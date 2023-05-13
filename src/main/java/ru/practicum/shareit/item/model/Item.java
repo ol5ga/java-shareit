@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item.model;
 
 import lombok.Data;
+import ru.practicum.shareit.request.ItemRequest;
 import ru.practicum.shareit.user.User;
 
 /**
@@ -13,5 +14,7 @@ public class Item {
     private String description;
     private boolean available;
     private User owner;
-    private String request;
+
+    //TODO ItemRequest request
+    private Long request;
 }
