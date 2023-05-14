@@ -6,35 +6,40 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
-/**
- * TODO Sprint add-controllers.
- */
 @RestController
 @RequestMapping(path = "/users")
 @Slf4j
 @RequiredArgsConstructor
 public class UserController {
 
-    UserService service;
+    private final UserService service;
+    private long idGenerate = 0;
 
     @GetMapping
-    public List<User> getAllUsers(){
-        return service.getAllUsers();
+    public List<UserDto> getAllUsers(){
+        return service.getAllUsers().stream()
+                .map(UserMapper::toUserDto)
+                .collect(Collectors.toList());
     }
     @GetMapping("/{id}")
-    public User getUser(@PathVariable int id){
-        return service.getUser(id);
+    public UserDto getUser(@PathVariable int id){
+        User user = service.getUser(id);
+        return UserMapper.toUserDto(user);
     }
 
     @PostMapping
-    public User create(@RequestBody @Valid User user){
-      return service.create(user);
+    public UserDto create(@RequestBody @Valid User user){
+        user.setId(++idGenerate);
+        user = service.create(user);
+        return UserMapper.toUserDto(user);
     }
 
     @PatchMapping
-    public User update(@RequestBody @Valid User user){
-        return service.update(user);
+    public UserDto update(@RequestBody @Valid User user){
+        user = service.update(user);
+        return UserMapper.toUserDto(user) ;
     }
 
     @DeleteMapping("/{id}")

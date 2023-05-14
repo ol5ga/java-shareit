@@ -1,12 +1,13 @@
 package ru.practicum.shareit.user;
 
-import ru.practicum.shareit.exceptions.ChangeException;
+import org.springframework.stereotype.Component;
+import ru.practicum.shareit.exceptions.StorageException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+@Component
 public class UserStorage {
     public Map<Long,User> users = new HashMap<>();
     long id = 0;
@@ -15,7 +16,7 @@ public class UserStorage {
     }
     public User getUser(int id){
         if (!users.containsKey(id)) {
-            throw new ChangeException("Такого пользователя не существует");
+            throw new StorageException("Такого пользователя не существует");
         }
         return users.get(id);
     }
@@ -31,7 +32,7 @@ public class UserStorage {
         if (users.containsKey(updateUser.getId())) {
             users.put(updateUser.getId(), updateUser);
         } else {
-            throw new ChangeException("Такого пользователя не существует");
+            throw new StorageException("Такого пользователя не существует");
         }
         return updateUser;
     }
@@ -40,7 +41,7 @@ public class UserStorage {
         if (users.containsKey(id)) {
             users.remove(id);
         } else {
-            throw new ChangeException("Такого пользователя не существует");
+            throw new StorageException("Такого пользователя не существует");
         }
     }
 }

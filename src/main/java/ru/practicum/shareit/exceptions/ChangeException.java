@@ -1,9 +1,0 @@
-package ru.practicum.shareit.exceptions;
-
-public class ChangeException extends RuntimeException {
-
-    public ChangeException(final String message) {
-        super(message);
-    }
-
-}
