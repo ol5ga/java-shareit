@@ -3,10 +3,8 @@ package ru.practicum.shareit.user;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.exceptions.StorageException;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 @Component
 public class UserStorage {
     public Map<Long,User> users = new HashMap<>();
@@ -24,16 +22,28 @@ public class UserStorage {
     public User create(User user){
         id++;
         user.setId(id);
+        for (User value : users.values()) {
+            if (Objects.equals(user.getEmail(), value.getEmail())){
+                throw new StorageException("Пользователь с таким email существует");
+            }
+        }
         users.put(user.getId(),user);
         return user;
     }
 
     public User update(User updateUser){
-        if (users.containsKey(updateUser.getId())) {
-            users.put(updateUser.getId(), updateUser);
-        } else {
+        if (!users.containsKey(updateUser.getId())) {
             throw new StorageException("Такого пользователя не существует");
+        } else {
+            User oldUser = users.get(updateUser.getId());
+           if(updateUser.getName() == null){
+               updateUser.setName(oldUser.getName());
+           }
+           if(updateUser.getEmail() == null){
+               updateUser.setEmail(oldUser.getEmail());
+           }
         }
+        users.put(updateUser.getId(), updateUser);
         return updateUser;
     }
 

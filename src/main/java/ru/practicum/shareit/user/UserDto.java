@@ -1,24 +1,26 @@
 package ru.practicum.shareit.user;
 
+import lombok.Builder;
 import lombok.Data;
+import org.springframework.lang.Nullable;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 
 @Data
+@Builder(toBuilder = true)
 public class UserDto {
-    @Null(groups = {User.class})
+    @Null(groups = UserId.class)
     private long id;
-    @NotBlank
+    @NotNull(groups = UserCreate.class)
+    @Nullable
     private String name;
-    @Email
+    @Email(message = "Email not valid", groups = UserCreate.class)
+    @NotNull(groups = UserCreate.class)
+    @Nullable
     private String email;
 
 
-    public UserDto(long id, String name, String email) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-    }
 }
