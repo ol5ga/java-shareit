@@ -4,8 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemMapper;
+import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.user.UserMapper;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * TODO Sprint add-controllers.
@@ -14,28 +18,37 @@ import java.util.List;
 @RequestMapping("/items")
 @RequiredArgsConstructor
 public class ItemController {
+
+    ItemService service;
     @PostMapping
-    public ItemDto addItem(@RequestBody ItemDto item){
-        return
+    public ItemDto addItem(@RequestHeader("X-Sharer_User_Id") long userId, @RequestBody ItemDto itemDto){
+        Item item = service.addItem(userId, ItemMapper.toItem(itemDto));
+        return ItemMapper.toItemDto(item);
     }
 
     @PatchMapping("/{id}")
-    public ItemDto updateItem(@PathVariable long id){
-        return
+    public ItemDto updateItem(@PathVariable long id, @RequestHeader("X-Sharer_User_Id") long userId){
+        Item item = service.updateItem(id, userId);
+        return ItemMapper.toItemDto(item);
     }
 
     @GetMapping("/{id}")
-    public ItemDto getItem(@PathVariable long id){
-        return
+    public ItemDto getItem(@PathVariable long id, @RequestHeader("X-Sharer_User_Id") long userId){
+        Item item = service.getItem(id,userId);
+        return ItemMapper.toItemDto(item);
     }
 
     @GetMapping
-    public List<ItemDto> getUserItems(){
-        return
+    public List<ItemDto> getUserItems(@RequestHeader("X-Sharer_User_Id") long userId){
+        return service.getUserItems(userId).stream()
+                .map(ItemMapper::toItemDto)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/search?text={text}")
-    public List<ItemDto> searchItem(){
-        return
+    public List<ItemDto> searchItem(@RequestParam(name = "text") String text){
+        return service.searchItem(text).stream()
+                .map(ItemMapper::toItemDto)
+                .collect(Collectors.toList());
     }
 }
