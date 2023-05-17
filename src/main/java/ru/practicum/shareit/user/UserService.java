@@ -15,7 +15,7 @@ public class UserService {
     public List<User> getAllUsers(){
         return storage.getAllUsers();
     }
-    public User getUser(int id){
+    public User getUser(long id){
         return storage.getUser(id);
     }
 
@@ -27,7 +27,7 @@ public class UserService {
         return storage.update(user);
     }
 
-    public void delete(int id){
+    public void delete(long id){
         storage.delete(id);
     }
 }

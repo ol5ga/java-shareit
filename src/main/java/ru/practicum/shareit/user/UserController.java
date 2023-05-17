@@ -25,7 +25,7 @@ public class UserController {
                 .collect(Collectors.toList());
     }
     @GetMapping("/{id}")
-    public UserDto getUser(@PathVariable int id){
+    public UserDto getUser(@PathVariable long id){
         User user = service.getUser(id);
         return UserMapper.toUserDto(user);
     }
@@ -44,7 +44,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable int id){
+    public void delete(@PathVariable long id){
         service.delete(id);
     }
 }
