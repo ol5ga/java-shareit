@@ -2,30 +2,30 @@ package ru.practicum.shareit.item.dto;
 
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.lang.Nullable;
+import ru.practicum.shareit.item.ItemCreate;
+import ru.practicum.shareit.item.ItemId;
 import ru.practicum.shareit.user.model.User;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 
 /**
  * TODO Sprint add-controllers.
  */
 @Data
-@Builder
+@Builder(toBuilder = true)
 public class ItemDto {
+    @Null(groups = ItemId.class)
     private long id;
+    @NotNull(groups = ItemCreate.class)
+    @Nullable
     private String name;
+    @NotNull(groups = ItemCreate.class)
+    @Nullable
     private String description;
-    private boolean available;
-    private User owner;
-
-    //TODO ItemRequest request
-    private Long request;
-
-//    public ItemDto(String name, String description, boolean available, Long request) {
-//        this.name = name;
-//        this.description = description;
-//        this.available = available;
-//        this.request = request;
-//    }
-
-
+    @NotNull(groups = ItemCreate.class)
+    @Nullable
+    private Boolean available;
 
 }

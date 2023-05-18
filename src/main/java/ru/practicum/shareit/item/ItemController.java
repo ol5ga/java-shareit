@@ -2,6 +2,7 @@ package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
@@ -19,27 +20,27 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ItemController {
 
-    ItemService service;
+    private final ItemService service;
     @PostMapping
-    public ItemDto addItem(@RequestHeader("X-Sharer_User_Id") long userId, @RequestBody ItemDto itemDto){
-        Item item = service.addItem(userId, ItemMapper.toItem(itemDto));
+    public ItemDto addItem(@RequestHeader("X-Sharer-User-Id") long userId, @Validated(ItemCreate.class) @RequestBody ItemDto itemDto){
+        Item item = service.addItem(userId, ItemMapper.toItem(userId, itemDto));
         return ItemMapper.toItemDto(item);
     }
 
     @PatchMapping("/{id}")
-    public ItemDto updateItem(@PathVariable long id, @RequestHeader("X-Sharer_User_Id") long userId){
-        Item item = service.updateItem(id, userId);
+    public ItemDto updateItem(@PathVariable long id,  @RequestBody ItemDto itemDto, @RequestHeader("X-Sharer-User-Id") long userId){
+        Item item = service.updateItem(ItemMapper.toItem(id, userId,itemDto));
         return ItemMapper.toItemDto(item);
     }
 
     @GetMapping("/{id}")
-    public ItemDto getItem(@PathVariable long id, @RequestHeader("X-Sharer_User_Id") long userId){
+    public ItemDto getItem(@PathVariable long id, @RequestHeader("X-Sharer-User-Id") long userId){
         Item item = service.getItem(id,userId);
         return ItemMapper.toItemDto(item);
     }
 
     @GetMapping
-    public List<ItemDto> getUserItems(@RequestHeader("X-Sharer_User_Id") long userId){
+    public List<ItemDto> getUserItems(@RequestHeader("X-Sharer-User-Id") long userId){
         return service.getUserItems(userId).stream()
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
