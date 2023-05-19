@@ -2,14 +2,13 @@ package ru.practicum.shareit.item;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import ru.practicum.shareit.exceptions.ChangeException;
 import ru.practicum.shareit.exceptions.StorageException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 @Slf4j
@@ -25,8 +24,11 @@ public class ItemStorage {
         return item;
     }
 
-    public Item updateItem(Item updateItem){
+    public Item updateItem(long userId, Item updateItem){
         Item oldItem = items.get(updateItem.getId());
+        if (userId != oldItem.getOwner()){
+            throw new ChangeException("Изменеия может вносить только владелец");
+        }
         if (!items.containsKey(updateItem.getId())) {
             log.info("Неправильный id");
             throw new StorageException("Такой вещи не существует");
@@ -47,14 +49,30 @@ public class ItemStorage {
         return updateItem;
     }
 
-    public Item getItem(long id, long userId){
-        return null;
+    public Item getItem(long id){
+        if (!items.containsKey(id)) {
+            log.info("Неправильный id");
+            throw new StorageException("вещи с таким id не существует");
+        }
+        return items.get(id);
     }
     public List<Item> getUserItems(long userId){
-        return null;
+        List<Item> userItems = new ArrayList<>();
+        for (Item item : items.values()) {
+            if (item.getOwner() == userId){
+                userItems.add(item);
+            }
+        }
+        return userItems;
     }
 
     public List<Item> searchItem(String text){
-        return null;
+        if (text.isEmpty()){
+            return new ArrayList<>();
+        }
+       return items.values().stream()
+                .filter(item -> (item.getName().toLowerCase().contains(text.toLowerCase()) || item.getDescription().toLowerCase().contains(text.toLowerCase())))
+                .filter(item -> item.getAvailable().equals(true))
+                .collect(Collectors.toList());
     }
 }

@@ -29,7 +29,7 @@ public class ItemController {
 
     @PatchMapping("/{id}")
     public ItemDto updateItem(@PathVariable long id,  @RequestBody ItemDto itemDto, @RequestHeader("X-Sharer-User-Id") long userId){
-        Item item = service.updateItem(ItemMapper.toItem(id, userId,itemDto));
+        Item item = service.updateItem(userId,ItemMapper.toItem(id, userId,itemDto));
         return ItemMapper.toItemDto(item);
     }
 
@@ -46,7 +46,7 @@ public class ItemController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/search?text={text}")
+    @GetMapping("/search")
     public List<ItemDto> searchItem(@RequestParam(name = "text") String text){
         return service.searchItem(text).stream()
                 .map(ItemMapper::toItemDto)

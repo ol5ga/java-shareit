@@ -26,16 +26,20 @@ public class ItemService {
         return storage.addItem(item);
     }
 
-    public Item updateItem(Item item){
+    public Item updateItem(long userId, Item item){
         try { userStorage.getUser(item.getOwner());
         } catch (StorageException ex) {
             throw new ChangeException("Такого пользователя не существует");
         }
-        return storage.updateItem(item);
+        return storage.updateItem(userId, item);
     }
 
     public Item getItem(long id, long userId){
-        return storage.getItem(id, userId);
+        try { userStorage.getUser(userId);
+        } catch (StorageException ex) {
+            throw new ChangeException("Такого пользователя не существует");
+        }
+        return storage.getItem(id);
     }
     public List<Item> getUserItems(long userId){
         return storage.getUserItems(userId);

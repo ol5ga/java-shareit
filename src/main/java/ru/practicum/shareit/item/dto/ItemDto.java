@@ -7,6 +7,7 @@ import ru.practicum.shareit.item.ItemCreate;
 import ru.practicum.shareit.item.ItemId;
 import ru.practicum.shareit.user.model.User;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 
@@ -18,7 +19,7 @@ import javax.validation.constraints.Null;
 public class ItemDto {
     @Null(groups = ItemId.class)
     private long id;
-    @NotNull(groups = ItemCreate.class)
+    @NotBlank(groups = ItemCreate.class)
     @Nullable
     private String name;
     @NotNull(groups = ItemCreate.class)
