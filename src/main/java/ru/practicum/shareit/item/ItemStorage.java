@@ -57,13 +57,9 @@ public class ItemStorage {
         return items.get(id);
     }
     public List<Item> getUserItems(long userId){
-        List<Item> userItems = new ArrayList<>();
-        for (Item item : items.values()) {
-            if (item.getOwner() == userId){
-                userItems.add(item);
-            }
-        }
-        return userItems;
+        return items.values().stream()
+                .filter(item -> item.getOwner() == userId)
+                .collect(Collectors.toList());
     }
 
     public List<Item> searchItem(String text){
