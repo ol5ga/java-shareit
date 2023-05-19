@@ -3,17 +3,13 @@ package ru.practicum.shareit.item.dto;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.lang.Nullable;
-import ru.practicum.shareit.item.ItemCreate;
-import ru.practicum.shareit.item.ItemId;
-import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.item.annotation.ItemCreate;
+import ru.practicum.shareit.item.annotation.ItemId;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 
-/**
- * TODO Sprint add-controllers.
- */
 @Data
 @Builder(toBuilder = true)
 public class ItemDto {

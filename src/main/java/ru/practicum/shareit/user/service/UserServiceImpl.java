@@ -1,32 +1,40 @@
-package ru.practicum.shareit.user;
+package ru.practicum.shareit.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.storage.UserStorage;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserServiceImpl implements UserService {
 
     private final UserStorage storage;
-    public List<User> getAllUsers(){
+
+    @Override
+    public List<User> getAllUsers() {
         return storage.getAllUsers();
     }
-    public User getUser(long id){
+
+    @Override
+    public User getUser(long id) {
         return storage.getUser(id);
     }
 
-    public User create(User user){
+    @Override
+    public User create(User user) {
         return storage.create(user);
     }
 
-    public User update(User user){
+    @Override
+    public User update(User user) {
         return storage.update(user);
     }
 
-    public void delete(long id){
+    @Override
+    public void delete(long id) {
         storage.delete(id);
     }
 }

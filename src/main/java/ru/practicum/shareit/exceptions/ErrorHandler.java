@@ -12,14 +12,14 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleValidationException(final ValidationException e){
+    public ErrorResponse handleValidationException(final ValidationException e) {
         log.info("Ошибка 400");
         return new ErrorResponse(e.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleChangeException(final ChangeException e){
+    public ErrorResponse handleChangeException(final ChangeException e) {
         log.info("Ошибка 404");
         return new ErrorResponse(e.getMessage());
     }

@@ -1,32 +1,36 @@
-package ru.practicum.shareit.item;
+package ru.practicum.shareit.item.storage;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.exceptions.ChangeException;
 import ru.practicum.shareit.exceptions.StorageException;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.model.User;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
 @Slf4j
-public class ItemStorage {
+public class ItemStorageImpl implements ItemStorage {
 
     Map<Long, Item> items = new HashMap<>();
     long id = 0;
 
-    public Item addItem(Item item){
+    @Override
+    public Item addItem(Item item) {
         id++;
         item.setId(id);
         items.put(item.getId(), item);
         return item;
     }
 
-    public Item updateItem(long userId, Item updateItem){
+    @Override
+    public Item updateItem(long userId, Item updateItem) {
         Item oldItem = items.get(updateItem.getId());
-        if (userId != oldItem.getOwner()){
+        if (userId != oldItem.getOwner()) {
             throw new ChangeException("Изменеия может вносить только владелец");
         }
         if (!items.containsKey(updateItem.getId())) {
@@ -34,13 +38,13 @@ public class ItemStorage {
             throw new StorageException("Такой вещи не существует");
         } else {
 
-            if(updateItem.getName() == null){
+            if (updateItem.getName() == null) {
                 updateItem.setName(oldItem.getName());
             }
-            if(updateItem.getDescription() == null){
+            if (updateItem.getDescription() == null) {
                 updateItem.setDescription(oldItem.getDescription());
             }
-            if(updateItem.getAvailable() == null){
+            if (updateItem.getAvailable() == null) {
                 updateItem.setAvailable(oldItem.getAvailable());
             }
         }
@@ -49,24 +53,28 @@ public class ItemStorage {
         return updateItem;
     }
 
-    public Item getItem(long id){
+    @Override
+    public Item getItem(long id) {
         if (!items.containsKey(id)) {
             log.info("Неправильный id");
             throw new StorageException("вещи с таким id не существует");
         }
         return items.get(id);
     }
-    public List<Item> getUserItems(long userId){
+
+    @Override
+    public List<Item> getUserItems(long userId) {
         return items.values().stream()
                 .filter(item -> item.getOwner() == userId)
                 .collect(Collectors.toList());
     }
 
-    public List<Item> searchItem(String text){
-        if (text.isEmpty()){
+    @Override
+    public List<Item> searchItem(String text) {
+        if (text.isEmpty()) {
             return new ArrayList<>();
         }
-       return items.values().stream()
+        return items.values().stream()
                 .filter(item -> (item.getName().toLowerCase().contains(text.toLowerCase()) || item.getDescription().toLowerCase().contains(text.toLowerCase())))
                 .filter(item -> item.getAvailable().equals(true))
                 .collect(Collectors.toList());

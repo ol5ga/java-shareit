@@ -1,10 +1,10 @@
-package ru.practicum.shareit.user.model;
+package ru.practicum.shareit.user.dto;
 
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.lang.Nullable;
-import ru.practicum.shareit.user.UserCreate;
-import ru.practicum.shareit.user.UserId;
+import ru.practicum.shareit.user.annotation.UserCreate;
+import ru.practicum.shareit.user.annotation.UserId;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
