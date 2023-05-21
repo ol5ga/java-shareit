@@ -10,20 +10,18 @@ import java.util.*;
 @Component
 @Slf4j
 public class UserStorageImpl implements UserStorage {
-    public Map<Long, User> users = new HashMap<>();
-    long id = 0;
+    private Map<Long, User> users = new HashMap<>();
+    private long id = 0;
 
     @Override
     public List<User> getAllUsers() {
+
         return new ArrayList<User>(users.values());
     }
 
     @Override
     public User getUser(long id) {
-        if (!users.containsKey(id)) {
-            log.info("Неправильный id");
-            throw new StorageException("Такого пользователя не существует");
-        }
+        checkId(id);
         return users.get(id);
     }
 
@@ -31,7 +29,7 @@ public class UserStorageImpl implements UserStorage {
     public User create(User user) {
         for (User value : users.values()) {
             if (Objects.equals(user.getEmail(), value.getEmail())) {
-                log.info("Неправильный email");
+                log.warn("Неправильный email");
                 throw new StorageException("Пользователь с таким email существует");
             }
         }
@@ -44,25 +42,21 @@ public class UserStorageImpl implements UserStorage {
     @Override
     public User update(User updateUser) {
         User oldUser = users.get(updateUser.getId());
-        if (!users.containsKey(updateUser.getId())) {
-            log.info("Неправильный id");
-            throw new StorageException("Такого пользователя не существует");
+        checkId(id);
+        if (updateUser.getName() == null) {
+            updateUser.setName(oldUser.getName());
+        }
+        if (updateUser.getEmail() == null) {
+            updateUser.setEmail(oldUser.getEmail());
         } else {
-
-            if (updateUser.getName() == null) {
-                updateUser.setName(oldUser.getName());
-            }
-            if (updateUser.getEmail() == null) {
-                updateUser.setEmail(oldUser.getEmail());
-            } else {
-                for (User value : users.values()) {
-                    if (Objects.equals(updateUser.getEmail(), value.getEmail()) && updateUser.getId() != value.getId()) {
-                        log.info("Неправильный id");
-                        throw new StorageException("Пользователь с таким email существует");
-                    }
+            for (User value : users.values()) {
+                if (Objects.equals(updateUser.getEmail(), value.getEmail()) && updateUser.getId() != value.getId()) {
+                    log.warn("Неправильный id");
+                    throw new StorageException("Пользователь с таким email существует");
                 }
             }
         }
+
         users.remove(oldUser.getId());
         users.put(updateUser.getId(), updateUser);
         return updateUser;
@@ -70,10 +64,14 @@ public class UserStorageImpl implements UserStorage {
 
     @Override
     public void delete(long id) {
-        if (users.containsKey(id)) {
-            users.remove(id);
-        } else {
-            log.info("Неправильный id");
+        checkId(id);
+        users.remove(id);
+
+    }
+
+    private void checkId(long userId) {
+        if (!users.containsKey(userId)) {
+            log.warn("Неправильный id");
             throw new StorageException("Такого пользователя не существует");
         }
     }

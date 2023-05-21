@@ -19,31 +19,19 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Item addItem(long userId, Item item) {
-        try {
-            userStorage.getUser(userId);
-        } catch (StorageException ex) {
-            throw new ChangeException("Такого пользователя не существует");
-        }
+        checkUser(userId);
         return storage.addItem(item);
     }
 
     @Override
     public Item updateItem(long userId, Item item) {
-        try {
-            userStorage.getUser(item.getOwner());
-        } catch (StorageException ex) {
-            throw new ChangeException("Такого пользователя не существует");
-        }
+        checkUser(userId);
         return storage.updateItem(userId, item);
     }
 
     @Override
     public Item getItem(long id, long userId) {
-        try {
-            userStorage.getUser(userId);
-        } catch (StorageException ex) {
-            throw new ChangeException("Такого пользователя не существует");
-        }
+        checkUser(userId);
         return storage.getItem(id);
     }
 
@@ -55,5 +43,13 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<Item> searchItem(String text) {
         return storage.searchItem(text);
+    }
+
+    private void checkUser(long userId) {
+        try {
+            userStorage.getUser(userId);
+        } catch (StorageException ex) {
+            throw new ChangeException("Такого пользователя не существует");
+        }
     }
 }

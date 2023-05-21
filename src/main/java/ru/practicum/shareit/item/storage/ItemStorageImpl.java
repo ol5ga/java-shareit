@@ -16,8 +16,8 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ItemStorageImpl implements ItemStorage {
 
-    Map<Long, Item> items = new HashMap<>();
-    long id = 0;
+    private Map<Long, Item> items = new HashMap<>();
+    private long id = 0;
 
     @Override
     public Item addItem(Item item) {
@@ -34,7 +34,7 @@ public class ItemStorageImpl implements ItemStorage {
             throw new ChangeException("Изменеия может вносить только владелец");
         }
         if (!items.containsKey(updateItem.getId())) {
-            log.info("Неправильный id");
+            log.warn("Неправильный id");
             throw new StorageException("Такой вещи не существует");
         } else {
 
@@ -56,7 +56,7 @@ public class ItemStorageImpl implements ItemStorage {
     @Override
     public Item getItem(long id) {
         if (!items.containsKey(id)) {
-            log.info("Неправильный id");
+            log.warn("Неправильный id");
             throw new StorageException("вещи с таким id не существует");
         }
         return items.get(id);
