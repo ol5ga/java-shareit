@@ -30,9 +30,6 @@ public class ItemStorageImpl implements ItemStorage {
     @Override
     public Item updateItem(long userId, Item updateItem) {
         Item oldItem = items.get(updateItem.getId());
-        if (userId != oldItem.getOwner()) {
-            throw new ChangeException("Изменеия может вносить только владелец");
-        }
         if (!items.containsKey(updateItem.getId())) {
             log.warn("Неправильный id");
             throw new StorageException("Такой вещи не существует");
@@ -65,7 +62,7 @@ public class ItemStorageImpl implements ItemStorage {
     @Override
     public List<Item> getUserItems(long userId) {
         return items.values().stream()
-                .filter(item -> item.getOwner() == userId)
+                .filter(item -> item.getOwner().getId() == userId)
                 .collect(Collectors.toList());
     }
 

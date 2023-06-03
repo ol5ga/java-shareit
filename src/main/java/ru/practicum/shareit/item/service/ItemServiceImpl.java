@@ -4,8 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exceptions.ChangeException;
 import ru.practicum.shareit.exceptions.StorageException;
+import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.ItemStorage;
+import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserStorage;
 
 import java.util.List;
@@ -18,14 +21,22 @@ public class ItemServiceImpl implements ItemService {
     private final UserStorage userStorage;
 
     @Override
-    public Item addItem(long userId, Item item) {
+    public Item addItem(long userId, ItemDto itemDto) {
         checkUser(userId);
+        User user = userStorage.getUser(userId);
+        Item item = ItemMapper.toItem(user, itemDto);
         return storage.addItem(item);
     }
 
     @Override
-    public Item updateItem(long userId, Item item) {
+    public Item updateItem(long id, long userId, ItemDto itemDto) {
         checkUser(userId);
+        if (userId != storage.getItem(id).getOwner().getId()) {
+            throw new ChangeException("Изменения может вносить только владелец");
+        }
+        User user = userStorage.getUser(userId);
+        Item item = ItemMapper.toItem(id,user, itemDto);
+
         return storage.updateItem(userId, item);
     }
 

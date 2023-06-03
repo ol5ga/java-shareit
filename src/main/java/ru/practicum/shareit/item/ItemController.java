@@ -22,13 +22,13 @@ public class ItemController {
 
     @PostMapping
     public ItemDto addItem(@RequestHeader(USER) long userId, @Validated(ItemCreate.class) @RequestBody ItemDto itemDto) {
-        Item item = service.addItem(userId, ItemMapper.toItem(userId, itemDto));
+        Item item = service.addItem(userId, itemDto);
         return ItemMapper.toItemDto(item);
     }
 
     @PatchMapping("/{id}")
     public ItemDto updateItem(@PathVariable long id, @RequestBody ItemDto itemDto, @RequestHeader(USER) long userId) {
-        Item item = service.updateItem(userId, ItemMapper.toItem(id, userId, itemDto));
+        Item item = service.updateItem(id,userId, itemDto);
         return ItemMapper.toItemDto(item);
     }
 
