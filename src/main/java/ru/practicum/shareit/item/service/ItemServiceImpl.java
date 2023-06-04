@@ -13,6 +13,7 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserRepository;
 
 import javax.transaction.Transactional;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,16 +27,14 @@ public class ItemServiceImpl implements ItemService {
     private final UserRepository userStorage;
 
     @Override
-    @Transactional
     public Item addItem(long userId, ItemDto itemDto) {
         checkUser(userId);
         User user = userStorage.getById(userId);
-        Item item = ItemMapper.toItem(user, itemDto);
+        Item item = ItemMapper.toItem(itemDto.getId(),user, itemDto);
         return storage.save(item);
     }
 
     @Override
-    @Transactional
     public Item updateItem(long id, long userId, ItemDto itemDto) {
         checkUser(userId);
         if (userId != storage.getById(id).getOwner().getId()) {
@@ -66,21 +65,18 @@ public class ItemServiceImpl implements ItemService {
 
 
     @Override
-    @Transactional
     public Item getItem(long id, long userId) {
         checkUser(userId);
         return storage.getById(id);
     }
 
     @Override
-    @Transactional
     public List<Item> getUserItems(long userId) {
         User user = userStorage.getById(userId);
         return storage.findAllByOwner(user);
     }
 
     @Override
-    @Transactional
     public List<Item> searchItem(String text) {
         if (text.isEmpty()) {
             return new ArrayList<>();

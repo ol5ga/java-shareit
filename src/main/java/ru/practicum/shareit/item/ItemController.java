@@ -21,7 +21,7 @@ public class ItemController {
     static final String USER = "X-Sharer-User-Id";
 
     @PostMapping
-    public ItemDto addItem(@RequestHeader(USER) long userId, @Validated(ItemCreate.class) @RequestBody ItemDto itemDto) {
+    public ItemDto addItem(@RequestHeader(USER) Long userId, @Validated(ItemCreate.class) @RequestBody ItemDto itemDto) {
         Item item = service.addItem(userId, itemDto);
         return ItemMapper.toItemDto(item);
     }
