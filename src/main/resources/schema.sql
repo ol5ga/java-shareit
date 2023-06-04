@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS items(
     user_id BIGINT REFERENCES users (id),
 --    request_id INTEGER REFERENCES requests (id),
     CONSTRAINT pk_item PRIMARY KEY (id),
-        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
 CREATE TABLE IF NOT EXISTS bookings (

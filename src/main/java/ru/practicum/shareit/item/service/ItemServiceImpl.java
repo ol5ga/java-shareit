@@ -87,9 +87,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private void checkUser(long userId) {
-        try {
-            userStorage.getById(userId);
-        } catch (NullPointerException ex) {
+        if (!userStorage.existsById(userId)){
+
             throw new ChangeException("Такого пользователя не существует");
         }
     }
