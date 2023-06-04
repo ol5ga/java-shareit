@@ -12,6 +12,7 @@ import ru.practicum.shareit.item.storage.ItemRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserRepository;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -43,12 +44,12 @@ public class ItemServiceImpl implements ItemService {
         User user = userStorage.getById(userId);
         Item item = ItemMapper.toItem(id,user, itemDto);
         Item oldItem = storage.getById(id);
-        if (storage.getById(id) != null) {
+        try { storage.getById(id);
+        } catch (EntityNotFoundException ex){
             log.warn("Неправильный id");
             throw new StorageException("Такой вещи не существует");
-        } else {
-
-            if (item.getName() == null) {
+        }
+         if (item.getName() == null) {
                 item.setName(oldItem.getName());
             }
             if (item.getDescription() == null) {
@@ -57,10 +58,8 @@ public class ItemServiceImpl implements ItemService {
             if (item.getAvailable() == null) {
                 item.setAvailable(oldItem.getAvailable());
             }
-        }
-        storage.delete(item);
         storage.save(item);
-        return item;
+        return storage.getById(item.getId());
     }
 
 
@@ -90,7 +89,7 @@ public class ItemServiceImpl implements ItemService {
     private void checkUser(long userId) {
         try {
             userStorage.getById(userId);
-        } catch (StorageException ex) {
+        } catch (NullPointerException ex) {
             throw new ChangeException("Такого пользователя не существует");
         }
     }
