@@ -3,12 +3,12 @@ package ru.practicum.shareit.item.dto;
 import lombok.AllArgsConstructor;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.storage.UserStorage;
+import ru.practicum.shareit.user.storage.UserRepository;
 
 @AllArgsConstructor
 public class ItemMapper {
 
-    private final UserStorage userStorage;
+    private final UserRepository userStorage;
     public static ItemDto toItemDto(Item item) {
         return ItemDto.builder()
                 .id(item.getId())
