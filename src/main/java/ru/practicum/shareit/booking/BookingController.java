@@ -8,6 +8,7 @@ import ru.practicum.shareit.booking.dto.BookingResponse;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * TODO Sprint add-bookings.
@@ -37,12 +38,18 @@ import java.util.List;
         }
 
         @GetMapping
-        public List<Booking> getUserBookings (@RequestHeader(USER) long userId,@RequestParam(defaultValue = "ALL") BookStatus status){
-            return service.getUserBookings(userId, status);
+        public List<BookingResponse> getUserBookings (@RequestHeader(USER) long userId, @RequestParam(name = "state", defaultValue = "ALL") String state){
+            List<Booking> bookings = service.getUserBookings(userId, state);
+            return bookings.stream()
+                    .map(BookingMapper::toResponse)
+                    .collect(Collectors.toList());
         }
 
         @GetMapping("/owner")
-        public List<Booking> getUserItems (@PathVariable long userId, @RequestParam(defaultValue = "ALL") BookStatus status){
-            return service.getUserItems(userId,status);
+        public List<BookingResponse> getUserItems (@RequestHeader(USER) long userId, @RequestParam(name = "state", defaultValue = "ALL") String state){
+            List<Booking> bookings = service.getUserItems(userId, state);
+            return bookings.stream()
+                    .map(BookingMapper::toResponse)
+                    .collect(Collectors.toList());
         }
 }
