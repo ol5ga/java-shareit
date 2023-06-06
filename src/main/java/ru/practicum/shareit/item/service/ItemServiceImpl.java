@@ -10,11 +10,9 @@ import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.ItemRepository;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.storage.UserRepository;
+import ru.practicum.shareit.user.storage.UserStorage;
 
 import javax.persistence.EntityNotFoundException;
-import javax.transaction.Transactional;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,7 +23,7 @@ import java.util.stream.Collectors;
 public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository storage;
-    private final UserRepository userStorage;
+    private final UserStorage userStorage;
 
     @Override
     public Item addItem(long userId, ItemDto itemDto) {

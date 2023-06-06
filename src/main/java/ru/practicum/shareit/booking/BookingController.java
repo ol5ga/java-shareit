@@ -2,7 +2,11 @@ package ru.practicum.shareit.booking;
 
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.booking.dto.BookingMapper;
+import ru.practicum.shareit.booking.dto.BookingRequest;
+import ru.practicum.shareit.booking.dto.BookingResponse;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -16,17 +20,20 @@ import java.util.List;
         BookingService service;
         static final String USER = "X-Sharer-User-Id";
         @PostMapping
-        public Booking addBooking (@RequestHeader(USER) long userId, @RequestBody Booking booking){
-            return service.addBooking(userId,booking);
+        public BookingResponse addBooking (@RequestHeader(USER) long userId,@Valid @RequestBody BookingRequest request){
+            Booking booking = service.addBooking(userId,request);
+            return BookingMapper.toResponse(booking);
         }
 
         @PatchMapping("/{bookingId}")
-        public Booking getStatus (@PathVariable long bookingId, @RequestHeader(USER) long userId,@RequestParam(name = "approved") Boolean approved){
-            return service.getStatus(bookingId, userId, approved);
+        public BookingResponse getStatus (@PathVariable long bookingId, @RequestHeader(USER) long userId,@RequestParam(name = "approved") Boolean approved){
+            Booking booking = service.getStatus(bookingId, userId, approved);
+            return BookingMapper.toResponse(booking);
         }
         @GetMapping("/{bookingId}")
-        public Booking getBooking (@PathVariable long bookingId, @RequestHeader(USER) long userId) {
-            return service.getBooking(bookingId,userId);
+        public BookingResponse getBooking (@PathVariable long bookingId, @RequestHeader(USER) long userId) {
+            Booking booking = service.getBooking(bookingId,userId);
+            return BookingMapper.toResponse(booking);
         }
 
         @GetMapping
