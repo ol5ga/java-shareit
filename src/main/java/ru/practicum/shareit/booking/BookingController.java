@@ -32,7 +32,7 @@ import java.util.List;
         }
         @GetMapping("/{bookingId}")
         public BookingResponse getBooking (@PathVariable long bookingId, @RequestHeader(USER) long userId) {
-            Booking booking = service.getBooking(bookingId,userId);
+            Booking booking = service.getBooking(bookingId, userId);
             return BookingMapper.toResponse(booking);
         }
 
@@ -41,7 +41,7 @@ import java.util.List;
             return service.getUserBookings(userId, status);
         }
 
-        @GetMapping("/{owner}")
+        @GetMapping("/owner")
         public List<Booking> getUserItems (@PathVariable long userId, @RequestParam(defaultValue = "ALL") BookStatus status){
             return service.getUserItems(userId,status);
         }

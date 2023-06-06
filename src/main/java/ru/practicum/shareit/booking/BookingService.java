@@ -27,9 +27,7 @@ public class BookingService {
         if (request.getStart().isAfter(request.getEnd()) ||
                 request.getStart().isEqual(request.getEnd()))
             throw new ValidationException("Некоректно указан интервал бронирования");
-        if(!userStorage.existsById(userId)){
-            throw new StorageException("Такого пользователя не существует");
-        }
+        checkUser(userId);
         User user = userStorage.getById(userId);
         Item item = itemStorage.getById(request.getItemId());
         if(!item.getAvailable()){
@@ -42,6 +40,7 @@ public class BookingService {
     public Booking getStatus (long bookingId, long userId, Boolean approved){
         Booking booking = storage.getById(bookingId);
         Item item = booking.getItem();
+        checkUser(userId);
         if (userId != item.getOwner().getId()){
             throw new StorageException("Операцию может выполнить только владелец");
         }
@@ -54,7 +53,12 @@ public class BookingService {
     }
 
     public Booking getBooking (long bookingId, long userId) {
-
+        Booking booking = storage.getById(bookingId);
+        Item item = booking.getItem();
+        checkUser(userId);
+        if (userId != item.getOwner().getId() && userId != booking.getBooker().getId()){
+            throw new StorageException("Нет прав на получение информации");
+        }
         return storage.getById(bookingId);
     }
 
@@ -65,5 +69,11 @@ public class BookingService {
     public List<Booking> getUserItems(long userId, BookStatus status) {
 
         return null; //storage.getUserItems(userId,status);
+    }
+
+    private void checkUser(long userId){
+        if(!userStorage.existsById(userId)){
+            throw new StorageException("Такого пользователя не существует");
+        }
     }
 }
