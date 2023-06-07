@@ -72,14 +72,14 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemWithTime getItem(long id, long userId) {
         checkUser(userId);
-        return addBooking(storage.getById(id));
+        return addBooking(storage.getById(id), userId);
     }
 
     @Override
     public List<ItemWithTime> getUserItems(long userId) {
         User user = userStorage.getById(userId);
         return storage.findAllByOwner(user).stream()
-                .map(item -> addBooking(item))
+                .map(item -> addBooking(item, userId))
                 .collect(Collectors.toList());
             }
 
@@ -101,7 +101,7 @@ public class ItemServiceImpl implements ItemService {
         }
     }
 
-    private ItemWithTime addBooking(Item item){
+    private ItemWithTime addBooking(Item item, long userId){
         LocalDateTime now = LocalDateTime.now();
         Booking lastBook = bookStorage.findFirstByItemIdAndStartIsBeforeOrStartEqualsOrderByStartDesc(item.getId(),now,now);
         Booking nextBook = bookStorage.findFirstByItemIdAndStartIsAfterOrderByStart(item.getId(),now);
@@ -115,6 +115,11 @@ public class ItemServiceImpl implements ItemService {
         if (nextBook != null){
         next = BookingMapper.toBookingShort(nextBook);
         } else {
+            next = null;
+        }
+        User user = userStorage.getById(userId);
+        if (userId != item.getOwner().getId()) {
+            last = null;
             next = null;
         }
         return ItemMapper.toItemWithTime(item,last,next);
