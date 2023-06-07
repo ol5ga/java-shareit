@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.annotation.ItemCreate;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
+import ru.practicum.shareit.item.dto.ItemWithTime;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
 
@@ -33,16 +34,13 @@ public class ItemController {
     }
 
     @GetMapping("/{id}")
-    public ItemDto getItem(@PathVariable long id, @RequestHeader(USER) long userId) {
-        Item item = service.getItem(id, userId);
-        return ItemMapper.toItemDto(item);
+    public ItemWithTime getItem(@PathVariable long id, @RequestHeader(USER) long userId) {
+        return service.getItem(id, userId);
     }
 
     @GetMapping
-    public List<ItemDto> getUserItems(@RequestHeader(USER) long userId) {
-        return service.getUserItems(userId).stream()
-                .map(ItemMapper::toItemDto)
-                .collect(Collectors.toList());
+    public List<ItemWithTime> getUserItems(@RequestHeader(USER) long userId) {
+        return service.getUserItems(userId);
     }
 
 

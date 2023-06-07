@@ -3,16 +3,22 @@ package ru.practicum.shareit.item.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.booking.Booking;
+import ru.practicum.shareit.booking.BookingStorage;
+import ru.practicum.shareit.booking.dto.BookingMapper;
+import ru.practicum.shareit.booking.dto.BookingShort;
 import ru.practicum.shareit.exceptions.ChangeException;
 import ru.practicum.shareit.exceptions.StorageException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
+import ru.practicum.shareit.item.dto.ItemWithTime;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.ItemRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserStorage;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,6 +30,8 @@ public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository storage;
     private final UserStorage userStorage;
+
+    private final BookingStorage bookStorage;
 
     @Override
     public Item addItem(long userId, ItemDto itemDto) {
@@ -62,16 +70,18 @@ public class ItemServiceImpl implements ItemService {
 
 
     @Override
-    public Item getItem(long id, long userId) {
+    public ItemWithTime getItem(long id, long userId) {
         checkUser(userId);
-        return storage.getById(id);
+        return addBooking(storage.getById(id));
     }
 
     @Override
-    public List<Item> getUserItems(long userId) {
+    public List<ItemWithTime> getUserItems(long userId) {
         User user = userStorage.getById(userId);
-        return storage.findAllByOwner(user);
-    }
+        return storage.findAllByOwner(user).stream()
+                .map(item -> addBooking(item))
+                .collect(Collectors.toList());
+            }
 
     @Override
     public List<Item> searchItem(String text) {
@@ -89,5 +99,24 @@ public class ItemServiceImpl implements ItemService {
 
             throw new ChangeException("Такого пользователя не существует");
         }
+    }
+
+    private ItemWithTime addBooking(Item item){
+        LocalDateTime now = LocalDateTime.now();
+        Booking lastBook = bookStorage.findFirstByItemIdAndStartIsBeforeOrStartEqualsOrderByStartDesc(item.getId(),now,now);
+        Booking nextBook = bookStorage.findFirstByItemIdAndStartIsAfterOrderByStart(item.getId(),now);
+        BookingShort last;
+        BookingShort next;
+        if(lastBook != null) {
+            last = BookingMapper.toBookingShort(lastBook);
+        } else {
+            last = null;
+        }
+        if (nextBook != null){
+        next = BookingMapper.toBookingShort(nextBook);
+        } else {
+            next = null;
+        }
+        return ItemMapper.toItemWithTime(item,last,next);
     }
 }

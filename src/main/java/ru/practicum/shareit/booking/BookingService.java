@@ -99,7 +99,7 @@ public class BookingService {
                 bookings = storage.findAllByBookerAndStatusEqualsOrderByStartDesc(user, BookStatus.REJECTED);
                 break;
             default:
-                throw new ValidationException("Неизвестный параметр");
+                throw new ValidationException("Unknown state: UNSUPPORTED_STATUS");
 
         }
         return bookings;
@@ -131,7 +131,8 @@ public class BookingService {
                 bookings = storage.findAllByItem_OwnerAndStatusEqualsOrderByStartDesc(user, BookStatus.REJECTED);
                 break;
             default:
-                throw new ValidationException("Неизвестный параметр");
+                throw new ValidationException("Unknown state: " + status);
+
         }
         return bookings;
     }

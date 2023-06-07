@@ -38,4 +38,12 @@ public class BookingMapper {
                 .status(booking.getStatus())
                 .build();
     }
+
+    public static BookingShort toBookingShort(Booking booking){
+        return BookingShort.builder()
+                .id(booking.getId())
+                .bookerId(booking.getBooker().getId())
+                .build();
+    }
+
 }

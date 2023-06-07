@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item.dto;
 
 import lombok.AllArgsConstructor;
+import ru.practicum.shareit.booking.dto.BookingShort;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserStorage;
@@ -34,6 +35,17 @@ public class ItemMapper {
                 .description(itemDto.getDescription())
                 .available(itemDto.getAvailable())
                 .owner(user)
+                .build();
+    }
+
+    public static ItemWithTime toItemWithTime(Item item, BookingShort last, BookingShort next) {
+        return ItemWithTime.builder()
+                .id(item.getId())
+                .name(item.getName())
+                .description(item.getDescription())
+                .available(item.getAvailable())
+                .lastBooking(last)
+                .nextBooking(next)
                 .build();
     }
 }
