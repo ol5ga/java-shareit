@@ -3,12 +3,15 @@ package ru.practicum.shareit.item.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.booking.BookStatus;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingStorage;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.dto.BookingShort;
 import ru.practicum.shareit.exceptions.ChangeException;
 import ru.practicum.shareit.exceptions.StorageException;
+import ru.practicum.shareit.exceptions.ValidationException;
+import ru.practicum.shareit.item.comment.*;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.dto.ItemWithTime;
@@ -30,8 +33,8 @@ public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository storage;
     private final UserStorage userStorage;
-
     private final BookingStorage bookStorage;
+    private final CommentRepository comStorage;
 
     @Override
     public Item addItem(long userId, ItemDto itemDto) {
@@ -72,14 +75,14 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemWithTime getItem(long id, long userId) {
         checkUser(userId);
-        return addBooking(storage.getById(id), userId);
+        return addProperty(storage.getById(id), userId);
     }
 
     @Override
     public List<ItemWithTime> getUserItems(long userId) {
         User user = userStorage.getById(userId);
         return storage.findAllByOwner(user).stream()
-                .map(item -> addBooking(item, userId))
+                .map(item -> addProperty(item, userId))
                 .collect(Collectors.toList());
             }
 
@@ -94,14 +97,26 @@ public class ItemServiceImpl implements ItemService {
                 .collect(Collectors.toList());
     }
 
+    public Comment addComment(long userId, long itemId, CommentRequest request){
+        Item item = storage.getById(itemId);
+        checkUser(userId);
+        User user = userStorage.getById(userId);
+        Comment comment;
+        if (bookStorage.findFirstByBookerIdAndItemIdAndEndIsBeforeOrderByEndDesc(userId,itemId, LocalDateTime.now()) != null) {
+           comment = CommentMapper.toComment(request, item, user);
+        } else {
+            throw new ValidationException("Пользователь не может оставить коментарий");
+        }
+        return comStorage.save(comment);
+    }
+
     private void checkUser(long userId) {
         if (!userStorage.existsById(userId)){
-
             throw new ChangeException("Такого пользователя не существует");
         }
     }
 
-    private ItemWithTime addBooking(Item item, long userId){
+    private ItemWithTime addProperty(Item item, long userId){
         LocalDateTime now = LocalDateTime.now();
         Booking lastBook = bookStorage.findFirstByItemIdAndStartIsBeforeOrStartEqualsOrderByStartDesc(item.getId(),now,now);
         Booking nextBook = bookStorage.findFirstByItemIdAndStartIsAfterOrderByStart(item.getId(),now);
@@ -109,19 +124,30 @@ public class ItemServiceImpl implements ItemService {
         BookingShort next;
         if(lastBook != null) {
             last = BookingMapper.toBookingShort(lastBook);
+            if(lastBook.getStatus() == BookStatus.REJECTED){
+                last = null;
+            }
         } else {
             last = null;
         }
         if (nextBook != null){
         next = BookingMapper.toBookingShort(nextBook);
+            if(nextBook.getStatus() == BookStatus.REJECTED){
+                next = null;
+            }
         } else {
             next = null;
         }
-        User user = userStorage.getById(userId);
         if (userId != item.getOwner().getId()) {
             last = null;
             next = null;
         }
-        return ItemMapper.toItemWithTime(item,last,next);
+        List<CommentResponse> comments = comStorage.findAllByItem(item).stream()
+                .map(CommentMapper::toResponse)
+                .collect(Collectors.toList());
+        if (comments.isEmpty()){
+            comments = new ArrayList<>();
+        }
+        return ItemMapper.toItemWithTime(item,last,next,comments);
     }
 }

@@ -4,12 +4,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.annotation.ItemCreate;
+import ru.practicum.shareit.item.comment.Comment;
+import ru.practicum.shareit.item.comment.CommentMapper;
+import ru.practicum.shareit.item.comment.CommentRequest;
+import ru.practicum.shareit.item.comment.CommentResponse;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.dto.ItemWithTime;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,5 +54,10 @@ public class ItemController {
         return service.searchItem(text).stream()
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
+    }
+
+    @PostMapping("/{itemId}/comment")
+    public CommentResponse addComment(@RequestHeader(USER) long userId, @PathVariable long itemId, @Valid @RequestBody CommentRequest commentRequest){
+        return CommentMapper.toResponse(service.addComment(userId,itemId,commentRequest));
     }
 }

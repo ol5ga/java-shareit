@@ -1,15 +1,14 @@
 package ru.practicum.shareit.item.dto;
 
-import lombok.AllArgsConstructor;
 import ru.practicum.shareit.booking.dto.BookingShort;
+import ru.practicum.shareit.item.comment.CommentResponse;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.storage.UserStorage;
 
-@AllArgsConstructor
+import java.util.List;
+
 public class ItemMapper {
 
-    private final UserStorage userStorage;
     public static ItemDto toItemDto(Item item) {
         return ItemDto.builder()
                 .id(item.getId())
@@ -38,7 +37,7 @@ public class ItemMapper {
                 .build();
     }
 
-    public static ItemWithTime toItemWithTime(Item item, BookingShort last, BookingShort next) {
+    public static ItemWithTime toItemWithTime(Item item, BookingShort last, BookingShort next, List<CommentResponse> comments) {
         return ItemWithTime.builder()
                 .id(item.getId())
                 .name(item.getName())
@@ -46,6 +45,7 @@ public class ItemMapper {
                 .available(item.getAvailable())
                 .lastBooking(last)
                 .nextBooking(next)
+                .comments(comments)
                 .build();
     }
 }
