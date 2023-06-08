@@ -1,7 +1,6 @@
 package ru.practicum.shareit.booking.dto;
 
 import lombok.Data;
-import org.springframework.lang.Nullable;
 
 import javax.validation.constraints.Future;
 import javax.validation.constraints.FutureOrPresent;
