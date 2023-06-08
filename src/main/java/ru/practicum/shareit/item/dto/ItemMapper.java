@@ -37,8 +37,8 @@ public class ItemMapper {
                 .build();
     }
 
-    public static ItemWithTime toItemWithTime(Item item, BookingShort last, BookingShort next, List<CommentResponse> comments) {
-        return ItemWithTime.builder()
+    public static ItemWithProperty toItemWithTime(Item item, BookingShort last, BookingShort next, List<CommentResponse> comments) {
+        return ItemWithProperty.builder()
                 .id(item.getId())
                 .name(item.getName())
                 .description(item.getDescription())

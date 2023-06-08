@@ -4,13 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.annotation.ItemCreate;
-import ru.practicum.shareit.item.comment.Comment;
 import ru.practicum.shareit.item.comment.CommentMapper;
 import ru.practicum.shareit.item.comment.CommentRequest;
 import ru.practicum.shareit.item.comment.CommentResponse;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
-import ru.practicum.shareit.item.dto.ItemWithTime;
+import ru.practicum.shareit.item.dto.ItemWithProperty;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
 
@@ -34,17 +33,17 @@ public class ItemController {
 
     @PatchMapping("/{id}")
     public ItemDto updateItem(@PathVariable long id, @RequestBody ItemDto itemDto, @RequestHeader(USER) long userId) {
-        Item item = service.updateItem(id,userId, itemDto);
+        Item item = service.updateItem(id, userId, itemDto);
         return ItemMapper.toItemDto(item);
     }
 
     @GetMapping("/{id}")
-    public ItemWithTime getItem(@PathVariable long id, @RequestHeader(USER) long userId) {
+    public ItemWithProperty getItem(@PathVariable long id, @RequestHeader(USER) long userId) {
         return service.getItem(id, userId);
     }
 
     @GetMapping
-    public List<ItemWithTime> getUserItems(@RequestHeader(USER) long userId) {
+    public List<ItemWithProperty> getUserItems(@RequestHeader(USER) long userId) {
         return service.getUserItems(userId);
     }
 
@@ -57,7 +56,7 @@ public class ItemController {
     }
 
     @PostMapping("/{itemId}/comment")
-    public CommentResponse addComment(@RequestHeader(USER) long userId, @PathVariable long itemId, @Valid @RequestBody CommentRequest commentRequest){
-        return CommentMapper.toResponse(service.addComment(userId,itemId,commentRequest));
+    public CommentResponse addComment(@RequestHeader(USER) long userId, @PathVariable long itemId, @Valid @RequestBody CommentRequest commentRequest) {
+        return CommentMapper.toResponse(service.addComment(userId, itemId, commentRequest));
     }
 }

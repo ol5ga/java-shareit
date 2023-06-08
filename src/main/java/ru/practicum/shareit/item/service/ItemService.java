@@ -3,7 +3,7 @@ package ru.practicum.shareit.item.service;
 import ru.practicum.shareit.item.comment.Comment;
 import ru.practicum.shareit.item.comment.CommentRequest;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemWithTime;
+import ru.practicum.shareit.item.dto.ItemWithProperty;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.List;
@@ -13,9 +13,9 @@ public interface ItemService {
 
     Item updateItem(long id, long userId, ItemDto item);
 
-    ItemWithTime getItem(long id, long userId);
+    ItemWithProperty getItem(long id, long userId);
 
-    List<ItemWithTime> getUserItems(long userId);
+    List<ItemWithProperty> getUserItems(long userId);
 
     List<Item> searchItem(String text);
 

@@ -14,7 +14,7 @@ import ru.practicum.shareit.exceptions.ValidationException;
 import ru.practicum.shareit.item.comment.*;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
-import ru.practicum.shareit.item.dto.ItemWithTime;
+import ru.practicum.shareit.item.dto.ItemWithProperty;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.ItemRepository;
 import ru.practicum.shareit.user.model.User;
@@ -40,7 +40,7 @@ public class ItemServiceImpl implements ItemService {
     public Item addItem(long userId, ItemDto itemDto) {
         checkUser(userId);
         User user = userStorage.getById(userId);
-        Item item = ItemMapper.toItem(itemDto.getId(),user, itemDto);
+        Item item = ItemMapper.toItem(itemDto.getId(), user, itemDto);
         return storage.save(item);
     }
 
@@ -51,40 +51,41 @@ public class ItemServiceImpl implements ItemService {
             throw new ChangeException("Изменения может вносить только владелец");
         }
         User user = userStorage.getById(userId);
-        Item item = ItemMapper.toItem(id,user, itemDto);
+        Item item = ItemMapper.toItem(id, user, itemDto);
         Item oldItem = storage.getById(id);
-        try { storage.getById(id);
-        } catch (EntityNotFoundException ex){
+        try {
+            storage.getById(id);
+        } catch (EntityNotFoundException ex) {
             log.warn("Неправильный id");
             throw new StorageException("Такой вещи не существует");
         }
-         if (item.getName() == null) {
-                item.setName(oldItem.getName());
-            }
-            if (item.getDescription() == null) {
-                item.setDescription(oldItem.getDescription());
-            }
-            if (item.getAvailable() == null) {
-                item.setAvailable(oldItem.getAvailable());
-            }
+        if (item.getName() == null) {
+            item.setName(oldItem.getName());
+        }
+        if (item.getDescription() == null) {
+            item.setDescription(oldItem.getDescription());
+        }
+        if (item.getAvailable() == null) {
+            item.setAvailable(oldItem.getAvailable());
+        }
         storage.save(item);
         return storage.getById(item.getId());
     }
 
 
     @Override
-    public ItemWithTime getItem(long id, long userId) {
+    public ItemWithProperty getItem(long id, long userId) {
         checkUser(userId);
         return addProperty(storage.getById(id), userId);
     }
 
     @Override
-    public List<ItemWithTime> getUserItems(long userId) {
+    public List<ItemWithProperty> getUserItems(long userId) {
         User user = userStorage.getById(userId);
         return storage.findAllByOwner(user).stream()
                 .map(item -> addProperty(item, userId))
                 .collect(Collectors.toList());
-            }
+    }
 
     @Override
     public List<Item> searchItem(String text) {
@@ -97,13 +98,13 @@ public class ItemServiceImpl implements ItemService {
                 .collect(Collectors.toList());
     }
 
-    public Comment addComment(long userId, long itemId, CommentRequest request){
+    public Comment addComment(long userId, long itemId, CommentRequest request) {
         Item item = storage.getById(itemId);
         checkUser(userId);
         User user = userStorage.getById(userId);
         Comment comment;
-        if (bookStorage.findFirstByBookerIdAndItemIdAndEndIsBeforeOrderByEndDesc(userId,itemId, LocalDateTime.now()) != null) {
-           comment = CommentMapper.toComment(request, item, user);
+        if (bookStorage.findFirstByBookerIdAndItemIdAndEndIsBeforeOrderByEndDesc(userId, itemId, LocalDateTime.now()) != null) {
+            comment = CommentMapper.toComment(request, item, user);
         } else {
             throw new ValidationException("Пользователь не может оставить коментарий");
         }
@@ -111,28 +112,28 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private void checkUser(long userId) {
-        if (!userStorage.existsById(userId)){
+        if (!userStorage.existsById(userId)) {
             throw new ChangeException("Такого пользователя не существует");
         }
     }
 
-    private ItemWithTime addProperty(Item item, long userId){
+    private ItemWithProperty addProperty(Item item, long userId) {
         LocalDateTime now = LocalDateTime.now();
-        Booking lastBook = bookStorage.findFirstByItemIdAndStartIsBeforeOrStartEqualsOrderByStartDesc(item.getId(),now,now);
-        Booking nextBook = bookStorage.findFirstByItemIdAndStartIsAfterOrderByStart(item.getId(),now);
+        Booking lastBook = bookStorage.findFirstByItemIdAndStartIsBeforeOrStartEqualsOrderByStartDesc(item.getId(), now, now);
+        Booking nextBook = bookStorage.findFirstByItemIdAndStartIsAfterOrderByStart(item.getId(), now);
         BookingShort last;
         BookingShort next;
-        if(lastBook != null) {
+        if (lastBook != null) {
             last = BookingMapper.toBookingShort(lastBook);
-            if(lastBook.getStatus() == BookStatus.REJECTED){
+            if (lastBook.getStatus() == BookStatus.REJECTED) {
                 last = null;
             }
         } else {
             last = null;
         }
-        if (nextBook != null){
-        next = BookingMapper.toBookingShort(nextBook);
-            if(nextBook.getStatus() == BookStatus.REJECTED){
+        if (nextBook != null) {
+            next = BookingMapper.toBookingShort(nextBook);
+            if (nextBook.getStatus() == BookStatus.REJECTED) {
                 next = null;
             }
         } else {
@@ -145,9 +146,9 @@ public class ItemServiceImpl implements ItemService {
         List<CommentResponse> comments = comStorage.findAllByItem(item).stream()
                 .map(CommentMapper::toResponse)
                 .collect(Collectors.toList());
-        if (comments.isEmpty()){
+        if (comments.isEmpty()) {
             comments = new ArrayList<>();
         }
-        return ItemMapper.toItemWithTime(item,last,next,comments);
+        return ItemMapper.toItemWithTime(item, last, next, comments);
     }
 }

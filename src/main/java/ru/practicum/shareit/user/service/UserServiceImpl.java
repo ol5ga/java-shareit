@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
     public User update(User user) {
         User oldUser = storage.getById(user.getId());
         checkId(user.getId());
-        checkEmail(user,oldUser.getEmail());
+        checkEmail(user, oldUser.getEmail());
         if (user.getName() == null) {
             user.setName(oldUser.getName());
         }
@@ -56,13 +56,13 @@ public class UserServiceImpl implements UserService {
     private void checkId(long userId) {
         try {
             storage.getById(userId);
-        } catch (NullPointerException ex){
+        } catch (NullPointerException ex) {
             log.warn("Неправильный id");
             throw new StorageException("Такого пользователя не существует");
         }
     }
 
-    private void checkEmail(User user, String email){
+    private void checkEmail(User user, String email) {
         for (User value : storage.findAll()) {
             if (Objects.equals(user.getEmail(), value.getEmail()) && user.getId() != value.getId()) {
                 log.warn("Неправильный id");

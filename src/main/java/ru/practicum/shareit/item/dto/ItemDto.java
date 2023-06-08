@@ -24,5 +24,4 @@ public class ItemDto {
     @NotNull(groups = ItemCreate.class)
     @Nullable
     private Boolean available;
-
 }

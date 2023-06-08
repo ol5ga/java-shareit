@@ -22,5 +22,4 @@ public class User {
     private String email;
     @Column(name = "name")
     private String name;
-
 }
