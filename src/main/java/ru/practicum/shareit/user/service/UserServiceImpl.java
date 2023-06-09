@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exceptions.StorageException;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.storage.UserStorage;
+import ru.practicum.shareit.user.storage.UserRepository;
 
 import java.util.List;
 import java.util.Objects;
@@ -15,7 +15,7 @@ import java.util.Objects;
 @Slf4j
 public class UserServiceImpl implements UserService {
 
-    private final UserStorage storage;
+    private final UserRepository storage;
 
     @Override
     public List<User> getAllUsers() {

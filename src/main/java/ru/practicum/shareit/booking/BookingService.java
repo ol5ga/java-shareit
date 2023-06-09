@@ -11,7 +11,7 @@ import ru.practicum.shareit.exceptions.ValidationException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.ItemRepository;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.storage.UserStorage;
+import ru.practicum.shareit.user.storage.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -21,14 +21,15 @@ import java.util.List;
 @Data
 @Builder
 public class BookingService {
-    BookingStorage storage;
-    UserStorage userStorage;
+    private BookingRepository storage;
+    private UserRepository userStorage;
 
-    ItemRepository itemStorage;
+    private ItemRepository itemStorage;
 
-    public Booking addBooking(long userId, BookingRequest request) throws ValidationException {
-        if (request.getStart().isAfter(request.getEnd()) ||
-                request.getStart().isEqual(request.getEnd()))
+    public Booking addBooking(long userId, BookingRequest request) {
+        LocalDateTime start = request.getStart();
+        LocalDateTime end = request.getEnd();
+        if (start.isAfter(end) || start.isEqual(end))
             throw new ValidationException("Некоректно указан интервал бронирования");
         checkUser(userId);
         User user = userStorage.getById(userId);

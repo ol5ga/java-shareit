@@ -34,5 +34,5 @@ public class Comment {
     private User user;
 
     @Column(name = "created")
-    LocalDateTime created;
+    private LocalDateTime created;
 }

@@ -15,6 +15,6 @@ public class BookingResponse {
     private LocalDateTime start;
     private LocalDateTime end;
     private ItemDto item;
-    public UserDto booker;
+    private UserDto booker;
     private BookStatus status;
 }

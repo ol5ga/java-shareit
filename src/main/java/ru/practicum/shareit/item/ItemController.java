@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class ItemController {
 
     private final ItemService service;
-    static final String USER = "X-Sharer-User-Id";
+    private static final String USER = "X-Sharer-User-Id";
 
     @PostMapping
     public ItemDto addItem(@RequestHeader(USER) Long userId, @Validated(ItemCreate.class) @RequestBody ItemDto itemDto) {
