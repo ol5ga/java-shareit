@@ -15,8 +15,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class BookingController {
 
-    BookingService service;
-    static final String USER = "X-Sharer-User-Id";
+    private BookingService service;
+    private static final String USER = "X-Sharer-User-Id";
 
     @PostMapping
     public BookingResponse addBooking(@RequestHeader(USER) long userId, @Valid @RequestBody BookingRequest request) {
