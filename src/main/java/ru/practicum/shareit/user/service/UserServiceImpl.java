@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private void checkId(long userId) {
-        if (!repository.existsById(userId)){
+        if (!repository.existsById(userId)) {
             throw new StorageException("Такого пользователя не существует");
         }
     }
