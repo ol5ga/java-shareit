@@ -7,6 +7,8 @@ import ru.practicum.shareit.exceptions.StorageException;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserRepository;
 
+import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,28 +17,31 @@ import java.util.Objects;
 @Slf4j
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository storage;
+    private final UserRepository repository;
 
     @Override
     public List<User> getAllUsers() {
-        return storage.findAll();
+        return repository.findAll();
     }
 
     @Override
     public User getUser(long id) {
 
-        return storage.getById(id);
+        return repository.getById(id);
     }
 
     @Override
+    @Transactional
     public User create(User user) {
-        return storage.save(user);
+
+        return repository.save(user);
     }
 
     @Override
+    @Transactional
     public User update(User user) {
-        User oldUser = storage.getById(user.getId());
         checkId(user.getId());
+        User oldUser = repository.getById(user.getId());
         checkEmail(user, oldUser.getEmail());
         if (user.getName() == null) {
             user.setName(oldUser.getName());
@@ -44,26 +49,24 @@ public class UserServiceImpl implements UserService {
         if (user.getEmail() == null) {
             user.setEmail(oldUser.getEmail());
         }
-        storage.save(user);
+        repository.save(user);
         return user;
     }
 
     @Override
+    @Transactional
     public void delete(long id) {
-        storage.deleteById(id);
+        repository.deleteById(id);
     }
 
     private void checkId(long userId) {
-        try {
-            storage.getById(userId);
-        } catch (NullPointerException ex) {
-            log.warn("Неправильный id");
+        if (!repository.existsById(userId)){
             throw new StorageException("Такого пользователя не существует");
         }
     }
 
     private void checkEmail(User user, String email) {
-        for (User value : storage.findAll()) {
+        for (User value : repository.findAll()) {
             if (Objects.equals(user.getEmail(), value.getEmail()) && user.getId() != value.getId()) {
                 log.warn("Неправильный id");
                 throw new StorageException("Пользователь с таким email существует");

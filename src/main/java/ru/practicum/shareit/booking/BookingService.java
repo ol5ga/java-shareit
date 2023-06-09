@@ -13,6 +13,7 @@ import ru.practicum.shareit.item.storage.ItemRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserRepository;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,19 +22,20 @@ import java.util.List;
 @Data
 @Builder
 public class BookingService {
-    private BookingRepository storage;
-    private UserRepository userStorage;
+    private BookingRepository bookingRepository;
+    private UserRepository userRepository;
 
-    private ItemRepository itemStorage;
+    private ItemRepository itemRepository;
 
+    @Transactional
     public Booking addBooking(long userId, BookingRequest request) {
         LocalDateTime start = request.getStart();
         LocalDateTime end = request.getEnd();
         if (start.isAfter(end) || start.isEqual(end))
             throw new ValidationException("Некоректно указан интервал бронирования");
         checkUser(userId);
-        User user = userStorage.getById(userId);
-        Item item = itemStorage.getById(request.getItemId());
+        User user = userRepository.getById(userId);
+        Item item = itemRepository.getById(request.getItemId());
         if (userId == item.getOwner().getId()) {
             throw new ChangeException("Собственник не может забронировать свою вещь");
         }
@@ -41,11 +43,12 @@ public class BookingService {
             throw new ValidationException("Эта вещь недоступна для бронирования");
         }
         BookStatus status = BookStatus.WAITING;
-        return storage.save(BookingMapper.toBooking(request, item, user, status));
+        return bookingRepository.save(BookingMapper.toBooking(request, item, user, status));
     }
 
+    @Transactional
     public Booking getStatus(long bookingId, long userId, Boolean approved) {
-        Booking booking = storage.getById(bookingId);
+        Booking booking = bookingRepository.getById(bookingId);
         Item item = booking.getItem();
         checkUser(userId);
         if (userId != item.getOwner().getId()) {
@@ -59,44 +62,44 @@ public class BookingService {
         } else {
             booking.setStatus(BookStatus.REJECTED);
         }
-        storage.save(booking);
-        return storage.getById(bookingId);
+        bookingRepository.save(booking);
+        return bookingRepository.getById(bookingId);
     }
 
     public Booking getBooking(long bookingId, long userId) {
-        Booking booking = storage.getById(bookingId);
+        Booking booking = bookingRepository.getById(bookingId);
         Item item = booking.getItem();
         checkUser(userId);
         if (userId != item.getOwner().getId() && userId != booking.getBooker().getId()) {
             throw new ChangeException("Нет прав на получение информации");
         }
-        return storage.getById(bookingId);
+        return bookingRepository.getById(bookingId);
     }
 
     public List<Booking> getUserBookings(long userId, String status) {
         checkUser(userId);
-        User user = userStorage.getById(userId);
+        User user = userRepository.getById(userId);
         LocalDateTime now = LocalDateTime.now();
         List<Booking> bookings = new ArrayList<>();
 
         switch (status) {
             case "ALL":
-                bookings = storage.findAllByBookerOrderByStartDesc(user);
+                bookings = bookingRepository.findAllByBookerOrderByStartDesc(user);
                 break;
             case "CURRENT":
-                bookings = storage.findAllByBookerAndStartIsBeforeAndEndIsAfterOrderByStart(user, now, now);
+                bookings = bookingRepository.findAllByBookerAndStartIsBeforeAndEndIsAfterOrderByStart(user, now, now);
                 break;
             case "FUTURE":
-                bookings = storage.findAllByBookerAndStartIsAfterOrderByStartDesc(user, now);
+                bookings = bookingRepository.findAllByBookerAndStartIsAfterOrderByStartDesc(user, now);
                 break;
             case "PAST":
-                bookings = storage.findAllByBookerAndEndIsBeforeOrderByStartDesc(user, now);
+                bookings = bookingRepository.findAllByBookerAndEndIsBeforeOrderByStartDesc(user, now);
                 break;
             case "WAITING":
-                bookings = storage.findAllByBookerAndStatusEqualsOrderByStartDesc(user, BookStatus.WAITING);
+                bookings = bookingRepository.findAllByBookerAndStatusEqualsOrderByStartDesc(user, BookStatus.WAITING);
                 break;
             case "REJECTED":
-                bookings = storage.findAllByBookerAndStatusEqualsOrderByStartDesc(user, BookStatus.REJECTED);
+                bookings = bookingRepository.findAllByBookerAndStatusEqualsOrderByStartDesc(user, BookStatus.REJECTED);
                 break;
             default:
                 throw new ValidationException("Unknown state: UNSUPPORTED_STATUS");
@@ -107,28 +110,28 @@ public class BookingService {
 
     public List<Booking> getUserItems(long userId, String status) {
         checkUser(userId);
-        User user = userStorage.getById(userId);
+        User user = userRepository.getById(userId);
         LocalDateTime now = LocalDateTime.now();
         List<Booking> bookings = new ArrayList<>();
 
         switch (status) {
             case "ALL":
-                bookings = storage.findAllByItem_OwnerOrderByStartDesc(user);
+                bookings = bookingRepository.findAllByItem_OwnerOrderByStartDesc(user);
                 break;
             case "CURRENT":
-                bookings = storage.findAllByItem_OwnerAndStartIsBeforeAndEndIsAfterOrderByStart(user, now, now);
+                bookings = bookingRepository.findAllByItem_OwnerAndStartIsBeforeAndEndIsAfterOrderByStart(user, now, now);
                 break;
             case "FUTURE":
-                bookings = storage.findAllByItem_OwnerAndStartIsAfterOrderByStartDesc(user, now);
+                bookings = bookingRepository.findAllByItem_OwnerAndStartIsAfterOrderByStartDesc(user, now);
                 break;
             case "PAST":
-                bookings = storage.findAllByItem_OwnerAndEndIsBeforeOrderByStartDesc(user, now);
+                bookings = bookingRepository.findAllByItem_OwnerAndEndIsBeforeOrderByStartDesc(user, now);
                 break;
             case "WAITING":
-                bookings = storage.findAllByItem_OwnerAndStatusEqualsOrderByStartDesc(user, BookStatus.WAITING);
+                bookings = bookingRepository.findAllByItem_OwnerAndStatusEqualsOrderByStartDesc(user, BookStatus.WAITING);
                 break;
             case "REJECTED":
-                bookings = storage.findAllByItem_OwnerAndStatusEqualsOrderByStartDesc(user, BookStatus.REJECTED);
+                bookings = bookingRepository.findAllByItem_OwnerAndStatusEqualsOrderByStartDesc(user, BookStatus.REJECTED);
                 break;
             default:
                 throw new ValidationException("Unknown state: " + status);
@@ -138,7 +141,7 @@ public class BookingService {
     }
 
     private void checkUser(long userId) {
-        if (!userStorage.existsById(userId)) {
+        if (!userRepository.existsById(userId)) {
             throw new StorageException("Такого пользователя не существует");
         }
     }
