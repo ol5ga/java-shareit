@@ -1,5 +1,6 @@
 package ru.practicum.shareit.request.dto;
 
+import net.bytebuddy.asm.Advice;
 import ru.practicum.shareit.item.dto.ItemShort;
 import ru.practicum.shareit.request.ItemRequest;
 import ru.practicum.shareit.user.model.User;
@@ -9,11 +10,11 @@ import java.util.List;
 
 public class ItemRequestMapper {
 
-    public static ItemRequest toItemRequest(ItemRequestDto request, User user){
+    public static ItemRequest toItemRequest(ItemRequestDto request, User user, LocalDateTime created){
         return ItemRequest.builder()
                 .description(request.getDescription())
                 .requestor(user)
-                .created(LocalDateTime.now())
+                .created(created)
                 .build();
 
     }

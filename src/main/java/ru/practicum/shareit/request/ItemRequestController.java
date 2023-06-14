@@ -6,6 +6,7 @@ import ru.practicum.shareit.booking.dto.BookingRequest;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -21,7 +22,8 @@ public class ItemRequestController {
 
     @PostMapping
     public ItemRequest addRequest(@RequestHeader(USER) long userId, @Valid @RequestBody ItemRequestDto request){
-        return service.addRequest();
+        LocalDateTime created = LocalDateTime.now();
+        return service.addRequest(userId,request,created);
     }
 
     @GetMapping
@@ -38,5 +40,6 @@ public class ItemRequestController {
     public ItemRequest getItemRequest(@PathVariable long requestId, @RequestHeader(USER) long userId){
         return service.getRequest();
     }
+
 
 }
