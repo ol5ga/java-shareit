@@ -4,8 +4,11 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingRequest;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
+import ru.practicum.shareit.request.dto.ItemRequestResponse;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -27,18 +30,18 @@ public class ItemRequestController {
     }
 
     @GetMapping
-    public List<ItemRequest> getMyRequests(@RequestHeader(USER) long userId){
+    public List<ItemRequestResponse> getMyRequests(@RequestHeader(USER) long userId){
         return service.getMyRequests(userId);
     }
 
     @GetMapping("/all")
-    public List<ItemRequest> getAllRequests(@RequestHeader(USER) long userId, @RequestParam(name = "from") int from, @RequestParam(name = "size") int size){
-        return service.getAllRequests();
+    public List<ItemRequestResponse> getAllRequests(@RequestHeader(USER) long userId, @RequestParam(name = "from", defaultValue = "1") @Min(1) Integer from, @RequestParam(name = "size",defaultValue = "20") @Min(1) @Max(20) Integer size){
+        return service.getAllRequests(userId, from, size);
     }
 
     @GetMapping("/{requestId}")
-    public ItemRequest getItemRequest(@PathVariable long requestId, @RequestHeader(USER) long userId){
-        return service.getRequest();
+    public ItemRequestResponse getItemRequest(@PathVariable long requestId, @RequestHeader(USER) long userId){
+        return service.getRequest(requestId, userId);
     }
 
 

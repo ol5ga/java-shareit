@@ -2,6 +2,7 @@ package ru.practicum.shareit.request.dto;
 
 import net.bytebuddy.asm.Advice;
 import ru.practicum.shareit.item.dto.ItemShort;
+import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.request.ItemRequest;
 import ru.practicum.shareit.user.model.User;
 
@@ -19,7 +20,7 @@ public class ItemRequestMapper {
 
     }
 
-    public static ItemRequestResponse toItemRequestResponse(ItemRequest itemRequest, List<ItemShort> itemList){
+    public static ItemRequestResponse toItemRequestResponse(ItemRequest itemRequest, List<Item> itemList){
         return ItemRequestResponse.builder()
                 .id(itemRequest.getId())
                 .description(itemRequest.getDescription())

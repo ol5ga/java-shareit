@@ -15,5 +15,5 @@ public class ItemRequestResponse {
     private long id;
     private String description;
     private LocalDateTime created;
-    private List<ItemShort> items;
+    private List<Item> items;
 }

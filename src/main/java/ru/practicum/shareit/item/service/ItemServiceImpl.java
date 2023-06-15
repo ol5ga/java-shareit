@@ -44,8 +44,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public Item addItem(long userId, ItemDto itemDto) {
-        checkUser(userId);
-        User user = userRepository.getById(userId);
+        User user = userRepository.findById(userId).orElseThrow(() -> new ChangeException("Такого пользователя не существует"));
         Item item;
         if (itemDto.getRequestId() != null) {
             ItemRequest request = requestRepository.findById(itemDto.getRequestId()).orElseThrow();
