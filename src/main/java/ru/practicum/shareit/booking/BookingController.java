@@ -1,18 +1,22 @@
 package ru.practicum.shareit.booking;
 
 import lombok.AllArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.dto.BookingRequest;
 import ru.practicum.shareit.booking.dto.BookingResponse;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/bookings")
 @AllArgsConstructor
+@Validated
 public class BookingController {
 
     private BookingService service;
@@ -37,18 +41,18 @@ public class BookingController {
     }
 
     @GetMapping
-    public List<BookingResponse> getUserBookings(@RequestHeader(USER) long userId, @RequestParam(name = "state", defaultValue = "ALL") String state) {
-        List<Booking> bookings = service.getUserBookings(userId, state);
-        return bookings.stream()
-                .map(BookingMapper::toResponse)
-                .collect(Collectors.toList());
+    public List<BookingResponse> getUserBookings(@RequestHeader(USER) long userId,
+                                                 @RequestParam(name = "state", defaultValue = "ALL") String state,
+                                                 @Valid @RequestParam(name = "from", defaultValue = "1") @Min(1) Integer from,
+                                                 @Valid @RequestParam(name = "size",defaultValue = "20") @Min(1) @Max(20) Integer size) {
+        return service.getUserBookings(userId, state, from, size);
     }
 
     @GetMapping("/owner")
-    public List<BookingResponse> getUserItems(@RequestHeader(USER) long userId, @RequestParam(name = "state", defaultValue = "ALL") String state) {
-        List<Booking> bookings = service.getUserItems(userId, state);
-        return bookings.stream()
-                .map(BookingMapper::toResponse)
-                .collect(Collectors.toList());
+    public List<BookingResponse> getUserItems(@RequestHeader(USER) long userId,
+                                              @RequestParam(name = "state", defaultValue = "ALL") String state,
+                                              @RequestParam(name = "from", defaultValue = "1") @Min(1) Integer from,
+                                              @RequestParam(name = "size",defaultValue = "20") @Min(1) @Max(20) Integer size) {
+        return service.getUserItems(userId, state,from, size);
     }
 }

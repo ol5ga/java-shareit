@@ -21,4 +21,5 @@ public class ItemWithProperty {
 
     private List<CommentResponse> comments;
 
+
 }

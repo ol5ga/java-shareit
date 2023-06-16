@@ -2,6 +2,9 @@ package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.BookStatus;
 import ru.practicum.shareit.booking.Booking;
@@ -92,19 +95,21 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemWithProperty> getUserItems(long userId) {
-        User user = userRepository.getById(userId);
-        return itemRepository.findAllByOwner(user).stream()
+    public List<ItemWithProperty> getUserItems(long userId, int from, int size) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new ChangeException("Такого пользователя не существует"));
+        Pageable page = PageRequest.of(from / size, size);
+        return itemRepository.findByOwnerId(userId,page).stream()
                 .map(item -> addProperty(item, userId))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<Item> searchItem(String text) {
+    public List<Item> searchItem(String text, int from, int size) {
         if (text.isEmpty()) {
             return new ArrayList<>();
         }
-        return itemRepository.findAll().stream()
+        Pageable page = PageRequest.of(from / size, size);
+        return itemRepository.findAll(page).stream()
                 .filter(item -> (item.getName().toLowerCase().contains(text.toLowerCase()) || item.getDescription().toLowerCase().contains(text.toLowerCase())))
                 .filter(item -> item.getAvailable().equals(true))
                 .collect(Collectors.toList());

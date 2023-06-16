@@ -14,6 +14,8 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,14 +45,14 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemWithProperty> getUserItems(@RequestHeader(USER) long userId) {
-        return service.getUserItems(userId);
+    public List<ItemWithProperty> getUserItems(@RequestHeader(USER) long userId, @RequestParam(name = "from", defaultValue = "1") @Min(1) Integer from, @RequestParam(name = "size",defaultValue = "20") @Min(1) @Max(20) Integer size) {
+        return service.getUserItems(userId, from, size);
     }
 
 
     @GetMapping("/search")
-    public List<ItemDto> searchItem(@RequestParam(name = "text") String text) {
-        return service.searchItem(text).stream()
+    public List<ItemDto> searchItem(@RequestParam(name = "text") String text, @RequestParam(name = "from", defaultValue = "1") @Min(1) Integer from, @RequestParam(name = "size",defaultValue = "20") @Min(1) @Max(20) Integer size) {
+        return service.searchItem(text, from, size).stream()
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
     }
