@@ -99,7 +99,7 @@ class BookingRepositoryTest {
 
     @Test
     void findAllByBookerOrderByStartDesc() {
-        List<Booking> result = bookingRepository.findAllByBookerOrderByStartDesc(booker, Pageable.unpaged()).getContent();
+        List<Booking> result = bookingRepository.findAllByBookerOrderByStartDesc(booker, Pageable.unpaged());
         assertEquals(2, result.size());
         assertThat(result.contains(booking));
         assertEquals(booking2, result.get(0));
@@ -108,14 +108,14 @@ class BookingRepositoryTest {
 
     @Test
     void findAllByBookerAndStartIsBeforeAndEndIsAfterOrderByStart() {
-        List<Booking> result = bookingRepository.findAllByBookerAndStartIsBeforeAndEndIsAfterOrderByStart(booker, now.plusMinutes(5), now.plusMinutes(5), Pageable.unpaged()).getContent();
+        List<Booking> result = bookingRepository.findAllByBookerAndStartIsBeforeAndEndIsAfterOrderByStart(booker, now.plusMinutes(5), now.plusMinutes(5), Pageable.unpaged());
         assertEquals(1, result.size());
         assertThat(result.contains(booking));
     }
 
     @Test
     void findAllByBookerAndStartIsAfterOrderByStartDesc() {
-        List<Booking> result = bookingRepository.findAllByBookerAndStartIsAfterOrderByStartDesc(booker, now.minusHours(5), Pageable.unpaged()).getContent();
+        List<Booking> result = bookingRepository.findAllByBookerAndStartIsAfterOrderByStartDesc(booker, now.minusHours(5), Pageable.unpaged());
         assertEquals(2, result.size());
         assertThat(result.contains(booking));
         assertEquals(booking2, result.get(0));
@@ -124,7 +124,7 @@ class BookingRepositoryTest {
 
     @Test
     void findAllByBookerAndEndIsBeforeOrderByStartDesc() {
-        List<Booking> result = bookingRepository.findAllByBookerAndEndIsBeforeOrderByStartDesc(booker, now.plusDays(5), Pageable.unpaged()).getContent();
+        List<Booking> result = bookingRepository.findAllByBookerAndEndIsBeforeOrderByStartDesc(booker, now.plusDays(5), Pageable.unpaged());
         assertEquals(2, result.size());
         assertThat(result.contains(booking));
         assertEquals(booking2, result.get(0));
@@ -134,14 +134,14 @@ class BookingRepositoryTest {
     @Test
     void findAllByBookerAndStatusEqualsOrderByStartDesc() {
         booking.setStatus(BookStatus.WAITING);
-        List<Booking> result = bookingRepository.findAllByBookerAndStatusEqualsOrderByStartDesc(booker, BookStatus.WAITING, Pageable.unpaged()).getContent();
+        List<Booking> result = bookingRepository.findAllByBookerAndStatusEqualsOrderByStartDesc(booker, BookStatus.WAITING, Pageable.unpaged());
         assertEquals(1, result.size());
         assertThat(result.contains(booking));
     }
 
     @Test
     void findAllByItem_OwnerOrderByStartDesc() {
-        List<Booking> result = bookingRepository.findAllByItem_OwnerOrderByStartDesc(owner, Pageable.unpaged()).getContent();
+        List<Booking> result = bookingRepository.findAllByItem_OwnerOrderByStartDesc(owner, Pageable.unpaged());
         assertEquals(2, result.size());
         assertThat(result.contains(booking));
         assertEquals(booking2, result.get(0));
@@ -150,14 +150,14 @@ class BookingRepositoryTest {
 
     @Test
     void findAllByItem_OwnerAndStartIsBeforeAndEndIsAfterOrderByStart() {
-        List<Booking> result = bookingRepository.findAllByItem_OwnerAndStartIsBeforeAndEndIsAfterOrderByStart(owner, now.plusMinutes(5), now.plusMinutes(5), Pageable.unpaged()).getContent();
+        List<Booking> result = bookingRepository.findAllByItem_OwnerAndStartIsBeforeAndEndIsAfterOrderByStart(owner, now.plusMinutes(5), now.plusMinutes(5), Pageable.unpaged());
         assertEquals(1, result.size());
         assertThat(result.contains(booking));
     }
 
     @Test
     void findAllByItem_OwnerAndStartIsAfterOrderByStartDesc() {
-        List<Booking> result = bookingRepository.findAllByItem_OwnerAndStartIsAfterOrderByStartDesc(owner, now.minusHours(5), Pageable.unpaged()).getContent();
+        List<Booking> result = bookingRepository.findAllByItem_OwnerAndStartIsAfterOrderByStartDesc(owner, now.minusHours(5), Pageable.unpaged());
         assertEquals(2, result.size());
         assertThat(result.contains(booking));
         assertEquals(booking2, result.get(0));
@@ -166,7 +166,7 @@ class BookingRepositoryTest {
 
     @Test
     void findAllByItem_OwnerAndEndIsBeforeOrderByStartDesc() {
-        List<Booking> result = bookingRepository.findAllByItem_OwnerAndEndIsBeforeOrderByStartDesc(owner, now.plusDays(5), Pageable.unpaged()).getContent();
+        List<Booking> result = bookingRepository.findAllByItem_OwnerAndEndIsBeforeOrderByStartDesc(owner, now.plusDays(5), Pageable.unpaged());
         assertEquals(2, result.size());
         assertThat(result.contains(booking));
         assertEquals(booking2, result.get(0));
@@ -176,7 +176,7 @@ class BookingRepositoryTest {
     @Test
     void findAllByItem_OwnerAndStatusEqualsOrderByStartDesc() {
         booking2.setStatus(BookStatus.WAITING);
-        List<Booking> result = bookingRepository.findAllByItem_OwnerAndStatusEqualsOrderByStartDesc(owner, BookStatus.WAITING, Pageable.unpaged()).getContent();
+        List<Booking> result = bookingRepository.findAllByItem_OwnerAndStatusEqualsOrderByStartDesc(owner, BookStatus.WAITING, Pageable.unpaged());
         assertEquals(1, result.size());
         assertThat(result.contains(booking2));
     }

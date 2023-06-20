@@ -38,8 +38,8 @@ public class BookingService {
         LocalDateTime end = request.getEnd();
         if (start.isAfter(end) || start.isEqual(end))
             throw new ValidationException("Некоректно указан интервал бронирования");
-        checkUser(userId);
-        User user = userRepository.getById(userId);
+//        checkUser(userId);
+        User user = userRepository.findById(userId).orElseThrow(()->new StorageException("Такого пользователя не существует"));
         Item item = itemRepository.getById(request.getItemId());
         if (userId == item.getOwner().getId()) {
             throw new ChangeException("Собственник не может забронировать свою вещь");
@@ -84,7 +84,7 @@ public class BookingService {
     public List<BookingResponse> getUserBookings(long userId, String status, int from, int size) {
         User user = userRepository.findById(userId).orElseThrow(() -> new StorageException("Такого пользователя не существует"));
         LocalDateTime now = LocalDateTime.now();
-        Page<Booking> bookings;
+        List<Booking> bookings;
         Pageable page = PageRequest.of(from / size, size);
         switch (status) {
             case "ALL":
@@ -117,7 +117,7 @@ public class BookingService {
     public List<BookingResponse> getUserItems(long userId, String status, int from, int size) {
         User user = userRepository.findById(userId).orElseThrow(() -> new StorageException("Такого пользователя не существует"));
         LocalDateTime now = LocalDateTime.now();
-        Page<Booking> bookings;
+        List<Booking> bookings;
         Pageable page = PageRequest.of(from / size, size);
         switch (status) {
             case "ALL":
