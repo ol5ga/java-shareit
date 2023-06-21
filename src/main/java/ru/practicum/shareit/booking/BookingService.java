@@ -38,7 +38,7 @@ public class BookingService {
         LocalDateTime end = request.getEnd();
         if (start.isAfter(end) || start.isEqual(end))
             throw new ValidationException("Некоректно указан интервал бронирования");
-        User user = userRepository.findById(userId).orElseThrow(()->new StorageException("Такого пользователя не существует"));
+        User user = userRepository.findById(userId).orElseThrow(()->new ChangeException("Такого пользователя не существует"));
         Item item = itemRepository.getById(request.getItemId());
         if (userId == item.getOwner().getId()) {
             throw new ChangeException("Собственник не может забронировать свою вещь");
@@ -71,8 +71,8 @@ public class BookingService {
     }
 
     public Booking getBooking(long bookingId, long userId) {
-        Booking booking = bookingRepository.findById(bookingId).orElseThrow();
-        Item item = booking.getItem();
+        Booking booking = bookingRepository.findById(bookingId).orElseThrow(()->new ChangeException("Такого пользователя не существует"));
+        Item item = itemRepository.findById(booking.getItem().getId()).orElseThrow();
         checkUser(userId);
         if (userId != item.getOwner().getId() && userId != booking.getBooker().getId()) {
             throw new ChangeException("Нет прав на получение информации");
@@ -148,7 +148,7 @@ public class BookingService {
 
     private void checkUser(long userId) {
         if (!userRepository.existsById(userId)) {
-            throw new StorageException("Такого пользователя не существует");
+            throw new ChangeException("Такого пользователя не существует");
         }
     }
 }

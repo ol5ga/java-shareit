@@ -97,6 +97,7 @@ class BookingServiceIntegrationTest {
     @Test
     void getUserBookings(){
         Booking booking = service.addBooking(booker.getId(), request);
+        booking.setStatus(BookStatus.APPROVED);
         List<BookingResponse> result = service.getUserBookings(booker.getId(),"ALL", 1, 1);
         assertTrue(result.contains(booking));
         assertEquals(1,result.size());

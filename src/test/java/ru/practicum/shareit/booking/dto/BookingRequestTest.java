@@ -52,7 +52,8 @@ class BookingRequestTest {
 
         var result = tester.write(request);
         assertThat(result).hasJsonPath("$.itemId");
-
+        assertThat(result).hasJsonPath("$.start");
+        assertThat(result).hasJsonPath("$.end");
         assertThat(result).extractingJsonPathNumberValue("$.itemId") .isEqualTo(request.getItemId().intValue());
     }
 }
