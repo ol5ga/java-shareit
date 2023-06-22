@@ -33,7 +33,7 @@ class BookingServiceIntegrationTest {
     private User owner;
     private User booker;
     private Item item;
-    BookingRequest request;
+    private BookingRequest request;
 
     @BeforeEach
     void setUp(){
@@ -85,7 +85,6 @@ class BookingServiceIntegrationTest {
     void getBooking(){
         Booking booking = service.addBooking(booker.getId(), request);
         booking.setStatus(BookStatus.APPROVED);
-        Item ad = booking.getItem();
         Booking result = service.getBooking(booking.getId(), booker.getId());
         assertNotNull(result);
         assertEquals(booking.getId(),result.getId());
@@ -97,16 +96,18 @@ class BookingServiceIntegrationTest {
     @Test
     void getUserBookings(){
         Booking booking = service.addBooking(booker.getId(), request);
-        booking.setStatus(BookStatus.APPROVED);
+        booking = service.getStatus(booking.getId(), owner.getId(),true);
+        Booking book = service.getBooking(booking.getId(), booker.getId());
         List<BookingResponse> result = service.getUserBookings(booker.getId(),"ALL", 1, 1);
-        assertTrue(result.contains(booking));
         assertEquals(1,result.size());
+        assertEquals(result.get(0).getId(),booking.getId());
+        assertEquals(result.get(0).getItem(),booking.getItem());
     }
 
     @Test
     void getUserItems(){
         Booking booking = service.addBooking(booker.getId(), request);
-        service.getStatus(booking.getId(),  owner.getId(),true);
+        service.getStatus(booking.getId(), owner.getId(),true);
         List<BookingResponse> result = service.getUserItems(owner.getId(), "ALL", 1, 1);
         assertNotNull(result);
         assertEquals(BookingMapper.toResponse(booking),result.get(0));

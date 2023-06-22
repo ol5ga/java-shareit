@@ -73,13 +73,16 @@ class BookingControllerTest {
     }
     @Test
     void addBooking() throws Exception {
-        Booking booking = BookingMapper.toBooking(request, item, booker, BookStatus.WAITING);
-//        booking.setId(1);
+//        Booking booking = BookingMapper.toBooking(request, item, booker, BookStatus.WAITING);
+//       booking.setId(1);
+//        booking.setStatus(BookStatus.WAITING);
         when(service.addBooking(booker.getId(), request)).
                 thenAnswer(invocationOnMock -> {
+                    Booking booking = BookingMapper.toBooking(request, item, booker, BookStatus.WAITING);
                     booking.setId(1);
                     return BookingMapper.toResponse(booking);
                 });
+
         mockMvc.perform(post("/bookings")
                         .header("X-Sharer-User-Id", String.valueOf(booker.getId()))
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -87,15 +90,28 @@ class BookingControllerTest {
                         .content(mapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.item.name").value("drill"));
+                .andExpect(jsonPath("$.item.name").value("name"));
     }
 
     @Test
-    void getStatus() {
+    void getStatus() throws Exception {
+        Booking booking = BookingMapper.toBooking(request, item, booker, BookStatus.WAITING);
+        booking.setId(1);
+        booking.setStatus(BookStatus.WAITING);
+        when(service.getStatus(booking.getId(),owner.getId(), true))
+                .thenReturn(booking);
+
+        mockMvc.perform(patch("/bookings/{bookingId}", booking.getId())
+                        .header("X-Sharer-User-Id", owner.getId())
+                        .param("approved", String.valueOf(true)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.status").value("APPROVED"));
     }
 
     @Test
     void getBooking() {
+
     }
 
     @Test
