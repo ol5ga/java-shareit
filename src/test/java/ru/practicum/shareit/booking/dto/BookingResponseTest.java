@@ -4,25 +4,27 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
+import ru.practicum.shareit.booking.BookStatus;
+import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-
+import static org.junit.jupiter.api.Assertions.*;
 @JsonTest
-class BookingRequestTest {
-
+class BookingResponseTest {
     @Autowired
-    JacksonTester<BookingRequest> tester;
+    JacksonTester<BookingResponse> tester;
     private User owner;
     private User booker;
     private Item item;
-    BookingRequest request;
+    BookingResponse response;
 
     @Test
-    void testSerialize() throws Exception{
+    void testSerialize() throws Exception {
         owner = User.builder()
                 .email("ownerItem1@Mail.ru")
                 .name("ownerItem1")
@@ -40,16 +42,22 @@ class BookingRequestTest {
                 .name("booker")
                 .build();
         booker.setId(2);
-        request = BookingRequest.builder()
-                .itemId(1L)
+        response = BookingResponse.builder()
+                .id(1L)
                 .start(LocalDateTime.now())
                 .end(LocalDateTime.now().plusDays(2))
+                .item(ItemMapper.toItemDto(item))
+                .booker(UserMapper.toUserDto(booker))
+                .status(BookStatus.APPROVED)
                 .build();
 
-        var result = tester.write(request);
-        assertThat(result).hasJsonPath("$.itemId");
-        assertThat(result).hasJsonPath("$.start");
-        assertThat(result).hasJsonPath("$.end");
-        assertThat(result).extractingJsonPathNumberValue("$.itemId") .isEqualTo(request.getItemId().intValue());
+        var result = tester.write(response);
+        assertThat(result).hasJsonPath(".$id");
+        assertThat(result).hasJsonPath(".$start");
+        assertThat(result).hasJsonPath(".$end");
+        assertThat(result).hasJsonPath(".$item");
+        assertThat(result).hasJsonPath(".$booker");
+        assertThat(result).hasJsonPath(".$status");
     }
+
 }

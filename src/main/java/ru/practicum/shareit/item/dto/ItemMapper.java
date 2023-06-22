@@ -23,15 +23,6 @@ public class ItemMapper {
                 .build();
     }
 
-    public static Item toItem(User user, ItemDto itemDto) {
-        return Item.builder()
-                .name(itemDto.getName())
-                .description(itemDto.getDescription())
-                .available(itemDto.getAvailable())
-                .owner(user)
-                .build();
-    }
-
     public static Item toItem(long id, User user, ItemDto itemDto, ItemRequest request) {
         return Item.builder()
                 .id(id)
