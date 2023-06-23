@@ -78,16 +78,17 @@ class BookingControllerTest {
 //        booking.setStatus(BookStatus.WAITING);
         when(service.addBooking(booker.getId(), request)).
                 thenAnswer(invocationOnMock -> {
-                    Booking booking = BookingMapper.toBooking(request, item, booker, BookStatus.WAITING);
+                    Booking booking = BookingMapper.toBooking(request, item, booker, BookStatus.APPROVED);
                     booking.setId(1);
-                    return BookingMapper.toResponse(booking);
+                    return booking;
                 });
 
         mockMvc.perform(post("/bookings")
                         .header("X-Sharer-User-Id", String.valueOf(booker.getId()))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(request)))
+                        .content(mapper.writeValueAsString(request))
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.item.name").value("name"));
@@ -106,7 +107,7 @@ class BookingControllerTest {
                         .param("approved", String.valueOf(true)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.status").value("APPROVED"));
+                .andExpect(jsonPath("$.status").value("WAITING"));
     }
 
     @Test

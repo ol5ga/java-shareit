@@ -61,19 +61,13 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public Item updateItem(long id, long userId, ItemDto itemDto) {
-        checkUser(userId);
+        User user = userRepository.findById(userId).orElseThrow(() -> new ChangeException("Такого пользователя не существует"));
         if (userId != itemRepository.getById(id).getOwner().getId()) {
             throw new ChangeException("Изменения может вносить только владелец");
         }
-        User user = userRepository.getById(userId);
+
         Item item = ItemMapper.toItem(id, user, itemDto);
-        Item oldItem = itemRepository.getById(id);
-        try {
-            itemRepository.getById(id);
-        } catch (EntityNotFoundException ex) {
-            log.warn("Неправильный id");
-            throw new StorageException("Такой вещи не существует");
-        }
+        Item oldItem = itemRepository.findById(id).orElseThrow(() ->new StorageException("Такой вещи не существует"));
         if (item.getName() == null) {
             item.setName(oldItem.getName());
         }
@@ -118,8 +112,7 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     public Comment addComment(long userId, long itemId, CommentRequest request) {
         Item item = itemRepository.getById(itemId);
-        checkUser(userId);
-        User user = userRepository.getById(userId);
+        User user = userRepository.findById(userId).orElseThrow(() -> new ChangeException("Такого пользователя не существует"));
         Comment comment;
         if (bookRepository.findFirstByBookerIdAndItemIdAndEndIsBeforeOrderByEndDesc(userId, itemId, LocalDateTime.now()) != null) {
             comment = CommentMapper.toComment(request, item, user);

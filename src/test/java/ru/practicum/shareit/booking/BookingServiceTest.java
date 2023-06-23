@@ -45,7 +45,7 @@ class BookingServiceTest {
     private User owner;
     private User booker;
     private Item item;
-    BookingRequest request;
+    private BookingRequest request;
 
     @BeforeEach
     void setUp(){
@@ -99,9 +99,9 @@ class BookingServiceTest {
 
     @Test
     void addBookingWrongUser(){
-        assertThrows(StorageException.class,() ->service.addBooking(5,request));
+        assertThrows(ChangeException.class,() ->service.addBooking(5,request));
         verify(bookingRepository,never()).save(Mockito.any(Booking.class));
-        assertThrows(StorageException.class,() ->service.addBooking(item.getOwner().getId(),request));
+        assertThrows(ChangeException.class,() ->service.addBooking(item.getOwner().getId(),request));
         verify(bookingRepository,never()).save(Mockito.any(Booking.class));
 
     }
@@ -109,7 +109,7 @@ class BookingServiceTest {
     @Test
     void addBookingNotAvailableItem(){
         item.setAvailable(false);
-        assertThrows(StorageException.class, () -> service.addBooking(2,request));
+        assertThrows(ChangeException.class, () -> service.addBooking(2,request));
         verify(bookingRepository,never()).save(Mockito.any(Booking.class));
     }
 //
@@ -136,9 +136,9 @@ class BookingServiceTest {
         Booking booking = BookingMapper.toBooking(request, item, booker,BookStatus.WAITING);
         booking.setId(1);
         when(bookingRepository.getById(1L)).thenReturn(booking);
-        assertThrows(StorageException.class,() ->service.getStatus(booking.getId(), 5,true));
+        assertThrows(ChangeException.class,() ->service.getStatus(booking.getId(), 5,true));
         verify(bookingRepository,never()).save(Mockito.any(Booking.class));
-        assertThrows(StorageException.class,() ->service.getStatus(booking.getId(), booker.getId(), true));
+        assertThrows(ChangeException.class,() ->service.getStatus(booking.getId(), booker.getId(), true));
         verify(bookingRepository,never()).save(Mockito.any(Booking.class));
     }
 
@@ -148,7 +148,7 @@ class BookingServiceTest {
         booking.setId(1);
         booking.setStatus(BookStatus.APPROVED);
         when(bookingRepository.getById(1L)).thenReturn(booking);
-        assertThrows(StorageException.class,() -> service.getStatus(booking.getId(), owner.getId(),true));
+        assertThrows(ChangeException.class,() -> service.getStatus(booking.getId(), owner.getId(),true));
         verify(bookingRepository,never()).save(Mockito.any(Booking.class));
     }
 
@@ -168,8 +168,9 @@ class BookingServiceTest {
     void getBooking() {
         Booking booking = BookingMapper.toBooking(request, item, booker,BookStatus.WAITING);
         booking.setId(1);
-        when(bookingRepository.getById(1L)).thenReturn(booking);
+        when(bookingRepository.findById(1L)).thenReturn(Optional.of(booking));
         when(userRepository.existsById(owner.getId())).thenReturn(true);
+        when(itemRepository.findById(item.getId())).thenReturn(Optional.of(item));
         Booking result = service.getBooking(1,owner.getId());
         assertEquals(booking,result);
         assertEquals(booking.getId(),result.getId());
@@ -186,8 +187,6 @@ class BookingServiceTest {
         Booking booking = BookingMapper.toBooking(request, item, booker,BookStatus.WAITING);
         booking.setId(1);
         User user = new User(3,"user2@book.ru","user2");
-        when(bookingRepository.getById(1L)).thenReturn(booking);
-        when(userRepository.existsById(user.getId())).thenReturn(true);
         assertThrows(ChangeException.class,() -> service.getBooking(booking.getId(), user.getId()));
         verify(bookingRepository,never()).save(Mockito.any(Booking.class));
     }

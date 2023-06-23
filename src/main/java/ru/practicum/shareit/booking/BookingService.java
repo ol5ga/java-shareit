@@ -72,7 +72,7 @@ public class BookingService {
 
     public Booking getBooking(long bookingId, long userId) {
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(()->new ChangeException("Такого пользователя не существует"));
-        Item item = itemRepository.findById(booking.getItem().getId()).orElseThrow();
+        Item item = itemRepository.findById(booking.getItem().getId()).orElseThrow(()->new ChangeException("Такой вещи не существует"));
         checkUser(userId);
         if (userId != item.getOwner().getId() && userId != booking.getBooker().getId()) {
             throw new ChangeException("Нет прав на получение информации");
