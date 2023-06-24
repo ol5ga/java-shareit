@@ -85,7 +85,8 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemWithProperty getItem(long id, long userId) {
         checkUser(userId);
-        return addProperty(itemRepository.getById(id), userId);
+        Item item = itemRepository.findById(id).orElseThrow();
+        return addProperty(item, userId);
     }
 
     @Override
@@ -103,10 +104,7 @@ public class ItemServiceImpl implements ItemService {
             return new ArrayList<>();
         }
         Pageable page = PageRequest.of(from / size, size);
-        return itemRepository.findAll(page).stream()
-                .filter(item -> (item.getName().toLowerCase().contains(text.toLowerCase()) || item.getDescription().toLowerCase().contains(text.toLowerCase())))
-                .filter(item -> item.getAvailable().equals(true))
-                .collect(Collectors.toList());
+        return itemRepository.search(text, page);
     }
 
     @Transactional
@@ -115,7 +113,7 @@ public class ItemServiceImpl implements ItemService {
         User user = userRepository.findById(userId).orElseThrow(() -> new ChangeException("Такого пользователя не существует"));
         Comment comment;
         if (bookRepository.findFirstByBookerIdAndItemIdAndEndIsBeforeOrderByEndDesc(userId, itemId, LocalDateTime.now()) != null) {
-            comment = CommentMapper.toComment(request, item, user);
+            comment = CommentMapper.toComment(request, item, user,LocalDateTime.now());
         } else {
             throw new ValidationException("Пользователь не может оставить коментарий");
         }

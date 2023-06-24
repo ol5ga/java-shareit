@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -362,8 +363,14 @@ class ItemServiceImplTest {
 
     @Test
     void searchItem() {
+        List<Item> items = new ArrayList<>();
+        items.add(item);
+        when(itemRepository.search("item",PageRequest.of(1,1))).thenReturn(items);
+        List<Item> result = service.searchItem("item", 1,1);
 
-//        List<Item> result = service.searchItem("item", 1,1);
+        assertEquals(1,result.size());
+        assertEquals(item, result.get(0));
+
     }
 
     @Test
@@ -378,13 +385,12 @@ class ItemServiceImplTest {
                 .build();
         booking.setId(1L);
         CommentRequest commentRequest = new CommentRequest("Comment text");
-        Comment comment = CommentMapper.toComment(commentRequest,item,requestor);
-//        comment.setId(1L);
+        Comment comment = CommentMapper.toComment(commentRequest,item,requestor,LocalDateTime.now());
         when(itemRepository.getById(item.getId())).thenReturn(item);
         when(userRepository.findById(requestor.getId())).thenReturn(Optional.of(requestor));
         when(bookingRepository.findFirstByBookerIdAndItemIdAndEndIsBeforeOrderByEndDesc(any(Long.class), any(Long.class), any(LocalDateTime.class)))
                 .thenReturn(booking);
-        when(commentRepository.save(comment)).thenAnswer(invocationOnMock -> {
+        when(commentRepository.save(any(Comment.class))).thenAnswer(invocationOnMock -> {
             comment.setId(1L);
             return comment;
         });

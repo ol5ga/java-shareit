@@ -4,15 +4,16 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 public class CommentMapper {
 
-    public static Comment toComment(CommentRequest request, Item item, User user) {
+    public static Comment toComment(CommentRequest request, Item item, User user,LocalDateTime now) {
         return Comment.builder()
                 .text(request.getText())
                 .item(item)
                 .user(user)
-                .created(LocalDateTime.now())
+                .created(now)
                 .build();
     }
 

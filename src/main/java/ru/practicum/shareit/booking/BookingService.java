@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 @Service
 @Data
 @Builder
+@Slf4j
 public class BookingService {
     private BookingRepository bookingRepository;
     private UserRepository userRepository;
@@ -108,6 +110,8 @@ public class BookingService {
                 throw new ValidationException("Unknown state: UNSUPPORTED_STATUS");
 
         }
+        System.out.println(bookings);
+        log.info("case:close");
         return bookings.stream()
                 .map(BookingMapper::toResponse)
                 .collect(Collectors.toList());
