@@ -239,7 +239,7 @@ class ItemServiceImplTest {
                 .comments(comments)
                 .build();
         when(userRepository.existsById(owner.getId())).thenReturn(true);
-        when(itemRepository.getById(item.getId())).thenReturn(item);
+        when(itemRepository.findById(item.getId())).thenReturn(Optional.of(item));
         when(bookingRepository.findFirstByItemIdAndStartIsBeforeOrStartEqualsOrderByStartDesc(any(Long.class), any(LocalDateTime.class), any(LocalDateTime.class)))
                 .thenReturn(booking);
         when(bookingRepository.findFirstByItemIdAndStartIsAfterOrderByStart(any(Long.class), any(LocalDateTime.class)))
@@ -293,7 +293,7 @@ class ItemServiceImplTest {
                 .build();
         when(userRepository.existsById(requestor.getId())).thenReturn(true);
         when(userRepository.existsById(owner.getId())).thenReturn(true);
-        when(itemRepository.getById(item.getId())).thenReturn(item);
+        when(itemRepository.findById(item.getId())).thenReturn(Optional.of(item));
         when(bookingRepository.findFirstByItemIdAndStartIsBeforeOrStartEqualsOrderByStartDesc(any(Long.class), any(LocalDateTime.class), any(LocalDateTime.class)))
                 .thenReturn(booking);
         when(bookingRepository.findFirstByItemIdAndStartIsAfterOrderByStart(any(Long.class), any(LocalDateTime.class)))
@@ -394,6 +394,7 @@ class ItemServiceImplTest {
             comment.setId(1L);
             return comment;
         });
+
         Comment result = service.addComment(requestor.getId(), item.getId(),commentRequest);
 
         assertEquals(commentRequest.getText(),result.getText());

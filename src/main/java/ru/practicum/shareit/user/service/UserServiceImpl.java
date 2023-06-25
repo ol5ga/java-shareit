@@ -20,13 +20,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getAllUsers() {
+
         return repository.findAll();
     }
 
     @Override
     public User getUser(long id) {
 
-        return repository.getById(id);
+        return repository.findById(id).orElseThrow();
     }
 
     @Override
@@ -55,6 +56,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void delete(long id) {
+
         repository.deleteById(id);
     }
 
@@ -67,7 +69,7 @@ public class UserServiceImpl implements UserService {
     private void checkEmail(User user, String email) {
         for (User value : repository.findAll()) {
             if (Objects.equals(user.getEmail(), value.getEmail()) && user.getId() != value.getId()) {
-                log.warn("Неправильный id");
+                log.warn("Неправильный email");
                 throw new StorageException("Пользователь с таким email существует");
             }
         }
