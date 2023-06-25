@@ -43,6 +43,7 @@ class BookingControllerTest {
     private User owner;
     private User booker;
     private Item item;
+
     BookingRequest request;
 
     @BeforeEach

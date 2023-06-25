@@ -11,7 +11,6 @@ import ru.practicum.shareit.user.service.UserService;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/users")
@@ -22,28 +21,23 @@ public class UserController {
 
     @GetMapping
     public List<UserDto> getAllUsers() {
-        return service.getAllUsers().stream()
-                .map(UserMapper::toUserDto)
-                .collect(Collectors.toList());
+        return service.getAllUsers();
     }
 
     @GetMapping("/{id}")
     public UserDto getUser(@PathVariable long id) {
-        User user = service.getUser(id);
-        return UserMapper.toUserDto(user);
+        return service.getUser(id);
     }
 
     @PostMapping
     public UserDto create(@Validated({UserCreate.class}) @RequestBody UserDto userDto) {
-        User user = service.create(UserMapper.toUser(userDto));
-        return UserMapper.toUserDto(user);
+        return service.create(userDto);
     }
 
     @PatchMapping("/{id}")
     public UserDto update(@PathVariable long id,
                           @Valid @RequestBody UserDto userDto) {
-        User user = service.update(UserMapper.toUser(id, userDto));
-        return UserMapper.toUserDto(user);
+        return service.update(id,userDto);
     }
 
     @DeleteMapping("/{id}")

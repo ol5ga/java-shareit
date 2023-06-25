@@ -3,13 +3,17 @@ package ru.practicum.shareit.user.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.exceptions.ChangeException;
 import ru.practicum.shareit.exceptions.StorageException;
+import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -19,27 +23,27 @@ public class UserServiceImpl implements UserService {
     private final UserRepository repository;
 
     @Override
-    public List<User> getAllUsers() {
-
-        return repository.findAll();
+    public List<UserDto> getAllUsers() {
+        return repository.findAll().stream()
+                .map(UserMapper::toUserDto)
+                .collect(Collectors.toList());
     }
-
     @Override
-    public User getUser(long id) {
-
-        return repository.findById(id).orElseThrow();
+    public UserDto getUser(long id) {
+        User user = repository.findById(id).orElseThrow(() -> new ChangeException("Такого пользователя не существует"));
+        return UserMapper.toUserDto(user);
+    }
+    @Override
+    @Transactional
+    public UserDto create(UserDto userDto) {
+        User user = UserMapper.toUser(userDto);
+        return UserMapper.toUserDto(repository.save(user));
     }
 
     @Override
     @Transactional
-    public User create(User user) {
-
-        return repository.save(user);
-    }
-
-    @Override
-    @Transactional
-    public User update(User user) {
+    public UserDto update(long id,UserDto userDto) {
+        User user = UserMapper.toUser(id, userDto);
         checkId(user.getId());
         User oldUser = repository.getById(user.getId());
         checkEmail(user, oldUser.getEmail());
@@ -50,7 +54,7 @@ public class UserServiceImpl implements UserService {
             user.setEmail(oldUser.getEmail());
         }
         repository.save(user);
-        return user;
+        return UserMapper.toUserDto(user);
     }
 
     @Override

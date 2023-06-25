@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import ru.practicum.shareit.item.service.ItemService;
+import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserRepository;
 
@@ -33,28 +35,28 @@ class UserServiceIntegrationTest {
     @Test
     void getAllUsers() {
         userRepository.save(user);
-        List<User> result = service.getAllUsers();
+        List<UserDto> result = service.getAllUsers();
 
         assertEquals(1,result.size());
-        assertEquals(user,result.get(0));
+        assertEquals(UserMapper.toUserDto(user),result.get(0));
         assertEquals(user.getId(),result.get(0).getId());
     }
 
     @Test
     void getUser() {
         userRepository.save(user);
-        User result = service.getUser(user.getId());
+        UserDto result = service.getUser(user.getId());
 
-        assertEquals(user,result);
+        assertEquals(UserMapper.toUserDto(user),result);
         assertEquals(user.getEmail(),result.getEmail());
     }
 
     @Test
     void create() {
         assertEquals(0,user.getId());
-        User result = service.create(user);
+        UserDto result = service.create(UserMapper.toUserDto(user));
 
-        assertEquals(1,user.getId());
+        assertEquals(1,result.getId());
         assertEquals(user.getEmail(),result.getEmail());
     }
 
@@ -62,7 +64,7 @@ class UserServiceIntegrationTest {
     void updateName() {
         userRepository.save(user);
         user.setName("New Name");
-        User result = service.update(user);
+        UserDto result = service.update(user.getId(),UserMapper.toUserDto(user));
 
         assertEquals("New Name",result.getName());
         assertEquals(user.getEmail(),result.getEmail());
@@ -72,7 +74,7 @@ class UserServiceIntegrationTest {
     void updateEmail() {
         userRepository.save(user);
         user.setEmail("new@mail.ru");
-        User result = service.update(user);
+        UserDto result = service.update(user.getId(),UserMapper.toUserDto(user));
 
         assertEquals(user.getName(),result.getName());
         assertEquals("new@mail.ru",result.getEmail());

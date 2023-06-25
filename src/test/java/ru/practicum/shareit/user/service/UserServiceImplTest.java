@@ -10,6 +10,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exceptions.ChangeException;
 import ru.practicum.shareit.exceptions.StorageException;
+import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserRepository;
 
@@ -47,7 +49,7 @@ class UserServiceImplTest {
         List<User> users = new ArrayList<>();
         users.add(user);
         when(userRepository.findAll()).thenReturn(users);
-        List<User> result =  service.getAllUsers();
+        List<UserDto> result =  service.getAllUsers();
 
         assertEquals(1,result.size());
         assertEquals(user,result.get(0));
@@ -57,18 +59,18 @@ class UserServiceImplTest {
     @Test
     void getUser() {
         when(userRepository.getById(user.getId())).thenReturn(user);
-        User result =service.getUser(1);
+        UserDto result =service.getUser(1);
 
-        assertEquals(user,result);
+        assertEquals(UserMapper.toUserDto(user),result);
         assertEquals(user.getEmail(),result.getEmail());
     }
 
     @Test
     void create() {
         when(userRepository.save(user)).thenReturn(user);
-        User result = service.create(user);
+        UserDto result = service.create(UserMapper.toUserDto(user));
 
-        assertEquals(user,result);
+        assertEquals(UserMapper.toUserDto(user),result);
         assertEquals(user.getEmail(),result.getEmail());
     }
 
@@ -80,7 +82,7 @@ class UserServiceImplTest {
         List<User> users = new ArrayList<>();
         when(userRepository.findAll()).thenReturn(users);
         users.add(user);
-        User result =  service.update(user);
+        UserDto result =  service.update(user.getId(),UserMapper.toUserDto(user));
 
         assertEquals(1,user.getId());
         assertEquals("New Name",result.getName());
@@ -94,7 +96,7 @@ class UserServiceImplTest {
         List<User> users = new ArrayList<>();
         when(userRepository.findAll()).thenReturn(users);
         users.add(user);
-        User result =  service.update(user);
+        UserDto result =  service.update(user.getId(),UserMapper.toUserDto(user));
 
         assertEquals(1,user.getId());
         assertEquals("NewEmail@mail.ru",result.getEmail());

@@ -47,7 +47,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public Item addItem(long userId, ItemDto itemDto) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new ChangeException("Такого пользователя не существует"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("Такого пользователя не существует"));
         Item item;
         if (itemDto.getRequestId() != null) {
             ItemRequest request = requestRepository.findById(itemDto.getRequestId()).orElseThrow();
@@ -61,13 +61,13 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public Item updateItem(long id, long userId, ItemDto itemDto) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new ChangeException("Такого пользователя не существует"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("Такого пользователя не существует"));
         if (userId != itemRepository.getById(id).getOwner().getId()) {
             throw new ChangeException("Изменения может вносить только владелец");
         }
 
         Item item = ItemMapper.toItem(id, user, itemDto);
-        Item oldItem = itemRepository.findById(id).orElseThrow(() ->new StorageException("Такой вещи не существует"));
+        Item oldItem = itemRepository.findById(id).orElseThrow(() ->new EntityNotFoundException("Такой вещи не существует"));
         if (item.getName() == null) {
             item.setName(oldItem.getName());
         }
@@ -85,13 +85,13 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemWithProperty getItem(long id, long userId) {
         checkUser(userId);
-        Item item = itemRepository.findById(id).orElseThrow();
+        Item item = itemRepository.findById(id).orElseThrow(() ->new EntityNotFoundException("Такой вещи не существует"));
         return addProperty(item, userId);
     }
 
     @Override
     public List<ItemWithProperty> getUserItems(long userId, int from, int size) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new ChangeException("Такого пользователя не существует"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("Такого пользователя не существует"));
         Pageable page = PageRequest.of(from / size, size);
         return itemRepository.findByOwnerId(userId,page).stream()
                 .map(item -> addProperty(item, userId))
@@ -110,7 +110,7 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     public Comment addComment(long userId, long itemId, CommentRequest request) {
         Item item = itemRepository.getById(itemId);
-        User user = userRepository.findById(userId).orElseThrow(() -> new ChangeException("Такого пользователя не существует"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("Такого пользователя не существует"));
         Comment comment;
         if (bookRepository.findFirstByBookerIdAndItemIdAndEndIsBeforeOrderByEndDesc(userId, itemId, LocalDateTime.now()) != null) {
             comment = CommentMapper.toComment(request, item, user,LocalDateTime.now());
