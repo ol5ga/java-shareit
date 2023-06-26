@@ -1,10 +1,12 @@
 package ru.practicum.shareit.user;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -38,11 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @WebMvcTest(controllers = UserController.class)
-//@ExtendWith(MockitoExtension.class)
 class UserControllerTest {
-
-//    @InjectMocks
-//    private UserController controller;
 
     @MockBean
     UserService userService;
@@ -87,19 +85,43 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.id").value(userDto.getId()))
                 .andExpect(jsonPath("$.name").value(userDto.getName()))
                 .andExpect(jsonPath("$.email").value(userDto.getEmail()));
-
     }
 
 
     @Test
-    void create() {
+    void create() throws Exception {
+        UserDto userDtoIn = builder().name("name").email("name@mail.ru").build();
+        UserDto userDtoOut = builder().id(1L).name("name").email("name@mail.ru").build();
+        when(userService.create(Mockito.any(UserDto.class)))
+                .thenReturn(userDtoOut);
+        mvc.perform(post("/users")
+                        .content(objectMapper.writeValueAsString(userDtoIn))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                ).andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(userDtoOut.getId()), Long.class))
+                .andExpect(jsonPath("$.name").value(userDtoOut.getName()))
+                .andExpect(jsonPath("$.email").value(userDtoOut.getEmail()));
+        verify(userService, times(1)).create(Mockito.any(UserDto.class));
     }
 
     @Test
-    void update() {
+    void update() throws Exception {
+        UserDto userDtoIn = builder().id(1L).name("name").email("name@mail.ru").build();
+        UserDto userDtoOut = builder().id(1L).name("name").email("name@mail.ru").build();
+        when(userService.update(anyLong(),Mockito.any(UserDto.class))).thenReturn(userDtoOut);
+        mvc.perform(patch("/users/1")
+                        .content(objectMapper.writeValueAsString(userDtoIn))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                ).andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").isNotEmpty())
+                .andExpect(jsonPath("$.id", is(userDtoOut.getId()), Long.class))
+                .andExpect(jsonPath("$.name").value(userDtoOut.getName()))
+                .andExpect(jsonPath("$.email").value(userDtoOut.getEmail()));
+        verify(userService, times(1)).update(Mockito.anyLong(), Mockito.any(UserDto.class));
     }
 
-    @Test
-    void delete() {
-    }
 }

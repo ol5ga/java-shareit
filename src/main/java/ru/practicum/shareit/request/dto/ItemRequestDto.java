@@ -1,6 +1,7 @@
 package ru.practicum.shareit.request.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -11,6 +12,7 @@ import javax.validation.constraints.Null;
  * TODO Sprint add-item-requests.
  */
 @Data
+@Builder
 @AllArgsConstructor
 public class ItemRequestDto {
     @NotBlank
