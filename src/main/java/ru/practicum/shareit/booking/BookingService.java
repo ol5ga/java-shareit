@@ -35,7 +35,7 @@ public class BookingService {
     private ItemRepository itemRepository;
 
     @Transactional
-    public Booking addBooking(long userId, BookingRequest request) {
+    public BookingResponse addBooking(long userId, BookingRequest request) {
         LocalDateTime start = request.getStart();
         LocalDateTime end = request.getEnd();
         if (start.isAfter(end) || start.isEqual(end))
@@ -49,11 +49,11 @@ public class BookingService {
             throw new ValidationException("Эта вещь недоступна для бронирования");
         }
         BookStatus status = BookStatus.WAITING;
-        return bookingRepository.save(BookingMapper.toBooking(request, item, user, status));
+        return BookingMapper.toResponse(bookingRepository.save(BookingMapper.toBooking(request, item, user, status)));
     }
 
     @Transactional
-    public Booking getStatus(long bookingId, long userId, Boolean approved) {
+    public BookingResponse getStatus(long bookingId, long userId, Boolean approved) {
         Booking booking = bookingRepository.getById(bookingId);
         Item item = booking.getItem();
         checkUser(userId);
@@ -69,17 +69,18 @@ public class BookingService {
             booking.setStatus(BookStatus.REJECTED);
         }
         bookingRepository.save(booking);
-        return bookingRepository.getById(bookingId);
+        return BookingMapper.toResponse(bookingRepository.getById(bookingId));
     }
 
-    public Booking getBooking(long bookingId, long userId) {
+    public BookingResponse getBooking(long bookingId, long userId) {
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(()->new ChangeException("Такого пользователя не существует"));
         Item item = itemRepository.findById(booking.getItem().getId()).orElseThrow(()->new ChangeException("Такой вещи не существует"));
         checkUser(userId);
         if (userId != item.getOwner().getId() && userId != booking.getBooker().getId()) {
             throw new ChangeException("Нет прав на получение информации");
         }
-        return bookingRepository.findById(bookingId).orElseThrow();
+        Booking result = bookingRepository.findById(bookingId).orElseThrow();
+        return BookingMapper.toResponse(result);
     }
 
     public List<BookingResponse> getUserBookings(long userId, String status, int from, int size) {

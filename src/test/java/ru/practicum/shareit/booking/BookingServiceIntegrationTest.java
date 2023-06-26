@@ -63,9 +63,9 @@ class BookingServiceIntegrationTest {
     }
     @Test
     void addBooking() {
-        Booking result = service.addBooking(booker.getId(), request);
+        BookingResponse result = service.addBooking(booker.getId(), request);
         assertNotNull(result.getId());
-        assertEquals(item, result.getItem());
+        assertEquals(item.getId(), result.getItem().getId());
         assertEquals(request.getItemId(),result.getItem().getId());
         assertEquals(request.getStart(),result.getStart());
         assertEquals(request.getEnd(),result.getEnd());
@@ -73,8 +73,8 @@ class BookingServiceIntegrationTest {
 
     @Test
     void getStatus(){
-        Booking booking = service.addBooking(booker.getId(), request);
-        Booking result = service.getStatus(booking.getId(), owner.getId(), true);
+        BookingResponse booking = service.addBooking(booker.getId(), request);
+        BookingResponse result = service.getStatus(booking.getId(), owner.getId(), true);
         assertEquals(BookStatus.APPROVED, result.getStatus());
         assertEquals(booking.getItem(),result.getItem());
         assertEquals(booking.getStart().truncatedTo(ChronoUnit.MINUTES),result.getStart().truncatedTo(ChronoUnit.MINUTES));
@@ -83,9 +83,9 @@ class BookingServiceIntegrationTest {
 
     @Test
     void getBooking(){
-        Booking booking = service.addBooking(booker.getId(), request);
+        BookingResponse booking = service.addBooking(booker.getId(), request);
         booking.setStatus(BookStatus.APPROVED);
-        Booking result = service.getBooking(booking.getId(), booker.getId());
+        BookingResponse result = service.getBooking(booking.getId(), booker.getId());
         assertNotNull(result);
         assertEquals(booking.getId(),result.getId());
         assertEquals(request.getItemId(),result.getItem().getId());
@@ -95,7 +95,7 @@ class BookingServiceIntegrationTest {
 
     @Test
     void getUserBookings(){
-        Booking booking = service.addBooking(booker.getId(), request);
+        BookingResponse booking = service.addBooking(booker.getId(), request);
         booking.setStatus(BookStatus.APPROVED);
         booking = service.getStatus(booking.getId(), owner.getId(),true);
         List<BookingResponse> result = service.getUserBookings(booker.getId(),"ALL", 0, 1);
@@ -106,7 +106,7 @@ class BookingServiceIntegrationTest {
 
     @Test
     void getUserItems(){
-        Booking booking = service.addBooking(booker.getId(), request);
+        BookingResponse booking = service.addBooking(booker.getId(), request);
         List<BookingResponse> result = service.getUserItems(owner.getId(), "ALL", 0, 1);
 
         assertNotNull(result);

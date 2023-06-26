@@ -52,13 +52,12 @@ class UserServiceImplTest {
         List<UserDto> result =  service.getAllUsers();
 
         assertEquals(1,result.size());
-        assertEquals(user,result.get(0));
         assertEquals(user.getId(),result.get(0).getId());
     }
 
     @Test
     void getUser() {
-        when(userRepository.getById(user.getId())).thenReturn(user);
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         UserDto result =service.getUser(1);
 
         assertEquals(UserMapper.toUserDto(user),result);

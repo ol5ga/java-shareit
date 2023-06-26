@@ -26,6 +26,7 @@ import ru.practicum.shareit.request.ItemRequestRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserRepository;
 
+import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -197,8 +198,8 @@ class ItemServiceImplTest {
                 .description("item1")
                 .available(true)
                 .build();
-        assertThrows(ChangeException.class,() -> service.updateItem(1,3,dto));
-        assertThrows(ChangeException.class, () -> service.updateItem(1,requestor.getId(),dto));
+        assertThrows(EntityNotFoundException.class,() -> service.updateItem(1,3,dto));
+        assertThrows(EntityNotFoundException.class, () -> service.updateItem(1,requestor.getId(),dto));
     }
     @Test
     void getItem() {

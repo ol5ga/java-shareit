@@ -78,14 +78,15 @@ class BookingServiceTest {
     @Test
     void addBooking() {
         Booking booking = BookingMapper.toBooking(request, item, booker,BookStatus.WAITING);
+        BookingResponse response = BookingMapper.toResponse(booking);
         when(bookingRepository.save(booking)).thenReturn(booking);
         when(userRepository.findById(booker.getId())).thenReturn(Optional.of(booker));
         when(itemRepository.getById(item.getId())).thenReturn(item);
-        Booking result = service.addBooking(2,request);
-        assertEquals(booking,result);
+        BookingResponse result = service.addBooking(2,request);
+        assertEquals(response.getId(),result.getId());
         assertEquals(request.getItemId(),result.getItem().getId());
-        assertEquals(item,result.getItem());
-        assertEquals(booker,result.getBooker());
+        assertEquals(item.getId(),result.getItem().getId());
+        assertEquals(booker.getId(),result.getBooker().getId());
         verify(bookingRepository,times(1)).save(Mockito.any(Booking.class));
     }
 
@@ -94,7 +95,6 @@ class BookingServiceTest {
         request.setEnd(LocalDateTime.now().minusHours(1));
         assertThrows(ValidationException.class,() ->service.addBooking(2,request));
         verify(bookingRepository,never()).save(Mockito.any(Booking.class));
-
     }
 
     @Test
@@ -112,12 +112,6 @@ class BookingServiceTest {
         assertThrows(ChangeException.class, () -> service.addBooking(2,request));
         verify(bookingRepository,never()).save(Mockito.any(Booking.class));
     }
-//
-//        ArgumentCaptor<Booking> argument = ArgumentCaptor.forClass(Booking.class);
-//        verify(bookingRepository,times(1).save(argument));
-//        assertEquals(booking.getId(), argument.getValue().getId());
-
-
 
     @Test
     void getStatus() {
@@ -125,10 +119,10 @@ class BookingServiceTest {
         booking.setId(1);
         when(bookingRepository.getById(1L)).thenReturn(booking);
         when(userRepository.existsById(owner.getId())).thenReturn(true);
-        Booking result = service.getStatus(booking.getId(), owner.getId(),true);
+        BookingResponse result = service.getStatus(booking.getId(), owner.getId(),true);
         assertEquals(BookStatus.APPROVED,result.getStatus());
         assertEquals(booking.getId(),result.getId());
-        assertEquals(booking.getItem(),result.getItem());
+        assertEquals(booking.getItem().getId(),result.getItem().getId());
     }
 
     @Test
@@ -158,28 +152,29 @@ class BookingServiceTest {
         booking.setId(1);
         when(bookingRepository.getById(1L)).thenReturn(booking);
         when(userRepository.existsById(owner.getId())).thenReturn(true);
-        Booking result = service.getStatus(booking.getId(), owner.getId(),false);
+        BookingResponse result = service.getStatus(booking.getId(), owner.getId(),false);
         assertEquals(BookStatus.REJECTED,result.getStatus());
         assertEquals(booking.getId(),result.getId());
-        assertEquals(booking.getItem(),result.getItem());
+        assertEquals(booking.getItem().getId(),result.getItem().getId());
     }
 
     @Test
     void getBooking() {
         Booking booking = BookingMapper.toBooking(request, item, booker,BookStatus.WAITING);
         booking.setId(1);
+        BookingResponse response = BookingMapper.toResponse(booking);
         when(bookingRepository.findById(1L)).thenReturn(Optional.of(booking));
         when(userRepository.existsById(owner.getId())).thenReturn(true);
         when(itemRepository.findById(item.getId())).thenReturn(Optional.of(item));
-        Booking result = service.getBooking(1,owner.getId());
-        assertEquals(booking,result);
+        BookingResponse result = service.getBooking(1,owner.getId());
+        assertEquals(response,result);
         assertEquals(booking.getId(),result.getId());
-        assertEquals(booking.getItem(),result.getItem());
+        assertEquals(booking.getItem().getId(),result.getItem().getId());
         when(userRepository.existsById(booker.getId())).thenReturn(true);
-        Booking result2 = service.getBooking(1,booker.getId());
-        assertEquals(booking,result2);
+        BookingResponse result2 = service.getBooking(1,booker.getId());
+        assertEquals(response,result2);
         assertEquals(booking.getId(),result2.getId());
-        assertEquals(booking.getItem(),result2.getItem());
+        assertEquals(booking.getItem().getId(),result2.getItem().getId());
     }
 
     @Test
