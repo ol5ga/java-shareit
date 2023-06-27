@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.practicum.shareit.Generated;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 /**
  * TODO Sprint add-bookings.
  */
+@Generated
 @Data
 @Builder
 @NoArgsConstructor

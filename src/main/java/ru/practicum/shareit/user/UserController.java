@@ -3,6 +3,7 @@ package ru.practicum.shareit.user;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.Generated;
 import ru.practicum.shareit.user.annotation.UserCreate;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.service.UserService;
@@ -38,6 +39,7 @@ public class UserController {
         return service.update(id, userDto);
     }
 
+    @Generated
     @DeleteMapping("/{id}")
     public void delete(@PathVariable long id) {
         service.delete(id);

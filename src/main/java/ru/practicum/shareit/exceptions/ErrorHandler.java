@@ -5,9 +5,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.practicum.shareit.Generated;
 
 import javax.persistence.EntityNotFoundException;
 
+@Generated
 @RestControllerAdvice
 @Slf4j
 public class ErrorHandler {
