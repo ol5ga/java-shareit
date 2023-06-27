@@ -4,8 +4,6 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-
 public class CommentMapper {
 
     public static Comment toComment(CommentRequest request, Item item, User user,LocalDateTime now) {

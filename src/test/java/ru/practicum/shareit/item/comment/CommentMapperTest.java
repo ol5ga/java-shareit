@@ -11,7 +11,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CommentMapperTest {
     private Item item;
-
     private User owner;
     private User booker;
 

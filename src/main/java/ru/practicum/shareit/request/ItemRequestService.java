@@ -29,8 +29,8 @@ public class ItemRequestService {
 
     public ItemRequest addRequest(long userId, ItemRequestDto request, LocalDateTime created) {
         User requestor = userRepository.findById(userId).orElseThrow(() -> new StorageException("Такого пользователя не существует"));
-        ItemRequest IRequest = ItemRequestMapper.toItemRequest(request, requestor, created);
-        return repository.save(IRequest);
+        ItemRequest itemRequest = ItemRequestMapper.toItemRequest(request, requestor, created);
+        return repository.save(itemRequest);
     }
 
     public List<ItemRequestResponse> getMyRequests(long userId) {

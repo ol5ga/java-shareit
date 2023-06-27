@@ -67,9 +67,9 @@ class ItemRequestServiceTest {
     void addRequest() {
         ItemRequestDto request = new ItemRequestDto("Request of item", 2);
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(booker));
-        ItemRequest IRequest = ItemRequestMapper.toItemRequest(request, booker, now);
-        IRequest.setId(1);
-        when(repository.save(any(ItemRequest.class))).thenReturn(IRequest);
+        ItemRequest itemRequest = ItemRequestMapper.toItemRequest(request, booker, now);
+        itemRequest.setId(1);
+        when(repository.save(any(ItemRequest.class))).thenReturn(itemRequest);
 
         ItemRequest result = service.addRequest(booker.getId(), request, now);
 

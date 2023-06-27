@@ -65,7 +65,7 @@ public class ItemServiceImpl implements ItemService {
         }
 
         Item item = ItemMapper.toItem(id, user, itemDto);
-        Item oldItem = itemRepository.findById(id).orElseThrow(() ->new EntityNotFoundException("Такой вещи не существует"));
+        Item oldItem = itemRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Такой вещи не существует"));
         if (item.getName() == null) {
             item.setName(oldItem.getName());
         }
@@ -83,7 +83,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemWithProperty getItem(long id, long userId) {
         checkUser(userId);
-        Item item = itemRepository.findById(id).orElseThrow(() ->new EntityNotFoundException("Такой вещи не существует"));
+        Item item = itemRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Такой вещи не существует"));
         return addProperty(item, userId);
     }
 
@@ -91,7 +91,7 @@ public class ItemServiceImpl implements ItemService {
     public List<ItemWithProperty> getUserItems(long userId, int from, int size) {
         User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("Такого пользователя не существует"));
         Pageable page = PageRequest.of(from / size, size);
-        return itemRepository.findByOwnerId(userId,page).stream()
+        return itemRepository.findByOwnerId(userId, page).stream()
                 .map(item -> addProperty(item, userId))
                 .collect(Collectors.toList());
     }
@@ -111,7 +111,7 @@ public class ItemServiceImpl implements ItemService {
         User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("Такого пользователя не существует"));
         Comment comment;
         if (bookRepository.findFirstByBookerIdAndItemIdAndEndIsBeforeOrderByEndDesc(userId, itemId, LocalDateTime.now()) != null) {
-            comment = CommentMapper.toComment(request, item, user,LocalDateTime.now());
+            comment = CommentMapper.toComment(request, item, user, LocalDateTime.now());
         } else {
             throw new ValidationException("Пользователь не может оставить коментарий");
         }

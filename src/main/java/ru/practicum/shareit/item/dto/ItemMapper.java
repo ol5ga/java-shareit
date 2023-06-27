@@ -11,7 +11,7 @@ import java.util.List;
 public class ItemMapper {
 
     public static ItemDto toItemDto(Item item) {
-        if(item.getRequest() == null){
+        if (item.getRequest() == null) {
             item.setRequest(new ItemRequest());
         }
         return ItemDto.builder()

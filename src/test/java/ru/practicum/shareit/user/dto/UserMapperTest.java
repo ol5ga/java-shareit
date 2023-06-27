@@ -43,7 +43,7 @@ class UserMapperTest {
     }
 
     @Test
-    void ToUserWithId() {
+    void toUserWithId() {
         UserDto userDto = UserDto.builder()
                 .id(1L)
                 .name("User name")
