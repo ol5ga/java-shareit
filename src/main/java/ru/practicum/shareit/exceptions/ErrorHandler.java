@@ -9,7 +9,6 @@ import ru.practicum.shareit.Generated;
 
 import javax.persistence.EntityNotFoundException;
 
-@Generated
 @RestControllerAdvice
 @Slf4j
 public class ErrorHandler {
