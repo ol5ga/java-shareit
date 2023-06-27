@@ -25,7 +25,6 @@ class CommentMapperTest {
                 .available(true)
                 .owner(owner)
                 .build();
-
     }
 
     @Test
@@ -35,7 +34,6 @@ class CommentMapperTest {
         assertEquals("Comment about item", result.getText());
         assertEquals(item, result.getItem());
         assertEquals(booker, result.getUser());
-
     }
 
     @Test
