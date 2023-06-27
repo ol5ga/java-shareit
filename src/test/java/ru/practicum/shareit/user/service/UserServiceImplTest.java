@@ -1,15 +1,10 @@
 package ru.practicum.shareit.user.service;
 
-import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.stereotype.Service;
-import ru.practicum.shareit.exceptions.ChangeException;
-import ru.practicum.shareit.exceptions.StorageException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
@@ -18,12 +13,9 @@ import ru.practicum.shareit.user.storage.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
@@ -34,7 +26,7 @@ class UserServiceImplTest {
     private User user;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         service = new UserServiceImpl(userRepository);
         user = User.builder()
                 .email("User1@Mail.ru")
@@ -49,19 +41,19 @@ class UserServiceImplTest {
         List<User> users = new ArrayList<>();
         users.add(user);
         when(userRepository.findAll()).thenReturn(users);
-        List<UserDto> result =  service.getAllUsers();
+        List<UserDto> result = service.getAllUsers();
 
-        assertEquals(1,result.size());
-        assertEquals(user.getId(),result.get(0).getId());
+        assertEquals(1, result.size());
+        assertEquals(user.getId(), result.get(0).getId());
     }
 
     @Test
     void getUser() {
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
-        UserDto result =service.getUser(1);
+        UserDto result = service.getUser(1);
 
-        assertEquals(UserMapper.toUserDto(user),result);
-        assertEquals(user.getEmail(),result.getEmail());
+        assertEquals(UserMapper.toUserDto(user), result);
+        assertEquals(user.getEmail(), result.getEmail());
     }
 
     @Test
@@ -69,8 +61,8 @@ class UserServiceImplTest {
         when(userRepository.save(user)).thenReturn(user);
         UserDto result = service.create(UserMapper.toUserDto(user));
 
-        assertEquals(UserMapper.toUserDto(user),result);
-        assertEquals(user.getEmail(),result.getEmail());
+        assertEquals(UserMapper.toUserDto(user), result);
+        assertEquals(user.getEmail(), result.getEmail());
     }
 
     @Test
@@ -81,24 +73,24 @@ class UserServiceImplTest {
         List<User> users = new ArrayList<>();
         when(userRepository.findAll()).thenReturn(users);
         users.add(user);
-        UserDto result =  service.update(user.getId(),UserMapper.toUserDto(user));
+        UserDto result = service.update(user.getId(), UserMapper.toUserDto(user));
 
-        assertEquals(1,user.getId());
-        assertEquals("New Name",result.getName());
+        assertEquals(1, user.getId());
+        assertEquals("New Name", result.getName());
     }
 
     @Test
-    void updateEmail(){
+    void updateEmail() {
         user.setEmail("NewEmail@mail.ru");
         when(userRepository.existsById(user.getId())).thenReturn(true);
         when(userRepository.getById(user.getId())).thenReturn(user);
         List<User> users = new ArrayList<>();
         when(userRepository.findAll()).thenReturn(users);
         users.add(user);
-        UserDto result =  service.update(user.getId(),UserMapper.toUserDto(user));
+        UserDto result = service.update(user.getId(), UserMapper.toUserDto(user));
 
-        assertEquals(1,user.getId());
-        assertEquals("NewEmail@mail.ru",result.getEmail());
+        assertEquals(1, user.getId());
+        assertEquals("NewEmail@mail.ru", result.getEmail());
     }
 
 //    @Test
@@ -115,6 +107,6 @@ class UserServiceImplTest {
     @Test
     void delete() {
         service.delete(user.getId());
-        verify(userRepository,times(1)).deleteById(user.getId());
+        verify(userRepository, times(1)).deleteById(user.getId());
     }
 }

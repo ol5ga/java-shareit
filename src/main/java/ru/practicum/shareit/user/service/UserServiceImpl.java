@@ -28,11 +28,13 @@ public class UserServiceImpl implements UserService {
                 .map(UserMapper::toUserDto)
                 .collect(Collectors.toList());
     }
+
     @Override
     public UserDto getUser(long id) {
         User user = repository.findById(id).orElseThrow(() -> new ChangeException("Такого пользователя не существует"));
         return UserMapper.toUserDto(user);
     }
+
     @Override
     @Transactional
     public UserDto create(UserDto userDto) {
@@ -42,7 +44,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserDto update(long id,UserDto userDto) {
+    public UserDto update(long id, UserDto userDto) {
         User user = UserMapper.toUser(id, userDto);
         checkId(user.getId());
         User oldUser = repository.getById(user.getId());

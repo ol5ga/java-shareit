@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
-import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.dto.BookingRequest;
 import ru.practicum.shareit.booking.dto.BookingResponse;
 import ru.practicum.shareit.item.model.Item;
@@ -17,7 +16,8 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -36,7 +36,7 @@ class BookingServiceIntegrationTest {
     private BookingRequest request;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         owner = User.builder()
                 .email("ownerItem1@Mail.ru")
                 .name("ownerItem1")
@@ -61,56 +61,57 @@ class BookingServiceIntegrationTest {
                 .build();
 
     }
+
     @Test
     void addBooking() {
         BookingResponse result = service.addBooking(booker.getId(), request);
         assertNotNull(result.getId());
         assertEquals(item.getId(), result.getItem().getId());
-        assertEquals(request.getItemId(),result.getItem().getId());
-        assertEquals(request.getStart(),result.getStart());
-        assertEquals(request.getEnd(),result.getEnd());
+        assertEquals(request.getItemId(), result.getItem().getId());
+        assertEquals(request.getStart(), result.getStart());
+        assertEquals(request.getEnd(), result.getEnd());
     }
 
     @Test
-    void getStatus(){
+    void getStatus() {
         BookingResponse booking = service.addBooking(booker.getId(), request);
         BookingResponse result = service.getStatus(booking.getId(), owner.getId(), true);
         assertEquals(BookStatus.APPROVED, result.getStatus());
-        assertEquals(booking.getItem(),result.getItem());
-        assertEquals(booking.getStart().truncatedTo(ChronoUnit.MINUTES),result.getStart().truncatedTo(ChronoUnit.MINUTES));
-        assertEquals(booking.getEnd().truncatedTo(ChronoUnit.MINUTES),result.getEnd().truncatedTo(ChronoUnit.MINUTES));
+        assertEquals(booking.getItem(), result.getItem());
+        assertEquals(booking.getStart().truncatedTo(ChronoUnit.MINUTES), result.getStart().truncatedTo(ChronoUnit.MINUTES));
+        assertEquals(booking.getEnd().truncatedTo(ChronoUnit.MINUTES), result.getEnd().truncatedTo(ChronoUnit.MINUTES));
     }
 
     @Test
-    void getBooking(){
+    void getBooking() {
         BookingResponse booking = service.addBooking(booker.getId(), request);
         booking.setStatus(BookStatus.APPROVED);
         BookingResponse result = service.getBooking(booking.getId(), booker.getId());
         assertNotNull(result);
-        assertEquals(booking.getId(),result.getId());
-        assertEquals(request.getItemId(),result.getItem().getId());
-        assertEquals(request.getStart().truncatedTo(ChronoUnit.MINUTES),result.getStart().truncatedTo(ChronoUnit.MINUTES));
-        assertEquals(request.getEnd().truncatedTo(ChronoUnit.MINUTES),result.getEnd().truncatedTo(ChronoUnit.MINUTES));
+        assertEquals(booking.getId(), result.getId());
+        assertEquals(request.getItemId(), result.getItem().getId());
+        assertEquals(request.getStart().truncatedTo(ChronoUnit.MINUTES), result.getStart().truncatedTo(ChronoUnit.MINUTES));
+        assertEquals(request.getEnd().truncatedTo(ChronoUnit.MINUTES), result.getEnd().truncatedTo(ChronoUnit.MINUTES));
     }
 
     @Test
-    void getUserBookings(){
+    void getUserBookings() {
         BookingResponse booking = service.addBooking(booker.getId(), request);
         booking.setStatus(BookStatus.APPROVED);
-        booking = service.getStatus(booking.getId(), owner.getId(),true);
-        List<BookingResponse> result = service.getUserBookings(booker.getId(),"ALL", 0, 1);
-        assertEquals(1,result.size());
-        assertEquals(result.get(0).getId(),booking.getId());
-        assertEquals(result.get(0).getItem().getId(),booking.getItem().getId());
+        booking = service.getStatus(booking.getId(), owner.getId(), true);
+        List<BookingResponse> result = service.getUserBookings(booker.getId(), "ALL", 0, 1);
+        assertEquals(1, result.size());
+        assertEquals(result.get(0).getId(), booking.getId());
+        assertEquals(result.get(0).getItem().getId(), booking.getItem().getId());
     }
 
     @Test
-    void getUserItems(){
+    void getUserItems() {
         BookingResponse booking = service.addBooking(booker.getId(), request);
         List<BookingResponse> result = service.getUserItems(owner.getId(), "ALL", 0, 1);
 
         assertNotNull(result);
-        assertEquals(1,result.size());
-        assertEquals(booking.getId(),result.get(0).getId());
+        assertEquals(1, result.size());
+        assertEquals(booking.getId(), result.get(0).getId());
     }
 }

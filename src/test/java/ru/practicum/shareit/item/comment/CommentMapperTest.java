@@ -3,12 +3,11 @@ package ru.practicum.shareit.item.comment;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.request.ItemRequest;
 import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CommentMapperTest {
     private Item item;
@@ -17,9 +16,9 @@ class CommentMapperTest {
     private User booker;
 
     @BeforeEach
-    void setUp(){
-        owner = new User(1,"user@mail.ru","User");
-        booker = new User(2,"user2@ya.ru","User2");
+    void setUp() {
+        owner = new User(1, "user@mail.ru", "User");
+        booker = new User(2, "user2@ya.ru", "User2");
         item = Item.builder()
                 .id(1)
                 .name("name")
@@ -34,9 +33,9 @@ class CommentMapperTest {
     void toComment() {
         Comment result = CommentMapper.toComment(new CommentRequest("Comment about item"), item, booker, LocalDateTime.now());
 
-        assertEquals("Comment about item",result.getText());
-        assertEquals(item,result.getItem());
-        assertEquals(booker,result.getUser());
+        assertEquals("Comment about item", result.getText());
+        assertEquals(item, result.getItem());
+        assertEquals(booker, result.getUser());
 
     }
 
@@ -52,8 +51,8 @@ class CommentMapperTest {
 
         CommentResponse result = CommentMapper.toResponse(comment);
 
-        assertEquals(comment.getId(),result.getId());
-        assertEquals("Comment text",result.getText());
-        assertEquals(comment.getUser().getName(),result.getAuthorName());
+        assertEquals(comment.getId(), result.getId());
+        assertEquals("Comment text", result.getText());
+        assertEquals(comment.getUser().getName(), result.getAuthorName());
     }
 }

@@ -7,7 +7,7 @@ import org.springframework.boot.test.json.JacksonTester;
 import ru.practicum.shareit.user.model.User;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+
 @JsonTest
 class BookingShortTest {
     @Autowired

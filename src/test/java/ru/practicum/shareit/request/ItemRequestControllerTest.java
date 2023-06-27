@@ -1,6 +1,5 @@
 package ru.practicum.shareit.request;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,18 +8,15 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
-import ru.practicum.shareit.user.UserController;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.service.UserService;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @WebMvcTest(controllers = ItemRequestController.class)
@@ -43,14 +39,14 @@ class ItemRequestControllerTest {
                 .name("booker")
                 .build();
         booker.setId(2);
-        ItemRequestDto request = new ItemRequestDto("Request of item",2);
+        ItemRequestDto request = new ItemRequestDto("Request of item", 2);
         ItemRequest response = ItemRequest.builder()
                 .id(1)
                 .description("Request of item")
                 .requestor(booker)
                 .created(created)
                 .build();
-        when(service.addRequest(booker.getId(),request,created)).thenReturn(response);
+        when(service.addRequest(booker.getId(), request, created)).thenReturn(response);
         mvc.perform(post("/requests")
                         .header("X-Sharer-User-Id", String.valueOf(booker.getId()))
                         .contentType(MediaType.APPLICATION_JSON)

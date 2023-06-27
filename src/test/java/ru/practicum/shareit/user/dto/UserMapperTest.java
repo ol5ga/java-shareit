@@ -4,10 +4,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.practicum.shareit.user.model.User;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class UserMapperTest {
     private User user;
+
     @BeforeEach
     void setUp() {
         user = User.builder()
@@ -16,13 +17,14 @@ class UserMapperTest {
                 .build();
         user.setId(1);
     }
+
     @Test
     void toUserDto() {
         UserDto result = UserMapper.toUserDto(user);
 
-        assertEquals(user.getId(),result.getId());
-        assertEquals(user.getName(),result.getName());
-        assertEquals(user.getEmail(),result.getEmail());
+        assertEquals(user.getId(), result.getId());
+        assertEquals(user.getName(), result.getName());
+        assertEquals(user.getEmail(), result.getEmail());
     }
 
     @Test
@@ -35,9 +37,9 @@ class UserMapperTest {
 
         User result = UserMapper.toUser(userDto);
 
-        assertEquals(userDto.getId(),result.getId());
-        assertEquals(userDto.getName(),result.getName());
-        assertEquals(userDto.getEmail(),result.getEmail());
+        assertEquals(userDto.getId(), result.getId());
+        assertEquals(userDto.getName(), result.getName());
+        assertEquals(userDto.getEmail(), result.getEmail());
     }
 
     @Test
@@ -48,10 +50,10 @@ class UserMapperTest {
                 .email("user@mail.ru")
                 .build();
 
-        User result = UserMapper.toUser(userDto.getId(),userDto);
+        User result = UserMapper.toUser(userDto.getId(), userDto);
 
-        assertEquals(userDto.getId(),result.getId());
-        assertEquals(userDto.getName(),result.getName());
-        assertEquals(userDto.getEmail(),result.getEmail());
+        assertEquals(userDto.getId(), result.getId());
+        assertEquals(userDto.getName(), result.getName());
+        assertEquals(userDto.getEmail(), result.getEmail());
     }
 }

@@ -9,12 +9,8 @@ import org.springframework.data.domain.PageRequest;
 import ru.practicum.shareit.booking.BookStatus;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingRepository;
-import ru.practicum.shareit.booking.BookingService;
 import ru.practicum.shareit.booking.dto.BookingMapper;
-import ru.practicum.shareit.booking.dto.BookingRequest;
 import ru.practicum.shareit.booking.dto.BookingShort;
-import ru.practicum.shareit.exceptions.ChangeException;
-import ru.practicum.shareit.exceptions.StorageException;
 import ru.practicum.shareit.item.comment.*;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
@@ -32,11 +28,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -63,8 +56,8 @@ class ItemServiceImplTest {
     private LocalDateTime now = LocalDateTime.now();
 
     @BeforeEach
-    void setUp(){
-        service = new ItemServiceImpl(itemRepository,userRepository,bookingRepository,commentRepository,requestRepository);
+    void setUp() {
+        service = new ItemServiceImpl(itemRepository, userRepository, bookingRepository, commentRepository, requestRepository);
         owner = User.builder()
                 .email("ownerItem1@Mail.ru")
                 .name("ownerItem1")
@@ -103,10 +96,10 @@ class ItemServiceImplTest {
         when(itemRepository.save(item)).thenReturn(item);
         Item result = service.addItem(owner.getId(), dto);
 
-        assertEquals(item,result);
-        assertEquals(dto.getId(),result.getId());
-        assertEquals(dto.getRequestId(),result.getRequest().getId());
-        assertEquals(owner,result.getOwner());
+        assertEquals(item, result);
+        assertEquals(dto.getId(), result.getId());
+        assertEquals(dto.getRequestId(), result.getRequest().getId());
+        assertEquals(owner, result.getOwner());
     }
 
     @Test
@@ -120,8 +113,8 @@ class ItemServiceImplTest {
         when(itemRepository.save(item)).thenReturn(item);
         Item result = service.addItem(owner.getId(), dto);
 
-        assertEquals(item,result);
-        assertEquals(owner,result.getOwner());
+        assertEquals(item, result);
+        assertEquals(owner, result.getOwner());
     }
 
     @Test
@@ -135,15 +128,15 @@ class ItemServiceImplTest {
         when(userRepository.findById(owner.getId())).thenReturn(Optional.of(owner));
         when(itemRepository.findById(item.getId())).thenReturn(Optional.of(item));
         when(itemRepository.findById(item.getId())).thenReturn(Optional.of(item));
-        Item itemDto = ItemMapper.toItem(item.getId(),owner,dto);
+        Item itemDto = ItemMapper.toItem(item.getId(), owner, dto);
         when(itemRepository.save(itemDto)).thenReturn(itemDto);
         when(itemRepository.getById(itemDto.getId())).thenReturn(itemDto);
-        Item result = service.updateItem(item.getId(), owner.getId(),dto);
+        Item result = service.updateItem(item.getId(), owner.getId(), dto);
 
-        assertNotEquals(item,result);
-        assertEquals(item.getId(),result.getId());
-        assertEquals(dto.getName(),result.getName());
-        assertNotEquals(item.getName(),result.getName());
+        assertNotEquals(item, result);
+        assertEquals(item.getId(), result.getId());
+        assertEquals(dto.getName(), result.getName());
+        assertNotEquals(item.getName(), result.getName());
     }
 
     @Test
@@ -157,15 +150,15 @@ class ItemServiceImplTest {
         when(userRepository.findById(owner.getId())).thenReturn(Optional.of(owner));
         when(itemRepository.findById(item.getId())).thenReturn(Optional.of(item));
         when(itemRepository.findById(item.getId())).thenReturn(Optional.of(item));
-        Item itemDto = ItemMapper.toItem(item.getId(),owner,dto);
+        Item itemDto = ItemMapper.toItem(item.getId(), owner, dto);
         when(itemRepository.save(itemDto)).thenReturn(itemDto);
         when(itemRepository.getById(itemDto.getId())).thenReturn(itemDto);
-        Item result = service.updateItem(item.getId(), owner.getId(),dto);
+        Item result = service.updateItem(item.getId(), owner.getId(), dto);
 
-        assertNotEquals(item,result);
-        assertEquals(item.getId(),result.getId());
-        assertEquals(dto.getDescription(),result.getDescription());
-        assertNotEquals(item.getDescription(),result.getDescription());
+        assertNotEquals(item, result);
+        assertEquals(item.getId(), result.getId());
+        assertEquals(dto.getDescription(), result.getDescription());
+        assertNotEquals(item.getDescription(), result.getDescription());
     }
 
     @Test
@@ -179,28 +172,29 @@ class ItemServiceImplTest {
         when(userRepository.findById(owner.getId())).thenReturn(Optional.of(owner));
         when(itemRepository.findById(item.getId())).thenReturn(Optional.of(item));
         when(itemRepository.findById(item.getId())).thenReturn(Optional.of(item));
-        Item itemDto = ItemMapper.toItem(item.getId(),owner,dto);
+        Item itemDto = ItemMapper.toItem(item.getId(), owner, dto);
         when(itemRepository.save(itemDto)).thenReturn(itemDto);
         when(itemRepository.getById(itemDto.getId())).thenReturn(itemDto);
-        Item result = service.updateItem(item.getId(), owner.getId(),dto);
+        Item result = service.updateItem(item.getId(), owner.getId(), dto);
 
-        assertNotEquals(item,result);
-        assertEquals(item.getId(),result.getId());
-        assertEquals(dto.getAvailable(),result.getAvailable());
-        assertNotEquals(item.getAvailable(),result.getAvailable());
+        assertNotEquals(item, result);
+        assertEquals(item.getId(), result.getId());
+        assertEquals(dto.getAvailable(), result.getAvailable());
+        assertNotEquals(item.getAvailable(), result.getAvailable());
     }
 
     @Test
-    void updateItemWrongUser(){
+    void updateItemWrongUser() {
         item.setId(1);
         ItemDto dto = ItemDto.builder()
                 .name("nameNew")
                 .description("item1")
                 .available(true)
                 .build();
-        assertThrows(EntityNotFoundException.class,() -> service.updateItem(1,3,dto));
-        assertThrows(EntityNotFoundException.class, () -> service.updateItem(1,requestor.getId(),dto));
+        assertThrows(EntityNotFoundException.class, () -> service.updateItem(1, 3, dto));
+        assertThrows(EntityNotFoundException.class, () -> service.updateItem(1, requestor.getId(), dto));
     }
+
     @Test
     void getItem() {
         item.setId(1);
@@ -247,10 +241,10 @@ class ItemServiceImplTest {
                 .thenReturn(booking2);
         ItemWithProperty result = service.getItem(fullItem.getId(), owner.getId());
 
-        assertEquals(fullItem.getId(),result.getId());
-        assertEquals(fullItem.getName(),result.getName());
-        assertEquals(fullItem.getDescription(),result.getDescription());
-        assertEquals(last,result.getLastBooking());
+        assertEquals(fullItem.getId(), result.getId());
+        assertEquals(fullItem.getName(), result.getName());
+        assertEquals(fullItem.getDescription(), result.getDescription());
+        assertEquals(last, result.getLastBooking());
         assertEquals(next, result.getNextBooking());
     }
 
@@ -301,23 +295,23 @@ class ItemServiceImplTest {
                 .thenReturn(booking2);
         ItemWithProperty result = service.getItem(fullItem.getId(), requestor.getId());
 
-        assertEquals(null,result.getLastBooking());
+        assertEquals(null, result.getLastBooking());
         assertEquals(null, result.getNextBooking());
-        assertEquals(fullItem.getId(),result.getId());
-        assertEquals(fullItem.getName(),result.getName());
-        assertEquals(fullItem.getDescription(),result.getDescription());
+        assertEquals(fullItem.getId(), result.getId());
+        assertEquals(fullItem.getName(), result.getName());
+        assertEquals(fullItem.getDescription(), result.getDescription());
 
         booking.setStatus(BookStatus.REJECTED);
         ItemWithProperty result2 = service.getItem(fullItem.getId(), owner.getId());
-        assertEquals(null,result2.getLastBooking());
+        assertEquals(null, result2.getLastBooking());
         assertEquals(next, result2.getNextBooking());
-        assertEquals(fullItem.getId(),result2.getId());
+        assertEquals(fullItem.getId(), result2.getId());
 
         booking2.setStatus(BookStatus.REJECTED);
         ItemWithProperty result3 = service.getItem(fullItem.getId(), owner.getId());
 
         assertEquals(null, result3.getNextBooking());
-        assertEquals(fullItem.getId(),result3.getId());
+        assertEquals(fullItem.getId(), result3.getId());
     }
 
 
@@ -351,25 +345,25 @@ class ItemServiceImplTest {
         List<Item> items = new ArrayList<>();
         items.add(item);
         when(userRepository.findById(owner.getId())).thenReturn(Optional.of(owner));
-        when(itemRepository.findByOwnerId(owner.getId(), PageRequest.of(1,1))).thenReturn(items);
+        when(itemRepository.findByOwnerId(owner.getId(), PageRequest.of(1, 1))).thenReturn(items);
         when(bookingRepository.findFirstByItemIdAndStartIsBeforeOrStartEqualsOrderByStartDesc(any(Long.class), any(LocalDateTime.class), any(LocalDateTime.class)))
                 .thenReturn(booking);
         when(bookingRepository.findFirstByItemIdAndStartIsAfterOrderByStart(any(Long.class), any(LocalDateTime.class)))
                 .thenReturn(booking2);
-        List<ItemWithProperty> result = service.getUserItems(owner.getId(),1,1);
+        List<ItemWithProperty> result = service.getUserItems(owner.getId(), 1, 1);
 
         assertEquals(1, result.size());
-        assertEquals(item.getId(),result.get(0).getId());
+        assertEquals(item.getId(), result.get(0).getId());
     }
 
     @Test
     void searchItem() {
         List<Item> items = new ArrayList<>();
         items.add(item);
-        when(itemRepository.search("item",PageRequest.of(1,1))).thenReturn(items);
-        List<Item> result = service.searchItem("item", 1,1);
+        when(itemRepository.search("item", PageRequest.of(1, 1))).thenReturn(items);
+        List<Item> result = service.searchItem("item", 1, 1);
 
-        assertEquals(1,result.size());
+        assertEquals(1, result.size());
         assertEquals(item, result.get(0));
 
     }
@@ -386,7 +380,7 @@ class ItemServiceImplTest {
                 .build();
         booking.setId(1L);
         CommentRequest commentRequest = new CommentRequest("Comment text");
-        Comment comment = CommentMapper.toComment(commentRequest,item,requestor,LocalDateTime.now());
+        Comment comment = CommentMapper.toComment(commentRequest, item, requestor, LocalDateTime.now());
         when(itemRepository.getById(item.getId())).thenReturn(item);
         when(userRepository.findById(requestor.getId())).thenReturn(Optional.of(requestor));
         when(bookingRepository.findFirstByBookerIdAndItemIdAndEndIsBeforeOrderByEndDesc(any(Long.class), any(Long.class), any(LocalDateTime.class)))
@@ -396,11 +390,11 @@ class ItemServiceImplTest {
             return comment;
         });
 
-        Comment result = service.addComment(requestor.getId(), item.getId(),commentRequest);
+        Comment result = service.addComment(requestor.getId(), item.getId(), commentRequest);
 
-        assertEquals(commentRequest.getText(),result.getText());
-        assertEquals(item,result.getItem());
-        assertEquals(requestor,result.getUser());
+        assertEquals(commentRequest.getText(), result.getText());
+        assertEquals(item, result.getItem());
+        assertEquals(requestor, result.getUser());
 
     }
 }

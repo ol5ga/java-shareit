@@ -6,6 +6,7 @@ import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+
 @JsonTest
 class ItemDtoTest {
 
@@ -13,7 +14,7 @@ class ItemDtoTest {
     JacksonTester<ItemDto> tester;
 
     @Test
-    void testSerialize() throws Exception{
+    void testSerialize() throws Exception {
 
         ItemDto itemDto = ItemDto.builder()
                 .id(1L)

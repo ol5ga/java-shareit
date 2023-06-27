@@ -22,7 +22,7 @@ class BookingRequestTest {
     BookingRequest request;
 
     @Test
-    void testSerialize() throws Exception{
+    void testSerialize() throws Exception {
         owner = User.builder()
                 .email("ownerItem1@Mail.ru")
                 .name("ownerItem1")
@@ -50,6 +50,6 @@ class BookingRequestTest {
         assertThat(result).hasJsonPath("$.itemId");
         assertThat(result).hasJsonPath("$.start");
         assertThat(result).hasJsonPath("$.end");
-        assertThat(result).extractingJsonPathNumberValue("$.itemId") .isEqualTo(request.getItemId().intValue());
+        assertThat(result).extractingJsonPathNumberValue("$.itemId").isEqualTo(request.getItemId().intValue());
     }
 }

@@ -13,7 +13,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 @DataJpaTest
 class ItemRequestRepositoryTest {
@@ -32,7 +33,7 @@ class ItemRequestRepositoryTest {
     ItemRepository itemRepository;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         user = User.builder()
                 .email("requestor@mail.ru")
                 .name("requestor")
@@ -45,6 +46,7 @@ class ItemRequestRepositoryTest {
                 .build();
         repository.save(request);
     }
+
     @Test
     void findAllByRequestorOrderByCreatedDesc() {
         List<ItemRequest> result = repository.findAllByRequestorOrderByCreatedDesc(user);

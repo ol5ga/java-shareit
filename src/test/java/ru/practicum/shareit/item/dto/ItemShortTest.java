@@ -6,14 +6,14 @@ import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+
 @JsonTest
 class ItemShortTest {
     @Autowired
     JacksonTester<ItemShort> tester;
 
     @Test
-    void testSerialize() throws Exception{
+    void testSerialize() throws Exception {
         ItemShort item = ItemShort.builder()
                 .id(1L)
                 .name("name")
@@ -28,4 +28,4 @@ class ItemShortTest {
     }
 
 
-    }
+}

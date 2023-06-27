@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+
 @JsonTest
 class ItemRequestResponseTest {
 
@@ -17,7 +17,7 @@ class ItemRequestResponseTest {
     JacksonTester<ItemRequestResponse> tester;
 
     @Test
-    void testSerialize() throws Exception{
+    void testSerialize() throws Exception {
         ItemRequestResponse response = ItemRequestResponse.builder()
                 .id(1L)
                 .description("Item Request")

@@ -1,6 +1,5 @@
 package ru.practicum.shareit.item;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,16 +25,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.Matchers.*;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = ItemController.class)
@@ -53,7 +48,7 @@ class ItemControllerTest {
     User owner;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         itemDto = ItemDto.builder().name("name1").description("Item1").available(true).requestId(1L).build();
         owner = User.builder()
                 .email("ownerItem1@Mail.ru")
@@ -70,8 +65,8 @@ class ItemControllerTest {
     }
 
     @Test
-    void addItem()throws Exception {
-        when(itemService.addItem(anyLong(),any(ItemDto.class)))
+    void addItem() throws Exception {
+        when(itemService.addItem(anyLong(), any(ItemDto.class)))
                 .thenReturn(item);
 
         mvc.perform(post("/items")
@@ -91,7 +86,7 @@ class ItemControllerTest {
 
     @Test
     void updateItem() throws Exception {
-        when(itemService.updateItem(anyLong(),anyLong(), any(ItemDto.class))).thenReturn(item);
+        when(itemService.updateItem(anyLong(), anyLong(), any(ItemDto.class))).thenReturn(item);
         ItemDto itemDtoOut = ItemMapper.toItemDto(item);
         mvc.perform(patch("/items/1")
                         .content(objectMapper.writeValueAsString(itemDto))
@@ -116,8 +111,8 @@ class ItemControllerTest {
                 .name("name")
                 .description("item1")
                 .available(true)
-                .lastBooking(new BookingShort(1,1))
-                .nextBooking(new BookingShort(2,1))
+                .lastBooking(new BookingShort(1, 1))
+                .nextBooking(new BookingShort(2, 1))
                 .comments(new ArrayList<>())
                 .build();
         when(itemService.getItem(anyLong(), anyLong())).thenReturn(fullItem);
@@ -143,8 +138,8 @@ class ItemControllerTest {
                 .name("name")
                 .description("item1")
                 .available(true)
-                .lastBooking(new BookingShort(1,1))
-                .nextBooking(new BookingShort(2,1))
+                .lastBooking(new BookingShort(1, 1))
+                .nextBooking(new BookingShort(2, 1))
                 .comments(new ArrayList<>())
                 .build();
         List<ItemWithProperty> result = List.of(fullItem);
@@ -198,7 +193,7 @@ class ItemControllerTest {
                 .id(1L)
                 .text("good item")
                 .item(item)
-                .user(new User(2,"user@mail.ru","requestor"))
+                .user(new User(2, "user@mail.ru", "requestor"))
                 .created(now).build();
 
         when(itemService.addComment(anyLong(), anyLong(), any(CommentRequest.class)))

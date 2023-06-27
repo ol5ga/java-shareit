@@ -4,10 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
-import ru.practicum.shareit.item.dto.ItemWithProperty;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @JsonTest
 class ItemRequestDtoTest {
@@ -15,7 +13,7 @@ class ItemRequestDtoTest {
     JacksonTester<ItemRequestDto> tester;
 
     @Test
-    void testSerialize() throws Exception{
+    void testSerialize() throws Exception {
         ItemRequestDto request = ItemRequestDto.builder()
                 .description("Item request")
                 .requestor(1L)

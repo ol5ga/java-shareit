@@ -3,7 +3,6 @@ package ru.practicum.shareit.booking;
 import lombok.Builder;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,7 +19,6 @@ import ru.practicum.shareit.user.storage.UserRepository;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,7 +38,7 @@ public class BookingService {
         LocalDateTime end = request.getEnd();
         if (start.isAfter(end) || start.isEqual(end))
             throw new ValidationException("Некоректно указан интервал бронирования");
-        User user = userRepository.findById(userId).orElseThrow(()->new ChangeException("Такого пользователя не существует"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new ChangeException("Такого пользователя не существует"));
         Item item = itemRepository.getById(request.getItemId());
         if (userId == item.getOwner().getId()) {
             throw new ChangeException("Собственник не может забронировать свою вещь");
@@ -73,8 +71,8 @@ public class BookingService {
     }
 
     public BookingResponse getBooking(long bookingId, long userId) {
-        Booking booking = bookingRepository.findById(bookingId).orElseThrow(()->new ChangeException("Такого пользователя не существует"));
-        Item item = itemRepository.findById(booking.getItem().getId()).orElseThrow(()->new ChangeException("Такой вещи не существует"));
+        Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new ChangeException("Такого пользователя не существует"));
+        Item item = itemRepository.findById(booking.getItem().getId()).orElseThrow(() -> new ChangeException("Такой вещи не существует"));
         checkUser(userId);
         if (userId != item.getOwner().getId() && userId != booking.getBooker().getId()) {
             throw new ChangeException("Нет прав на получение информации");
@@ -90,22 +88,22 @@ public class BookingService {
         Pageable page = PageRequest.of(from / size, size);
         switch (status) {
             case "ALL":
-                bookings = bookingRepository.findAllByBookerOrderByStartDesc(user,page);
+                bookings = bookingRepository.findAllByBookerOrderByStartDesc(user, page);
                 break;
             case "CURRENT":
-                bookings = bookingRepository.findAllByBookerAndStartIsBeforeAndEndIsAfterOrderByStart(user, now, now,page);
+                bookings = bookingRepository.findAllByBookerAndStartIsBeforeAndEndIsAfterOrderByStart(user, now, now, page);
                 break;
             case "FUTURE":
-                bookings = bookingRepository.findAllByBookerAndStartIsAfterOrderByStartDesc(user, now,page);
+                bookings = bookingRepository.findAllByBookerAndStartIsAfterOrderByStartDesc(user, now, page);
                 break;
             case "PAST":
-                bookings = bookingRepository.findAllByBookerAndEndIsBeforeOrderByStartDesc(user, now,page);
+                bookings = bookingRepository.findAllByBookerAndEndIsBeforeOrderByStartDesc(user, now, page);
                 break;
             case "WAITING":
-                bookings = bookingRepository.findAllByBookerAndStatusEqualsOrderByStartDesc(user, BookStatus.WAITING,page);
+                bookings = bookingRepository.findAllByBookerAndStatusEqualsOrderByStartDesc(user, BookStatus.WAITING, page);
                 break;
             case "REJECTED":
-                bookings = bookingRepository.findAllByBookerAndStatusEqualsOrderByStartDesc(user, BookStatus.REJECTED,page);
+                bookings = bookingRepository.findAllByBookerAndStatusEqualsOrderByStartDesc(user, BookStatus.REJECTED, page);
                 break;
             default:
                 throw new ValidationException("Unknown state: UNSUPPORTED_STATUS");
@@ -125,22 +123,22 @@ public class BookingService {
         Pageable page = PageRequest.of(from / size, size);
         switch (status) {
             case "ALL":
-                bookings = bookingRepository.findAllByItem_OwnerOrderByStartDesc(user,page);
+                bookings = bookingRepository.findAllByItem_OwnerOrderByStartDesc(user, page);
                 break;
             case "CURRENT":
-                bookings = bookingRepository.findAllByItem_OwnerAndStartIsBeforeAndEndIsAfterOrderByStart(user, now, now,page);
+                bookings = bookingRepository.findAllByItem_OwnerAndStartIsBeforeAndEndIsAfterOrderByStart(user, now, now, page);
                 break;
             case "FUTURE":
-                bookings = bookingRepository.findAllByItem_OwnerAndStartIsAfterOrderByStartDesc(user, now,page);
+                bookings = bookingRepository.findAllByItem_OwnerAndStartIsAfterOrderByStartDesc(user, now, page);
                 break;
             case "PAST":
-                bookings = bookingRepository.findAllByItem_OwnerAndEndIsBeforeOrderByStartDesc(user, now,page);
+                bookings = bookingRepository.findAllByItem_OwnerAndEndIsBeforeOrderByStartDesc(user, now, page);
                 break;
             case "WAITING":
-                bookings = bookingRepository.findAllByItem_OwnerAndStatusEqualsOrderByStartDesc(user, BookStatus.WAITING,page);
+                bookings = bookingRepository.findAllByItem_OwnerAndStatusEqualsOrderByStartDesc(user, BookStatus.WAITING, page);
                 break;
             case "REJECTED":
-                bookings = bookingRepository.findAllByItem_OwnerAndStatusEqualsOrderByStartDesc(user, BookStatus.REJECTED,page);
+                bookings = bookingRepository.findAllByItem_OwnerAndStatusEqualsOrderByStartDesc(user, BookStatus.REJECTED, page);
                 break;
             default:
                 throw new ValidationException("Unknown state: " + status);

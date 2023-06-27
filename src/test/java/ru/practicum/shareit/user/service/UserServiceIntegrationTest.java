@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
-import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
@@ -25,21 +24,22 @@ class UserServiceIntegrationTest {
     private User user;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         user = User.builder()
                 .email("User1@Mail.ru")
                 .name("User")
                 .build();
 
     }
+
     @Test
     void getAllUsers() {
         userRepository.save(user);
         List<UserDto> result = service.getAllUsers();
 
-        assertEquals(1,result.size());
-        assertEquals(UserMapper.toUserDto(user),result.get(0));
-        assertEquals(user.getId(),result.get(0).getId());
+        assertEquals(1, result.size());
+        assertEquals(UserMapper.toUserDto(user), result.get(0));
+        assertEquals(user.getId(), result.get(0).getId());
     }
 
     @Test
@@ -47,46 +47,46 @@ class UserServiceIntegrationTest {
         userRepository.save(user);
         UserDto result = service.getUser(user.getId());
 
-        assertEquals(UserMapper.toUserDto(user),result);
-        assertEquals(user.getEmail(),result.getEmail());
+        assertEquals(UserMapper.toUserDto(user), result);
+        assertEquals(user.getEmail(), result.getEmail());
     }
 
     @Test
     void create() {
-        assertEquals(0,user.getId());
+        assertEquals(0, user.getId());
         UserDto result = service.create(UserMapper.toUserDto(user));
 
-        assertEquals(1,result.getId());
-        assertEquals(user.getEmail(),result.getEmail());
+        assertEquals(1, result.getId());
+        assertEquals(user.getEmail(), result.getEmail());
     }
 
     @Test
     void updateName() {
         userRepository.save(user);
         user.setName("New Name");
-        UserDto result = service.update(user.getId(),UserMapper.toUserDto(user));
+        UserDto result = service.update(user.getId(), UserMapper.toUserDto(user));
 
-        assertEquals("New Name",result.getName());
-        assertEquals(user.getEmail(),result.getEmail());
+        assertEquals("New Name", result.getName());
+        assertEquals(user.getEmail(), result.getEmail());
     }
 
     @Test
     void updateEmail() {
         userRepository.save(user);
         user.setEmail("new@mail.ru");
-        UserDto result = service.update(user.getId(),UserMapper.toUserDto(user));
+        UserDto result = service.update(user.getId(), UserMapper.toUserDto(user));
 
-        assertEquals(user.getName(),result.getName());
-        assertEquals("new@mail.ru",result.getEmail());
+        assertEquals(user.getName(), result.getName());
+        assertEquals("new@mail.ru", result.getEmail());
     }
 
     @Test
     void delete() {
         userRepository.save(user);
-        assertEquals(1,userRepository.findAll().size());
+        assertEquals(1, userRepository.findAll().size());
         service.delete(user.getId());
 
-        assertEquals(0,userRepository.findAll().size());
+        assertEquals(0, userRepository.findAll().size());
     }
 
 }

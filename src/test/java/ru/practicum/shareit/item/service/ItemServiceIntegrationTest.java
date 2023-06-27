@@ -8,14 +8,10 @@ import org.springframework.test.annotation.DirtiesContext;
 import ru.practicum.shareit.booking.BookStatus;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingRepository;
-import ru.practicum.shareit.booking.BookingService;
-import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.dto.BookingRequest;
-import ru.practicum.shareit.booking.dto.BookingShort;
 import ru.practicum.shareit.item.comment.Comment;
 import ru.practicum.shareit.item.comment.CommentRepository;
 import ru.practicum.shareit.item.comment.CommentRequest;
-import ru.practicum.shareit.item.comment.CommentResponse;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemWithProperty;
 import ru.practicum.shareit.item.model.Item;
@@ -24,10 +20,10 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserRepository;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -55,7 +51,7 @@ class ItemServiceIntegrationTest {
     private LocalDateTime now = LocalDateTime.now();
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         owner = User.builder()
                 .email("ownerItem1@Mail.ru")
                 .name("ownerItem1")
@@ -92,23 +88,23 @@ class ItemServiceIntegrationTest {
 
         assertNotNull(result.getId());
         assertEquals(itemDto.getName(), result.getName());
-        assertEquals(itemDto.getAvailable(),result.getAvailable());
+        assertEquals(itemDto.getAvailable(), result.getAvailable());
     }
 
     @Test
     void updateItem() {
         itemDto.setName("nameNew");
-        Item result = service.updateItem(item.getId(),owner.getId(),itemDto);
+        Item result = service.updateItem(item.getId(), owner.getId(), itemDto);
 
-        assertEquals("nameNew",result.getName());
+        assertEquals("nameNew", result.getName());
 
         itemDto.setDescription("New description");
-        Item result2 = service.updateItem(item.getId(),owner.getId(),itemDto);
+        Item result2 = service.updateItem(item.getId(), owner.getId(), itemDto);
 
         assertEquals("New description", result2.getDescription());
 
         itemDto.setAvailable(false);
-        Item result3 = service.updateItem(item.getId(),owner.getId(),itemDto);
+        Item result3 = service.updateItem(item.getId(), owner.getId(), itemDto);
 
         assertEquals(false, result3.getAvailable());
 
@@ -141,7 +137,7 @@ class ItemServiceIntegrationTest {
         ItemWithProperty result = service.getItem(item.getId(), owner.getId());
 
         assertNotNull(result);
-        assertEquals(itemDto.getName(),result.getName());
+        assertEquals(itemDto.getName(), result.getName());
         assertEquals(booking.getId(), result.getLastBooking().getId());
         assertEquals(booking2.getId(), result.getNextBooking().getId());
     }
@@ -169,19 +165,19 @@ class ItemServiceIntegrationTest {
                 .build();
         bookingRepository.save(booking);
         bookingRepository.save(booking2);
-        List<ItemWithProperty> result =service.getUserItems(owner.getId(), 1, 1);
+        List<ItemWithProperty> result = service.getUserItems(owner.getId(), 0, 1);
 
         assertNotNull(result);
         assertEquals(1, result.size());
-        assertEquals(item.getId(),result.get(0).getId());
+        assertEquals(item.getId(), result.get(0).getId());
     }
 
     @Test
     void searchItem() {
-        List<Item> result = service.searchItem("item", 1, 1);
+        List<Item> result = service.searchItem("item", 0, 1);
         assertNotNull(result);
         assertEquals(1, result.size());
-        assertEquals(item.getId(),result.get(0).getId());
+        assertEquals(item.getId(), result.get(0).getId());
     }
 
     @Test
@@ -195,11 +191,11 @@ class ItemServiceIntegrationTest {
                 .status(BookStatus.APPROVED)
                 .build();
         bookingRepository.save(booking);
-        Comment result =  service.addComment(booker.getId(), item.getId(), commentRequest);
+        Comment result = service.addComment(booker.getId(), item.getId(), commentRequest);
 
         assertEquals(1, result.getId());
-        assertEquals(commentRequest.getText(),result.getText());
-        assertEquals(booker.getId(),result.getUser().getId());
+        assertEquals(commentRequest.getText(), result.getText());
+        assertEquals(booker.getId(), result.getUser().getId());
         assertEquals(item.getId(), result.getItem().getId());
     }
 }

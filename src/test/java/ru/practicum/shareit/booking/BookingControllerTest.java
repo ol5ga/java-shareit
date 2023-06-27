@@ -1,15 +1,12 @@
 package ru.practicum.shareit.booking;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.dto.BookingRequest;
@@ -23,15 +20,12 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.hamcrest.Matchers.is;
 
 @WebMvcTest(controllers = BookingController.class)
 class BookingControllerTest {
@@ -55,12 +49,12 @@ class BookingControllerTest {
     private LocalDateTime now = LocalDateTime.now();
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         owner = User.builder()
+                .id(1L)
                 .email("ownerItem1@Mail.ru")
                 .name("ownerItem1")
                 .build();
-        owner.setId(1);
         item = Item.builder()
                 .id(1L)
                 .name("name")
@@ -69,18 +63,18 @@ class BookingControllerTest {
                 .owner(owner)
                 .build();
         booker = User.builder()
-                .id(2)
+                .id(2L)
                 .email("bookerItem1@mail.ru")
                 .name("booker")
                 .build();
         request = BookingRequest.builder()
                 .itemId(1L)
-                .start(now)
+                .start(now.plusMinutes(30))
                 .end(now.plusDays(2))
                 .build();
         response = BookingResponse.builder()
                 .id(1L)
-                .start(now)
+                .start(now.plusMinutes(30))
                 .end(now.plusDays(2))
                 .item(ItemMapper.toItemDto(item))
                 .booker(UserMapper.toUserDto(booker))
@@ -89,17 +83,17 @@ class BookingControllerTest {
         booking = BookingMapper.toBooking(request, item, booker, BookStatus.WAITING);
 
     }
+
     @Test
-    @DirtiesContext
     void addBooking() throws Exception {
-        when(service.addBooking(anyLong(),any(BookingRequest.class))).thenReturn(response);
+        when(service.addBooking(anyLong(), any(BookingRequest.class))).thenReturn(response);
 
         mockMvc.perform(post("/bookings")
-                                .content(mapper.writeValueAsString(request))
-                .characterEncoding(StandardCharsets.UTF_8)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .header("X-Sharer-User-Id", "1")
+                        .content(String.format("{\"itemId\": %s,\"start\": \"%s\", \"end\":\"%s\"}", item.getId(), now.plusMinutes(30), LocalDateTime.now().plusDays(2)))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header("X-Sharer-User-Id", String.valueOf(booker.getId()))
                 ).andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(response.getId()), Long.class))
                 .andExpect(jsonPath("$.start").isNotEmpty())
@@ -113,7 +107,7 @@ class BookingControllerTest {
 
     @Test
     void getStatus() throws Exception {
-        when(service.getStatus(booking.getId(),owner.getId(), true))
+        when(service.getStatus(booking.getId(), owner.getId(), true))
                 .thenReturn(response);
 
         mockMvc.perform(patch("/bookings/{bookingId}", booking.getId())
@@ -203,7 +197,7 @@ class BookingControllerTest {
                 .status(BookStatus.WAITING)
                 .build();
 
-        List<BookingResponse> expectedList = List.of(response,response2);
+        List<BookingResponse> expectedList = List.of(response, response2);
         when(service.getUserItems(anyLong(), anyString(), anyInt(), anyInt()))
                 .thenReturn(expectedList);
         mockMvc.perform(get("/bookings/owner")

@@ -5,8 +5,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.annotation.UserCreate;
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.dto.UserMapper;
-import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
 
 import javax.validation.Valid;
@@ -37,7 +35,7 @@ public class UserController {
     @PatchMapping("/{id}")
     public UserDto update(@PathVariable long id,
                           @Valid @RequestBody UserDto userDto) {
-        return service.update(id,userDto);
+        return service.update(id, userDto);
     }
 
     @DeleteMapping("/{id}")

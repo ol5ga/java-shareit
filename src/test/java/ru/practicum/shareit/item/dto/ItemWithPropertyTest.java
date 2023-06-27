@@ -3,14 +3,12 @@ package ru.practicum.shareit.item.dto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.json.JacksonTester;
 import ru.practicum.shareit.booking.dto.BookingShort;
 
 import java.util.ArrayList;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @JsonTest
 class ItemWithPropertyTest {
@@ -18,7 +16,7 @@ class ItemWithPropertyTest {
     JacksonTester<ItemWithProperty> tester;
 
     @Test
-    void testSerialize() throws Exception{
+    void testSerialize() throws Exception {
         BookingShort lastBooking = BookingShort.builder()
                 .id(1L)
                 .bookerId(1L)
@@ -45,7 +43,6 @@ class ItemWithPropertyTest {
         assertThat(result).hasJsonPath("$.lastBooking");
         assertThat(result).hasJsonPath("$.nextBooking");
         assertThat(result).hasJsonPath("$.comments");
-
 
 
     }

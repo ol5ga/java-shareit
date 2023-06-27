@@ -15,7 +15,7 @@ import ru.practicum.shareit.user.storage.UserRepository;
 
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -58,14 +58,14 @@ class ItemRequestIntegrationTest {
 
     @Test
     void addRequest() {
-        ItemRequestDto request = new ItemRequestDto("Request of item",2);
+        ItemRequestDto request = new ItemRequestDto("Request of item", 2);
 
-        ItemRequest result = service.addRequest(booker.getId(),request, now);
+        ItemRequest result = service.addRequest(booker.getId(), request, now);
 
-        assertEquals(1,result.getId());
-        assertEquals(request.getDescription(),request.getDescription());
-        assertEquals(request.getRequestor(),result.getRequestor().getId());
-        assertEquals(booker,result.getRequestor());
+        assertEquals(1, result.getId());
+        assertEquals(request.getDescription(), request.getDescription());
+        assertEquals(request.getRequestor(), result.getRequestor().getId());
+        assertEquals(booker, result.getRequestor());
     }
 
     @Test
@@ -79,7 +79,7 @@ class ItemRequestIntegrationTest {
         repository.save(request);
         ItemRequestResponse result = service.getRequest(request.getId(), booker.getId());
 
-        assertEquals(1,result.getId());
-        assertEquals(request.getDescription(),result.getDescription());
+        assertEquals(1, result.getId());
+        assertEquals(request.getDescription(), result.getDescription());
     }
 }

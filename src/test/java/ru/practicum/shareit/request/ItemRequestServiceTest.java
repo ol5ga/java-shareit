@@ -6,8 +6,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
-import ru.practicum.shareit.booking.BookingRepository;
-import ru.practicum.shareit.booking.BookingService;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.ItemRepository;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
@@ -22,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
@@ -44,8 +42,8 @@ class ItemRequestServiceTest {
     private LocalDateTime now = LocalDateTime.now();
 
     @BeforeEach
-    void setUp(){
-        service = new ItemRequestService(repository,userRepository,itemRepository);
+    void setUp() {
+        service = new ItemRequestService(repository, userRepository, itemRepository);
         owner = User.builder()
                 .email("ownerItem1@Mail.ru")
                 .name("ownerItem1")
@@ -64,20 +62,21 @@ class ItemRequestServiceTest {
                 .build();
         booker.setId(2);
     }
+
     @Test
     void addRequest() {
-        ItemRequestDto request = new ItemRequestDto("Request of item",2);
+        ItemRequestDto request = new ItemRequestDto("Request of item", 2);
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(booker));
-        ItemRequest IRequest = ItemRequestMapper.toItemRequest(request, booker,now);
+        ItemRequest IRequest = ItemRequestMapper.toItemRequest(request, booker, now);
         IRequest.setId(1);
         when(repository.save(any(ItemRequest.class))).thenReturn(IRequest);
 
-        ItemRequest result = service.addRequest(booker.getId(),request, now);
+        ItemRequest result = service.addRequest(booker.getId(), request, now);
 
-        assertEquals(1,result.getId());
-        assertEquals(request.getDescription(),request.getDescription());
-        assertEquals(request.getRequestor(),result.getRequestor().getId());
-        assertEquals(booker,result.getRequestor());
+        assertEquals(1, result.getId());
+        assertEquals(request.getDescription(), request.getDescription());
+        assertEquals(request.getRequestor(), result.getRequestor().getId());
+        assertEquals(booker, result.getRequestor());
     }
 
     @Test
@@ -94,26 +93,26 @@ class ItemRequestServiceTest {
 
         List<ItemRequestResponse> result = service.getMyRequests(booker.getId());
 
-        assertEquals(1,result.size());
+        assertEquals(1, result.size());
         assertThat(result.contains(response));
     }
 
     @Test
     void getAllRequests() {
-            ItemRequest request = ItemRequest.builder()
-                    .id(1)
-                    .description("request")
-                    .requestor(booker)
-                    .created(now)
-                    .build();
-            ItemRequestResponse response = ItemRequestMapper.toItemRequestResponse(request, new ArrayList<>());
-            when(userRepository.findById(anyLong())).thenReturn(Optional.of(booker));
-            when(repository.findAllByRequestorNotOrderByCreatedDesc(booker, PageRequest.of(1,1))).thenReturn(List.of(request));
+        ItemRequest request = ItemRequest.builder()
+                .id(1)
+                .description("request")
+                .requestor(booker)
+                .created(now)
+                .build();
+        ItemRequestResponse response = ItemRequestMapper.toItemRequestResponse(request, new ArrayList<>());
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(booker));
+        when(repository.findAllByRequestorNotOrderByCreatedDesc(booker, PageRequest.of(1, 1))).thenReturn(List.of(request));
 
-            List<ItemRequestResponse> result = service.getAllRequests(booker.getId(),1,1);
+        List<ItemRequestResponse> result = service.getAllRequests(booker.getId(), 1, 1);
 
-            assertEquals(1,result.size());
-            assertThat(result.contains(response));
+        assertEquals(1, result.size());
+        assertThat(result.contains(response));
     }
 
     @Test
@@ -129,8 +128,8 @@ class ItemRequestServiceTest {
 
         ItemRequestResponse result = service.getRequest(request.getId(), booker.getId());
 
-        assertEquals(request.getId(),result.getId());
-        assertEquals(request.getDescription(),result.getDescription());
+        assertEquals(request.getId(), result.getId());
+        assertEquals(request.getDescription(), result.getDescription());
     }
 
 }
