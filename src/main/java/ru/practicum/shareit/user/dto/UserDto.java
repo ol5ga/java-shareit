@@ -23,6 +23,4 @@ public class UserDto {
     @NotNull(groups = UserCreate.class)
     @Nullable
     private String email;
-
-
 }

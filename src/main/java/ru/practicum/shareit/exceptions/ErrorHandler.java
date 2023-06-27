@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.persistence.EntityNotFoundException;
+
 @RestControllerAdvice
 @Slf4j
 public class ErrorHandler {
@@ -20,6 +22,14 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleChangeException(final ChangeException e) {
+        log.info("Ошибка 404");
+        return new ErrorResponse(e.getMessage());
+    }
+
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleChangeException(final EntityNotFoundException e) {
         log.info("Ошибка 404");
         return new ErrorResponse(e.getMessage());
     }
