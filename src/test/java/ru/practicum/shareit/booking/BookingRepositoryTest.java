@@ -29,7 +29,6 @@ class BookingRepositoryTest {
     @Autowired
     private ItemRepository itemRepository;
 
-    private final EasyRandom generator = new EasyRandom();
     private Item item;
     private Item item2;
     private User booker;
