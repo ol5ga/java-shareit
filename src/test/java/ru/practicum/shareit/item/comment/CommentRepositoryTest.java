@@ -18,14 +18,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class CommentRepositoryTest {
 
     @Autowired
-    CommentRepository repository;
+    private CommentRepository repository;
 
     @Autowired
-    ItemRepository itemRepository;
+    private ItemRepository itemRepository;
 
     @Autowired
-    UserRepository userRepository;
-
+    private UserRepository userRepository;
 
     private LocalDateTime now = LocalDateTime.now();
 

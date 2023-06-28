@@ -27,7 +27,7 @@ import static ru.practicum.shareit.user.dto.UserDto.builder;
 class UserControllerTest {
 
     @MockBean
-    UserService userService;
+    private UserService userService;
 
     @Autowired
     private MockMvc mvc;

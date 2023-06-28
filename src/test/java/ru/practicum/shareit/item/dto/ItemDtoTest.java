@@ -11,7 +11,7 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 class ItemDtoTest {
 
     @Autowired
-    JacksonTester<ItemDto> tester;
+    private JacksonTester<ItemDto> tester;
 
     @Test
     void testSerialize() throws Exception {

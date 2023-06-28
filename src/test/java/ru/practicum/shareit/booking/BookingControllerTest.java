@@ -31,17 +31,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class BookingControllerTest {
 
     @MockBean
-    BookingService service;
+    private BookingService service;
 
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
 
     @Autowired
-    ObjectMapper mapper;
+    private ObjectMapper mapper;
     private User owner;
     private User booker;
     private Item item;
-
+    private static String USER = "X-Sharer-User-Id";
 
     private BookingRequest request;
     private Booking booking;
@@ -93,7 +93,7 @@ class BookingControllerTest {
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", String.valueOf(booker.getId()))
+                        .header(USER, String.valueOf(booker.getId()))
                 ).andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(response.getId()), Long.class))
                 .andExpect(jsonPath("$.start").isNotEmpty())
@@ -111,7 +111,7 @@ class BookingControllerTest {
                 .thenReturn(response);
 
         mockMvc.perform(patch("/bookings/{bookingId}", booking.getId())
-                        .header("X-Sharer-User-Id", owner.getId())
+                        .header(USER, owner.getId())
                         .param("approved", String.valueOf(true)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1L))
@@ -127,7 +127,7 @@ class BookingControllerTest {
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", "1")
+                        .header(USER, "1")
                 ).andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(response.getId()), Long.class))
                 .andExpect(jsonPath("$.start").isNotEmpty())
@@ -158,7 +158,7 @@ class BookingControllerTest {
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", "1")
+                        .header(USER, "1")
                         .param("state", "ALL")
                         .param("from", "1")
                         .param("size", "2")
@@ -204,7 +204,7 @@ class BookingControllerTest {
                 .characterEncoding(StandardCharsets.UTF_8)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("X-Sharer-User-Id", "qwerty")
+                .header(USER, "qwerty")
                 .param("state", "ALL")
                 .param("from", "1")
                 .param("size", "2")

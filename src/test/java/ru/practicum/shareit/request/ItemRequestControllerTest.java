@@ -32,19 +32,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ItemRequestControllerTest {
 
     @MockBean
-    ItemRequestService service;
+    private ItemRequestService service;
 
     @Autowired
     private MockMvc mvc;
     @Autowired
     private ObjectMapper mapper;
 
-    LocalDateTime created = LocalDateTime.now();
+    private LocalDateTime created = LocalDateTime.now();
 
     private User booker;
     private ItemRequestDto itemRequestDto;
     private ItemRequest itemRequest;
     private ItemRequestResponse itemRequestResponse;
+    private static String USER = "X-Sharer-User-Id";
 
     @BeforeEach
     void setUp() {
@@ -68,7 +69,7 @@ class ItemRequestControllerTest {
         when(service.addRequest(anyLong(), any(ItemRequestDto.class), any(LocalDateTime.class))).thenReturn(itemRequest);
 
         mvc.perform(post("/requests")
-                        .header("X-Sharer-User-Id", String.valueOf(booker.getId()))
+                        .header(USER, String.valueOf(booker.getId()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(mapper.writeValueAsString(itemRequestDto)))
@@ -90,7 +91,7 @@ class ItemRequestControllerTest {
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", "1")
+                        .header(USER, "1")
                 ).andExpect(status().isOk())
                 .andExpect(jsonPath("$").isNotEmpty())
                 .andExpect(jsonPath("$[0].id", is(itemRequestResponse.getId()), Long.class))
@@ -117,7 +118,7 @@ class ItemRequestControllerTest {
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", "1")
+                        .header(USER, "1")
                         .param("from", "1")
                         .param("size", "2")
                 ).andExpect(status().isOk())
@@ -140,7 +141,7 @@ class ItemRequestControllerTest {
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", "1")
+                        .header(USER, "1")
                 ).andExpect(status().isOk())
                 .andExpect(jsonPath("$").isNotEmpty())
                 .andExpect(jsonPath("$.id", is(itemRequestResponse.getId()), Long.class))

@@ -26,7 +26,7 @@ public class BookingController {
     }
 
     @PatchMapping("/{bookingId}")
-    public BookingResponse getStatus(@PathVariable long bookingId, @RequestHeader(USER) long userId, @RequestParam(name = "approved") Boolean approved) {
+    public BookingResponse getStatus(@PathVariable long bookingId, @RequestHeader(USER) long userId, @RequestParam Boolean approved) {
         return service.getStatus(bookingId, userId, approved);
     }
 
@@ -37,17 +37,17 @@ public class BookingController {
 
     @GetMapping
     public List<BookingResponse> getUserBookings(@RequestHeader(USER) long userId,
-                                                 @RequestParam(name = "state", defaultValue = "ALL") String state,
-                                                 @Valid @RequestParam(name = "from", defaultValue = "1") @Min(1) Integer from,
-                                                 @Valid @RequestParam(name = "size", defaultValue = "20") @Min(1) @Max(20) Integer size) {
+                                                 @RequestParam(defaultValue = "ALL") String state,
+                                                 @Valid @RequestParam(defaultValue = "1") @Min(1) Integer from,
+                                                 @Valid @RequestParam(defaultValue = "20") @Min(1) @Max(20) Integer size) {
         return service.getUserBookings(userId, state, from, size);
     }
 
     @GetMapping("/owner")
     public List<BookingResponse> getUserItems(@RequestHeader(USER) long userId,
-                                              @RequestParam(name = "state", defaultValue = "ALL") String state,
-                                              @RequestParam(name = "from", defaultValue = "1") @Min(1) Integer from,
-                                              @RequestParam(name = "size", defaultValue = "20") @Min(1) @Max(20) Integer size) {
+                                              @RequestParam(defaultValue = "ALL") String state,
+                                              @RequestParam(defaultValue = "1") @Min(1) Integer from,
+                                              @RequestParam(defaultValue = "20") @Min(1) @Max(20) Integer size) {
         return service.getUserItems(userId, state, from, size);
     }
 }

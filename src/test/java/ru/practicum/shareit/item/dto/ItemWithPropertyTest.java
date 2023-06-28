@@ -13,7 +13,7 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 @JsonTest
 class ItemWithPropertyTest {
     @Autowired
-    JacksonTester<ItemWithProperty> tester;
+    private JacksonTester<ItemWithProperty> tester;
 
     @Test
     void testSerialize() throws Exception {

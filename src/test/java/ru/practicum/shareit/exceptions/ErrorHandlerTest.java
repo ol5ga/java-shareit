@@ -3,7 +3,8 @@ package ru.practicum.shareit.exceptions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class ErrorHandlerTest {
     private ErrorHandler errorHandler;
@@ -12,7 +13,6 @@ class ErrorHandlerTest {
     void setUp() {
         errorHandler = new ErrorHandler();
     }
-
 
     @Test
     void handleValidationException() {

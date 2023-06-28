@@ -30,7 +30,7 @@ class ItemRequestRepositoryTest {
     private LocalDateTime now = LocalDateTime.now();
 
     @Autowired
-    ItemRepository itemRepository;
+    private ItemRepository itemRepository;
 
     @BeforeEach
     void setUp() {

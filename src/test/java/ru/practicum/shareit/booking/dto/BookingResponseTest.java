@@ -17,11 +17,11 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 @JsonTest
 class BookingResponseTest {
     @Autowired
-    JacksonTester<BookingResponse> tester;
+    private JacksonTester<BookingResponse> tester;
     private User owner;
     private User booker;
     private Item item;
-    BookingResponse response;
+    private BookingResponse response;
 
     @Test
     void testSerialize() throws Exception {

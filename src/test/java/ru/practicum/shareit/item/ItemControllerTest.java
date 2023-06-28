@@ -42,10 +42,11 @@ class ItemControllerTest {
     @Autowired
     private MockMvc mvc;
 
-    Item item;
-    ItemDto itemDto;
+    private Item item;
+    private ItemDto itemDto;
 
-    User owner;
+    private User owner;
+    private static String USER = "X-Sharer-User-Id";
 
     @BeforeEach
     void setUp() {
@@ -74,7 +75,7 @@ class ItemControllerTest {
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", "1")
+                        .header(USER, "1")
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(item.getId()), Long.class))
@@ -93,7 +94,7 @@ class ItemControllerTest {
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", "1")
+                        .header(USER, "1")
                 ).andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(itemDtoOut.getId()), Long.class))
                 .andExpect(jsonPath("$.name").value(itemDtoOut.getName()))
@@ -119,7 +120,7 @@ class ItemControllerTest {
 
         mvc.perform(get("/items/1")
                         .accept(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", "1")
+                        .header(USER, "1")
                 ).andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(fullItem.getId()), Long.class))
                 .andExpect(jsonPath("$.name").value(fullItem.getName()))
@@ -146,7 +147,7 @@ class ItemControllerTest {
         when(itemService.getUserItems(anyLong(), anyInt(), anyInt())).thenReturn(result);
         mvc.perform(get("/items")
                         .accept(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", "1")
+                        .header(USER, "1")
                         .param("from", "1")
                         .param("size", "2")
                 ).andExpect(status().isOk())
@@ -170,7 +171,7 @@ class ItemControllerTest {
 
         mvc.perform(get("/items/search")
                         .accept(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", "1")
+                        .header(USER, "1")
                         .param("text", "item")
                         .param("from", "1")
                         .param("size", "2")
@@ -205,7 +206,7 @@ class ItemControllerTest {
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", "1")
+                        .header(USER, "1")
                 ).andExpect(status().isOk())
                 .andExpect(jsonPath("$").isNotEmpty())
                 .andExpect(jsonPath("$.id", is(result.getId()), Long.class))

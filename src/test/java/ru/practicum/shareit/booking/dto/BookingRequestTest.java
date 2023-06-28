@@ -15,11 +15,11 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 class BookingRequestTest {
 
     @Autowired
-    JacksonTester<BookingRequest> tester;
+    private JacksonTester<BookingRequest> tester;
     private User owner;
     private User booker;
     private Item item;
-    BookingRequest request;
+    private BookingRequest request;
 
     @Test
     void testSerialize() throws Exception {

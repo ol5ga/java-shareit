@@ -10,7 +10,7 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 @JsonTest
 class ItemShortTest {
     @Autowired
-    JacksonTester<ItemShort> tester;
+    private JacksonTester<ItemShort> tester;
 
     @Test
     void testSerialize() throws Exception {

@@ -21,10 +21,10 @@ import java.time.LocalDateTime;
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column
     private Long id;
 
-    @Column(name = "text")
+    @Column
     private String text;
 
     @ManyToOne
@@ -35,6 +35,6 @@ public class Comment {
     @JoinColumn(name = "author_id")
     private User user;
 
-    @Column(name = "created")
+    @Column
     private LocalDateTime created;
 }

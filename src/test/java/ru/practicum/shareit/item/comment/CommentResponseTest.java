@@ -12,7 +12,7 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 @JsonTest
 class CommentResponseTest {
     @Autowired
-    JacksonTester<CommentResponse> tester;
+    private JacksonTester<CommentResponse> tester;
 
     @Test
     void testSerialize() throws Exception {

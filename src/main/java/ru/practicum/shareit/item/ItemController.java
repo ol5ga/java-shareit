@@ -45,20 +45,23 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemWithProperty> getUserItems(@RequestHeader(USER) long userId, @RequestParam(name = "from", defaultValue = "1") @Min(1) Integer from, @RequestParam(name = "size",defaultValue = "20") @Min(1) @Max(20) Integer size) {
+    public List<ItemWithProperty> getUserItems(@RequestHeader(USER) long userId, @RequestParam(defaultValue = "1") @Min(1) Integer from,
+                                               @RequestParam(defaultValue = "20") @Min(1) @Max(20) Integer size) {
         return service.getUserItems(userId, from, size);
     }
 
 
     @GetMapping("/search")
-    public List<ItemDto> searchItem(@RequestParam(name = "text") String text, @RequestParam(name = "from", defaultValue = "1") @Min(1) Integer from, @RequestParam(name = "size",defaultValue = "20") @Min(1) @Max(20) Integer size) {
+    public List<ItemDto> searchItem(@RequestParam String text, @RequestParam(defaultValue = "1") @Min(1) Integer from,
+                                    @RequestParam(defaultValue = "20") @Min(1) @Max(20) Integer size) {
         return service.searchItem(text, from, size).stream()
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
     }
 
     @PostMapping("/{itemId}/comment")
-    public CommentResponse addComment(@RequestHeader(USER) long userId, @PathVariable long itemId, @Valid @RequestBody CommentRequest commentRequest) {
+    public CommentResponse addComment(@RequestHeader(USER) long userId, @PathVariable long itemId,
+                                      @Valid @RequestBody CommentRequest commentRequest) {
         return CommentMapper.toResponse(service.addComment(userId, itemId, commentRequest));
     }
 }

@@ -20,9 +20,9 @@ import javax.persistence.*;
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column
     private long id;
-    @Column(name = "name")
+    @Column
     private String name;
     @Column
     private String description;

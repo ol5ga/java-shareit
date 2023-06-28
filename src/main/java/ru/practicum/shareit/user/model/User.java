@@ -18,10 +18,10 @@ import javax.persistence.*;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column
     private long id;
-    @Column(name = "email")
+    @Column
     private String email;
-    @Column(name = "name")
+    @Column
     private String name;
 }

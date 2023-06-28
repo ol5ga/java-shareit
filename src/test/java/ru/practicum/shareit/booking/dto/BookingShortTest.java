@@ -11,7 +11,7 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 @JsonTest
 class BookingShortTest {
     @Autowired
-    JacksonTester<BookingShort> tester;
+    private JacksonTester<BookingShort> tester;
 
 
     @Test

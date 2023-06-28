@@ -24,7 +24,7 @@ import java.time.LocalDateTime;
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column
     private long id;
     @Column(name = "start_date")
     private LocalDateTime start;
@@ -36,7 +36,7 @@ public class Booking {
     @OneToOne
     @JoinColumn(name = "booker_id")
     public User booker;
-    @Column(name = "status")
+    @Column
     @Enumerated(EnumType.STRING)
     private BookStatus status;
 }
