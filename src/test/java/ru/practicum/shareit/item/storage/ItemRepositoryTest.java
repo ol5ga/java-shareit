@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.request.ItemRequest;
 import ru.practicum.shareit.request.ItemRequestRepository;
@@ -71,6 +70,7 @@ class ItemRepositoryTest {
         itemRepository.save(item);
         itemRepository.save(item2);
     }
+
     @Test
     void testGettingAllItemWithRequest() {
         List<Item> result = itemRepository.findAllByRequest(request);
@@ -104,7 +104,7 @@ class ItemRepositoryTest {
     }
 
     @Test
-    void testSearchingInName(){
+    void testSearchingInName() {
         List<Item> result = itemRepository.search("name", Pageable.unpaged());
 
         assertEquals(2, result.size());
@@ -114,7 +114,7 @@ class ItemRepositoryTest {
     }
 
     @Test
-    void testSearchingInDescription(){
+    void testSearchingInDescription() {
         List<Item> result = itemRepository.search("item", Pageable.unpaged());
 
         assertEquals(2, result.size());

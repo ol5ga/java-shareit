@@ -43,7 +43,7 @@ class UserServiceIntegrationTest {
     }
 
     @Test
-    void getUser() {
+    void testGetUser() {
         userRepository.save(user);
         UserDto result = service.getUser(user.getId());
 
@@ -52,7 +52,7 @@ class UserServiceIntegrationTest {
     }
 
     @Test
-    void TestCreate() {
+    void testCreate() {
         assertEquals(0, user.getId());
         UserDto result = service.create(UserMapper.toUserDto(user));
 
@@ -61,7 +61,7 @@ class UserServiceIntegrationTest {
     }
 
     @Test
-    void TestUpdateName() {
+    void testUpdateName() {
         userRepository.save(user);
         user.setName("New Name");
         UserDto result = service.update(user.getId(), UserMapper.toUserDto(user));
@@ -71,7 +71,7 @@ class UserServiceIntegrationTest {
     }
 
     @Test
-    void TestUpdateEmail() {
+    void testUpdateEmail() {
         userRepository.save(user);
         user.setEmail("new@mail.ru");
         UserDto result = service.update(user.getId(), UserMapper.toUserDto(user));
@@ -81,7 +81,7 @@ class UserServiceIntegrationTest {
     }
 
     @Test
-    void TestDelete() {
+    void testDelete() {
         userRepository.save(user);
         assertEquals(1, userRepository.findAll().size());
         service.delete(user.getId());

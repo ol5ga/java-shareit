@@ -58,7 +58,7 @@ class UserControllerTest {
     }
 
     @Test
-    void TestGettingUser() throws Exception {
+    void testGettingUser() throws Exception {
         UserDto userDto = builder().id(1L).name("name").email("name@mail.ru").build();
 
         when(userService.getUser(userDto.getId()))
@@ -73,7 +73,7 @@ class UserControllerTest {
 
 
     @Test
-    void TestCreate() throws Exception {
+    void testCreate() throws Exception {
         UserDto userDtoIn = builder().name("name").email("name@mail.ru").build();
         UserDto userDtoOut = builder().id(1L).name("name").email("name@mail.ru").build();
         when(userService.create(Mockito.any(UserDto.class)))
@@ -91,7 +91,7 @@ class UserControllerTest {
     }
 
     @Test
-    void estUpdateEmail() throws Exception {
+    void testUpdateEmail() throws Exception {
         UserDto userDtoIn = builder().id(1L).name("name").email("name@mail.ru").build();
         UserDto userDtoOut = builder().id(1L).name("name").email("name@mail.ru").build();
         when(userService.update(anyLong(), Mockito.any(UserDto.class))).thenReturn(userDtoOut);

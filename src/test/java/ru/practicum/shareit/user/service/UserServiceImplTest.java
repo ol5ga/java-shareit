@@ -48,7 +48,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void TestGettingUser() {
+    void tstGettingUser() {
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         UserDto result = service.getUser(1);
 
@@ -57,7 +57,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void TestCreate() {
+    void testCreate() {
         when(userRepository.save(user)).thenReturn(user);
         UserDto result = service.create(UserMapper.toUserDto(user));
 
@@ -66,7 +66,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void TestUpdateName() {
+    void testUpdateName() {
         user.setName("New Name");
         when(userRepository.existsById(user.getId())).thenReturn(true);
         when(userRepository.getById(user.getId())).thenReturn(user);
@@ -80,7 +80,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void TestUpdateEmail() {
+    void testUpdateEmail() {
         user.setEmail("NewEmail@mail.ru");
         when(userRepository.existsById(user.getId())).thenReturn(true);
         when(userRepository.getById(user.getId())).thenReturn(user);
@@ -94,7 +94,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void TestDelete() {
+    void testDelete() {
         service.delete(user.getId());
         verify(userRepository, times(1)).deleteById(user.getId());
     }
