@@ -70,7 +70,7 @@ class BookingServiceTest {
     }
 
     @Test
-    void addBooking() {
+    void testAddingBookingWithRightData() {
         Booking booking = BookingMapper.toBooking(request, item, booker, BookStatus.WAITING);
         BookingResponse response = BookingMapper.toResponse(booking);
         when(bookingRepository.save(booking)).thenReturn(booking);
@@ -85,14 +85,14 @@ class BookingServiceTest {
     }
 
     @Test
-    void addBookingWrongTime() {
+    void testAddingBookingWithWrongTime() {
         request.setEnd(LocalDateTime.now().minusHours(1));
         assertThrows(ValidationException.class, () -> service.addBooking(2, request));
         verify(bookingRepository, never()).save(Mockito.any(Booking.class));
     }
 
     @Test
-    void addBookingWrongUser() {
+    void testAddingBookingWithWrongUser() {
         assertThrows(ChangeException.class, () -> service.addBooking(5, request));
         verify(bookingRepository, never()).save(Mockito.any(Booking.class));
         assertThrows(ChangeException.class, () -> service.addBooking(item.getOwner().getId(), request));
@@ -101,14 +101,14 @@ class BookingServiceTest {
     }
 
     @Test
-    void addBookingNotAvailableItem() {
+    void testAddingBookingWithNotAvailableItem() {
         item.setAvailable(false);
         assertThrows(ChangeException.class, () -> service.addBooking(2, request));
         verify(bookingRepository, never()).save(Mockito.any(Booking.class));
     }
 
     @Test
-    void getStatus() {
+    void testChangeStatusWithRightData() {
         Booking booking = BookingMapper.toBooking(request, item, booker, BookStatus.WAITING);
         booking.setId(1);
         when(bookingRepository.getById(1L)).thenReturn(booking);
@@ -120,7 +120,7 @@ class BookingServiceTest {
     }
 
     @Test
-    void getStatusWrongUser() {
+    void testChangeStatusWithWrongUser() {
         Booking booking = BookingMapper.toBooking(request, item, booker, BookStatus.WAITING);
         booking.setId(1);
         when(bookingRepository.getById(1L)).thenReturn(booking);
@@ -131,7 +131,7 @@ class BookingServiceTest {
     }
 
     @Test
-    void getStatusWithApproved() {
+    void testChangeStatusWithApproved() {
         Booking booking = BookingMapper.toBooking(request, item, booker, BookStatus.WAITING);
         booking.setId(1);
         booking.setStatus(BookStatus.APPROVED);
@@ -141,7 +141,7 @@ class BookingServiceTest {
     }
 
     @Test
-    void getStatusNotApproved() {
+    void testChangeStatusWithNotApproved() {
         Booking booking = BookingMapper.toBooking(request, item, booker, BookStatus.WAITING);
         booking.setId(1);
         when(bookingRepository.getById(1L)).thenReturn(booking);
@@ -153,7 +153,7 @@ class BookingServiceTest {
     }
 
     @Test
-    void getBooking() {
+    void testGettingBookingWithRightData() {
         Booking booking = BookingMapper.toBooking(request, item, booker, BookStatus.WAITING);
         booking.setId(1);
         BookingResponse response = BookingMapper.toResponse(booking);
@@ -172,7 +172,7 @@ class BookingServiceTest {
     }
 
     @Test
-    void getBookingWrongUser() {
+    void testGettingBookingWithWrongUser() {
         Booking booking = BookingMapper.toBooking(request, item, booker, BookStatus.WAITING);
         booking.setId(1);
         User user = new User(3, "user2@book.ru", "user2");
@@ -181,7 +181,7 @@ class BookingServiceTest {
     }
 
     @Test
-    void getUserBookingsAll() {
+    void testGettingUsersBookingsAll() {
         Booking booking = BookingMapper.toBooking(request, item, booker, BookStatus.APPROVED);
         booking.setId(1);
         when(userRepository.findById(booker.getId())).thenReturn(Optional.of(booker));
@@ -194,7 +194,7 @@ class BookingServiceTest {
     }
 
     @Test
-    void getUserBookingsCURRENT() {
+    void testGettingUsersBookingsWithCURRENT() {
         Booking booking = BookingMapper.toBooking(request, item, booker, BookStatus.APPROVED);
         booking.setId(1);
         when(userRepository.findById(booker.getId())).thenReturn(Optional.of(booker));
@@ -208,7 +208,7 @@ class BookingServiceTest {
     }
 
     @Test
-    void getUserBookingsFUTURE() {
+    void testGettingUsersBookingsWithFUTURE() {
         Booking booking = BookingMapper.toBooking(request, item, booker, BookStatus.APPROVED);
         booking.setId(1);
         when(userRepository.findById(booker.getId())).thenReturn(Optional.of(booker));
@@ -222,7 +222,7 @@ class BookingServiceTest {
     }
 
     @Test
-    void getUserBookingsPAST() {
+    void testGettingUsersBookingsWithPAST() {
         Booking booking = BookingMapper.toBooking(request, item, booker, BookStatus.APPROVED);
         booking.setId(1);
         when(userRepository.findById(booker.getId())).thenReturn(Optional.of(booker));
@@ -236,7 +236,7 @@ class BookingServiceTest {
     }
 
     @Test
-    void getUserBookingsWAITING() {
+    void testGettingUsersBookingsWithWAITING() {
         Booking booking = BookingMapper.toBooking(request, item, booker, BookStatus.WAITING);
         booking.setId(1);
         when(userRepository.findById(booker.getId())).thenReturn(Optional.of(booker));
@@ -250,7 +250,7 @@ class BookingServiceTest {
     }
 
     @Test
-    void getUserBookingsREJECTED() {
+    void testGettingUsersBookingsWithREJECTED() {
         Booking booking = BookingMapper.toBooking(request, item, booker, BookStatus.REJECTED);
         booking.setId(1);
         when(userRepository.findById(booker.getId())).thenReturn(Optional.of(booker));
@@ -264,14 +264,14 @@ class BookingServiceTest {
     }
 
     @Test
-    void getUserBookingWrongState() {
+    void testGettingUsersBookingsWithWrongState() {
         when(userRepository.findById(booker.getId())).thenReturn(Optional.of(booker));
         assertThrows(ValidationException.class, () -> service.getUserBookings(booker.getId(), " ", 1, 1));
         verify(bookingRepository, never()).findAllByBookerOrderByStartDesc(any(), any());
     }
 
     @Test
-    void getUserItemsALL() {
+    void testGettingBookingItemALL() {
         Booking booking = BookingMapper.toBooking(request, item, booker, BookStatus.APPROVED);
         booking.setId(1);
         when(userRepository.findById(owner.getId())).thenReturn(Optional.of(owner));
@@ -284,7 +284,7 @@ class BookingServiceTest {
     }
 
     @Test
-    void getUserItemsCURRENT() {
+    void testGettingBookingItemWithCURRENT() {
         Booking booking = BookingMapper.toBooking(request, item, booker, BookStatus.APPROVED);
         booking.setId(1);
         when(userRepository.findById(owner.getId())).thenReturn(Optional.of(owner));
@@ -298,7 +298,7 @@ class BookingServiceTest {
     }
 
     @Test
-    void getUserItemsFUTURE() {
+    void testGettingBookingItemWithFUTURE() {
         Booking booking = BookingMapper.toBooking(request, item, booker, BookStatus.APPROVED);
         booking.setId(1);
         when(userRepository.findById(owner.getId())).thenReturn(Optional.of(owner));
@@ -313,7 +313,7 @@ class BookingServiceTest {
 
     //
     @Test
-    void getUserItemsPAST() {
+    void testGettingBookingItemWithPAST() {
         Booking booking = BookingMapper.toBooking(request, item, booker, BookStatus.APPROVED);
         booking.setId(1);
         when(userRepository.findById(owner.getId())).thenReturn(Optional.of(owner));
@@ -327,7 +327,7 @@ class BookingServiceTest {
     }
 
     @Test
-    void getUserItemsWAITING() {
+    void testGettingBookingItemWithWAITING() {
         Booking booking = BookingMapper.toBooking(request, item, booker, BookStatus.WAITING);
         booking.setId(1);
         when(userRepository.findById(owner.getId())).thenReturn(Optional.of(owner));
@@ -341,7 +341,7 @@ class BookingServiceTest {
     }
 
     @Test
-    void getUserItemsREJECTED() {
+    void testGettingBookingItemWithEJECTED() {
         Booking booking = BookingMapper.toBooking(request, item, booker, BookStatus.REJECTED);
         booking.setId(1);
         when(userRepository.findById(owner.getId())).thenReturn(Optional.of(owner));
@@ -355,7 +355,7 @@ class BookingServiceTest {
     }
 
     @Test
-    void getUserItemsWrongState() {
+    void testGettingBookingItemWithWrongState() {
         when(userRepository.findById(owner.getId())).thenReturn(Optional.of(owner));
         assertThrows(ValidationException.class, () -> service.getUserItems(owner.getId(), " ", 1, 1));
         verify(bookingRepository, never()).findAllByItem_OwnerOrderByStartDesc(any(), any());

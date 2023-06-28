@@ -85,7 +85,7 @@ class BookingControllerTest {
     }
 
     @Test
-    void addBooking() throws Exception {
+    void testAddingBooking() throws Exception {
         when(service.addBooking(anyLong(), any(BookingRequest.class))).thenReturn(response);
 
         mockMvc.perform(post("/bookings")
@@ -106,7 +106,7 @@ class BookingControllerTest {
     }
 
     @Test
-    void getStatus() throws Exception {
+    void testChangeStatus() throws Exception {
         when(service.getStatus(booking.getId(), owner.getId(), true))
                 .thenReturn(response);
 
@@ -119,7 +119,7 @@ class BookingControllerTest {
     }
 
     @Test
-    void getBooking() throws Exception {
+    void testGettingBooking() throws Exception {
         when(service.getBooking(anyLong(), anyLong()))
                 .thenReturn(response);
 
@@ -139,7 +139,7 @@ class BookingControllerTest {
     }
 
     @Test
-    void getUserBookings() throws Exception {
+    void testGettingUsersBookings() throws Exception {
         BookingResponse response2 = BookingResponse.builder()
                 .id(2L)
                 .start(now.minusDays(1))
@@ -180,7 +180,7 @@ class BookingControllerTest {
     }
 
     @Test
-    void getUserItems() throws Exception {
+    void testGettingBookingItem() throws Exception {
         Item item2 = Item.builder()
                 .name("name2")
                 .description("item2")

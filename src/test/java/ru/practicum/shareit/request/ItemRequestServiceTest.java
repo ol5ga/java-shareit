@@ -64,7 +64,7 @@ class ItemRequestServiceTest {
     }
 
     @Test
-    void addRequest() {
+    void testAddingRequest() {
         ItemRequestDto request = new ItemRequestDto("Request of item", 2);
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(booker));
         ItemRequest itemRequest = ItemRequestMapper.toItemRequest(request, booker, now);
@@ -80,7 +80,7 @@ class ItemRequestServiceTest {
     }
 
     @Test
-    void getMyRequests() {
+    void testGettingUsersRequests() {
         ItemRequest request = ItemRequest.builder()
                 .id(1)
                 .description("request")
@@ -98,7 +98,7 @@ class ItemRequestServiceTest {
     }
 
     @Test
-    void getAllRequests() {
+    void testGettingAllRequests() {
         ItemRequest request = ItemRequest.builder()
                 .id(1)
                 .description("request")
@@ -116,7 +116,7 @@ class ItemRequestServiceTest {
     }
 
     @Test
-    void getRequest() {
+    void testGettingRequest() {
         ItemRequest request = ItemRequest.builder()
                 .id(1)
                 .description("request")

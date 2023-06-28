@@ -72,7 +72,7 @@ class ItemRepositoryTest {
         itemRepository.save(item2);
     }
     @Test
-    void findAllByRequest() {
+    void testGettingAllItemWithRequest() {
         List<Item> result = itemRepository.findAllByRequest(request);
 
         assertEquals(2, result.size());
@@ -82,7 +82,7 @@ class ItemRepositoryTest {
     }
 
     @Test
-    void findByOwnerId() {
+    void testGettingOwnersItems() {
         List<Item> result = itemRepository.findByOwnerId(owner.getId(), Pageable.unpaged());
 
         assertEquals(2, result.size());
@@ -92,7 +92,7 @@ class ItemRepositoryTest {
     }
 
     @Test
-    void findAll() {
+    void testGettingAllItemsWithLimit() {
         Page<Item> page = itemRepository.findAll(Pageable.unpaged());
         List<Item> result = page.stream()
                 .collect(Collectors.toList());
@@ -104,7 +104,7 @@ class ItemRepositoryTest {
     }
 
     @Test
-    void searchInName(){
+    void testSearchingInName(){
         List<Item> result = itemRepository.search("name", Pageable.unpaged());
 
         assertEquals(2, result.size());
@@ -114,7 +114,7 @@ class ItemRepositoryTest {
     }
 
     @Test
-    void searchInDescription(){
+    void testSearchingInDescription(){
         List<Item> result = itemRepository.search("item", Pageable.unpaged());
 
         assertEquals(2, result.size());

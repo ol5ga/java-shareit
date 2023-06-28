@@ -83,7 +83,7 @@ class ItemServiceIntegrationTest {
     }
 
     @Test
-    void addItem() {
+    void testAddingItem() {
         Item result = service.addItem(owner.getId(), itemDto);
 
         assertNotNull(result.getId());
@@ -92,7 +92,7 @@ class ItemServiceIntegrationTest {
     }
 
     @Test
-    void updateItem() {
+    void testUdateItem() {
         itemDto.setName("nameNew");
         Item result = service.updateItem(item.getId(), owner.getId(), itemDto);
 
@@ -111,7 +111,7 @@ class ItemServiceIntegrationTest {
     }
 
     @Test
-    void getItem() {
+    void testGettingItem() {
         Comment comment = Comment.builder()
                 .text("Comment text")
                 .created(LocalDateTime.now())
@@ -143,7 +143,7 @@ class ItemServiceIntegrationTest {
     }
 
     @Test
-    void getUserItems() {
+    void testGettingUserItems() {
         Comment comment = Comment.builder()
                 .text("Comment text")
                 .created(LocalDateTime.now())
@@ -173,7 +173,7 @@ class ItemServiceIntegrationTest {
     }
 
     @Test
-    void searchItem() {
+    void testSearchItem() {
         List<Item> result = service.searchItem("item", 0, 1);
         assertNotNull(result);
         assertEquals(1, result.size());
@@ -181,7 +181,7 @@ class ItemServiceIntegrationTest {
     }
 
     @Test
-    void addComment() {
+    void testAddComment() {
         CommentRequest commentRequest = new CommentRequest("Comment for item1");
         Booking booking = Booking.builder()
                 .start(now.minusDays(2))

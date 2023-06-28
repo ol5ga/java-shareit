@@ -57,7 +57,7 @@ class ItemRequestIntegrationTest {
     }
 
     @Test
-    void addRequest() {
+    void testAddingRequest() {
         ItemRequestDto request = new ItemRequestDto("Request of item", 2);
 
         ItemRequest result = service.addRequest(booker.getId(), request, now);
@@ -69,7 +69,7 @@ class ItemRequestIntegrationTest {
     }
 
     @Test
-    void getRequest() {
+    void testGetRequest() {
         ItemRequest request = ItemRequest.builder()
                 .id(1)
                 .description("request")

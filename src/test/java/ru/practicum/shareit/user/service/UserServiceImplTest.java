@@ -37,7 +37,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void getAllUsers() {
+    void testGettingAllUsers() {
         List<User> users = new ArrayList<>();
         users.add(user);
         when(userRepository.findAll()).thenReturn(users);
@@ -48,7 +48,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void getUser() {
+    void TestGettingUser() {
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         UserDto result = service.getUser(1);
 
@@ -57,7 +57,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void create() {
+    void TestCreate() {
         when(userRepository.save(user)).thenReturn(user);
         UserDto result = service.create(UserMapper.toUserDto(user));
 
@@ -66,7 +66,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void updateName() {
+    void TestUpdateName() {
         user.setName("New Name");
         when(userRepository.existsById(user.getId())).thenReturn(true);
         when(userRepository.getById(user.getId())).thenReturn(user);
@@ -80,7 +80,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void updateEmail() {
+    void TestUpdateEmail() {
         user.setEmail("NewEmail@mail.ru");
         when(userRepository.existsById(user.getId())).thenReturn(true);
         when(userRepository.getById(user.getId())).thenReturn(user);
@@ -93,19 +93,8 @@ class UserServiceImplTest {
         assertEquals("NewEmail@mail.ru", result.getEmail());
     }
 
-//    @Test
-//    void updateWrongEmail(){
-//        when(userRepository.existsById(user.getId())).thenReturn(true);
-//        when(userRepository.getById(user.getId())).thenReturn(user);
-//        List<User> users = new ArrayList<>();
-//        when(userRepository.findAll()).thenReturn(users);
-//        users.add(user);
-//
-//        assertThrows(StorageException.class,() -> service.update(user));
-//    }
-
     @Test
-    void delete() {
+    void TestDelete() {
         service.delete(user.getId());
         verify(userRepository, times(1)).deleteById(user.getId());
     }

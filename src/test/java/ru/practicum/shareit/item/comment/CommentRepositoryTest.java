@@ -29,7 +29,7 @@ class CommentRepositoryTest {
     private LocalDateTime now = LocalDateTime.now();
 
     @Test
-    void findAllByItem() {
+    void testFindingAllByItem() {
         User owner = User.builder()
                 .email("ownerItem1@Mail.ru")
                 .name("ownerItem1")

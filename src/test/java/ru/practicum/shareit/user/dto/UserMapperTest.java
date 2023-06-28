@@ -19,7 +19,7 @@ class UserMapperTest {
     }
 
     @Test
-    void toUserDto() {
+    void testMappingToUserDto() {
         UserDto result = UserMapper.toUserDto(user);
 
         assertEquals(user.getId(), result.getId());
@@ -28,7 +28,7 @@ class UserMapperTest {
     }
 
     @Test
-    void toUser() {
+    void testMappingToUser() {
         UserDto userDto = UserDto.builder()
                 .id(1L)
                 .name("User name")
@@ -43,7 +43,7 @@ class UserMapperTest {
     }
 
     @Test
-    void toUserWithId() {
+    void testMappingToUserWithId() {
         UserDto userDto = UserDto.builder()
                 .id(1L)
                 .name("User name")

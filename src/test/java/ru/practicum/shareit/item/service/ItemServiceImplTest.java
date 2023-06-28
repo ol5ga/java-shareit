@@ -83,7 +83,7 @@ class ItemServiceImplTest {
     }
 
     @Test
-    void addItemWithRequest() {
+    void testAddingItemWithRequest() {
         ItemDto dto = ItemDto.builder()
                 .name("name")
                 .description("item1")
@@ -103,7 +103,7 @@ class ItemServiceImplTest {
     }
 
     @Test
-    void addItemWithoutRequest() {
+    void testAddingItemWithoutRequest() {
         ItemDto dto = ItemDto.builder()
                 .name("name")
                 .description("item1")
@@ -118,7 +118,7 @@ class ItemServiceImplTest {
     }
 
     @Test
-    void updateItemName() {
+    void testUpdateItemName() {
         item.setId(1);
         ItemDto dto = ItemDto.builder()
                 .name("nameNew")
@@ -140,7 +140,7 @@ class ItemServiceImplTest {
     }
 
     @Test
-    void updateItemDescription() {
+    void testUpdateItemDescription() {
         item.setId(1);
         ItemDto dto = ItemDto.builder()
                 .name("name")
@@ -162,7 +162,7 @@ class ItemServiceImplTest {
     }
 
     @Test
-    void updateItemAvailable() {
+    void testUpdateItemAvailable() {
         item.setId(1);
         ItemDto dto = ItemDto.builder()
                 .name("name")
@@ -184,7 +184,7 @@ class ItemServiceImplTest {
     }
 
     @Test
-    void updateItemWrongUser() {
+    void testUpdateItemWrongUser() {
         item.setId(1);
         ItemDto dto = ItemDto.builder()
                 .name("nameNew")
@@ -196,7 +196,7 @@ class ItemServiceImplTest {
     }
 
     @Test
-    void getItem() {
+    void testGettingItem() {
         item.setId(1);
         CommentResponse comment = CommentResponse.builder()
                 .id(1)
@@ -249,7 +249,7 @@ class ItemServiceImplTest {
     }
 
     @Test
-    void getItemWithoutBooking() {
+    void testGetItemWithoutBooking() {
         item.setId(1);
         CommentResponse comment = CommentResponse.builder()
                 .id(1)
@@ -316,7 +316,7 @@ class ItemServiceImplTest {
 
 
     @Test
-    void getUserItems() {
+    void testGetUserItems() {
         item.setId(1);
         CommentResponse comment = CommentResponse.builder()
                 .id(1)
@@ -357,7 +357,7 @@ class ItemServiceImplTest {
     }
 
     @Test
-    void searchItem() {
+    void testSearchItem() {
         List<Item> items = new ArrayList<>();
         items.add(item);
         when(itemRepository.search("item", PageRequest.of(1, 1))).thenReturn(items);
@@ -369,7 +369,7 @@ class ItemServiceImplTest {
     }
 
     @Test
-    void addComment() {
+    void testAddingComment() {
         item.setId(1);
         Booking booking = Booking.builder()
                 .start(now.minusDays(2).truncatedTo(ChronoUnit.MINUTES))

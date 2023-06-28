@@ -28,7 +28,7 @@ class CommentMapperTest {
     }
 
     @Test
-    void toComment() {
+    void testMappingToComment() {
         Comment result = CommentMapper.toComment(new CommentRequest("Comment about item"), item, booker, LocalDateTime.now());
 
         assertEquals("Comment about item", result.getText());
@@ -37,7 +37,7 @@ class CommentMapperTest {
     }
 
     @Test
-    void toResponse() {
+    void testMappingToResponse() {
         Comment comment = Comment.builder()
                 .id(1L)
                 .text("Comment text")

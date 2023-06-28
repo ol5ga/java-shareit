@@ -65,7 +65,7 @@ class ItemRequestControllerTest {
     }
 
     @Test
-    void addRequest() throws Exception {
+    void testAddingRequest() throws Exception {
         when(service.addRequest(anyLong(), any(ItemRequestDto.class), any(LocalDateTime.class))).thenReturn(itemRequest);
 
         mvc.perform(post("/requests")
@@ -79,7 +79,7 @@ class ItemRequestControllerTest {
     }
 
     @Test
-    void getMyRequests() throws Exception {
+    void testGettingUsersRequests() throws Exception {
         ItemRequestResponse response2 = ItemRequestResponse.builder()
                 .id(2)
                 .description("response item 2")
@@ -106,7 +106,7 @@ class ItemRequestControllerTest {
     }
 
     @Test
-    void getAllRequests() throws Exception {
+    void testGettingAllRequests() throws Exception {
         ItemRequestResponse response2 = ItemRequestResponse.builder()
                 .id(2)
                 .description("response item 2")
@@ -135,7 +135,7 @@ class ItemRequestControllerTest {
     }
 
     @Test
-    void getItemRequest() throws Exception {
+    void testGettingRequest() throws Exception {
         when(service.getRequest(anyLong(), anyLong())).thenReturn(itemRequestResponse);
         mvc.perform(get("/requests/1")
                         .characterEncoding(StandardCharsets.UTF_8)

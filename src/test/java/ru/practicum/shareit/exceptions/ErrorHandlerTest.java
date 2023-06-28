@@ -15,7 +15,7 @@ class ErrorHandlerTest {
     }
 
     @Test
-    void handleValidationException() {
+    void testHandleValidationException() {
         ValidationException exception = new ValidationException("error");
         ErrorResponse errorResponse = errorHandler.handleValidationException(exception);
         assertNotNull(errorResponse);

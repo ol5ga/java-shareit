@@ -35,7 +35,7 @@ class ItemMapperTest {
     }
 
     @Test
-    void toItemDto() {
+    void testMappingToItemDto() {
         ItemDto result = ItemMapper.toItemDto(item);
 
         assertEquals(item.getId(), result.getId());
@@ -44,7 +44,7 @@ class ItemMapperTest {
     }
 
     @Test
-    void toItem() {
+    void testMappingToItem() {
         ItemDto dto = ItemDto.builder()
                 .id(1)
                 .name("name")
@@ -60,7 +60,7 @@ class ItemMapperTest {
     }
 
     @Test
-    void testToItem() {
+    void testMappingTestToItem() {
         ItemDto dto = ItemDto.builder()
                 .id(1)
                 .name("name")
@@ -80,7 +80,7 @@ class ItemMapperTest {
     }
 
     @Test
-    void toItemWithTime() {
+    void testMappingToItemWithTime() {
         BookingShort last = BookingShort.builder()
                 .id(1)
                 .bookerId(2)

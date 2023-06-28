@@ -48,7 +48,7 @@ class ItemRequestRepositoryTest {
     }
 
     @Test
-    void findAllByRequestorOrderByCreatedDesc() {
+    void testGettingOrdersRequests() {
         List<ItemRequest> result = repository.findAllByRequestorOrderByCreatedDesc(user);
 
         assertEquals(1, result.size());
@@ -56,7 +56,7 @@ class ItemRequestRepositoryTest {
     }
 
     @Test
-    void findAllByRequestorNotOrderByCreatedDesc() {
+    void testGettingOrdersOtherUsers() {
         User user2 = User.builder()
                 .email("requestor2@mail.ru")
                 .name("requestor2")

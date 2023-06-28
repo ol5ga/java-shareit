@@ -63,7 +63,7 @@ class BookingServiceIntegrationTest {
     }
 
     @Test
-    void addBooking() {
+    void testAddingBooking() {
         BookingResponse result = service.addBooking(booker.getId(), request);
         assertNotNull(result.getId());
         assertEquals(item.getId(), result.getItem().getId());
@@ -73,7 +73,7 @@ class BookingServiceIntegrationTest {
     }
 
     @Test
-    void getStatus() {
+    void testChangeStatus() {
         BookingResponse booking = service.addBooking(booker.getId(), request);
         BookingResponse result = service.getStatus(booking.getId(), owner.getId(), true);
         assertEquals(BookStatus.APPROVED, result.getStatus());
@@ -83,7 +83,7 @@ class BookingServiceIntegrationTest {
     }
 
     @Test
-    void getBooking() {
+    void testGettingBooking() {
         BookingResponse booking = service.addBooking(booker.getId(), request);
         booking.setStatus(BookStatus.APPROVED);
         BookingResponse result = service.getBooking(booking.getId(), booker.getId());
@@ -95,7 +95,7 @@ class BookingServiceIntegrationTest {
     }
 
     @Test
-    void getUserBookings() {
+    void testGettingUsersBookings() {
         BookingResponse booking = service.addBooking(booker.getId(), request);
         booking.setStatus(BookStatus.APPROVED);
         booking = service.getStatus(booking.getId(), owner.getId(), true);
@@ -106,7 +106,7 @@ class BookingServiceIntegrationTest {
     }
 
     @Test
-    void getUserItems() {
+    void testGettingBookingItem() {
         BookingResponse booking = service.addBooking(booker.getId(), request);
         List<BookingResponse> result = service.getUserItems(owner.getId(), "ALL", 0, 1);
 

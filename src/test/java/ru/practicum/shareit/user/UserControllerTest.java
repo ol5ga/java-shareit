@@ -35,7 +35,7 @@ class UserControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
-    void getAllUsers() throws Exception {
+    void testGettingAllUsers() throws Exception {
         UserDto userDto = builder().id(1L).name("name").email("name@mail.ru").build();
         UserDto userDto2 = builder().id(2L).name("name2").email("name2@ya.ru").build();
         List<UserDto> users = List.of(userDto, userDto2);
@@ -58,7 +58,7 @@ class UserControllerTest {
     }
 
     @Test
-    void getUser() throws Exception {
+    void TestGettingUser() throws Exception {
         UserDto userDto = builder().id(1L).name("name").email("name@mail.ru").build();
 
         when(userService.getUser(userDto.getId()))
@@ -73,7 +73,7 @@ class UserControllerTest {
 
 
     @Test
-    void create() throws Exception {
+    void TestCreate() throws Exception {
         UserDto userDtoIn = builder().name("name").email("name@mail.ru").build();
         UserDto userDtoOut = builder().id(1L).name("name").email("name@mail.ru").build();
         when(userService.create(Mockito.any(UserDto.class)))
@@ -91,7 +91,7 @@ class UserControllerTest {
     }
 
     @Test
-    void update() throws Exception {
+    void estUpdateEmail() throws Exception {
         UserDto userDtoIn = builder().id(1L).name("name").email("name@mail.ru").build();
         UserDto userDtoOut = builder().id(1L).name("name").email("name@mail.ru").build();
         when(userService.update(anyLong(), Mockito.any(UserDto.class))).thenReturn(userDtoOut);

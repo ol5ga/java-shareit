@@ -62,11 +62,10 @@ class ItemControllerTest {
                 .available(true)
                 .owner(owner)
                 .build();
-
     }
 
     @Test
-    void addItem() throws Exception {
+    void testAddingItem() throws Exception {
         when(itemService.addItem(anyLong(), any(ItemDto.class)))
                 .thenReturn(item);
 
@@ -86,7 +85,7 @@ class ItemControllerTest {
     }
 
     @Test
-    void updateItem() throws Exception {
+    void testUdateItem() throws Exception {
         when(itemService.updateItem(anyLong(), anyLong(), any(ItemDto.class))).thenReturn(item);
         ItemDto itemDtoOut = ItemMapper.toItemDto(item);
         mvc.perform(patch("/items/1")
@@ -106,7 +105,7 @@ class ItemControllerTest {
     }
 
     @Test
-    void getItem() throws Exception {
+    void testGettingItem() throws Exception {
         ItemWithProperty fullItem = ItemWithProperty.builder()
                 .id(1)
                 .name("name")
@@ -133,7 +132,7 @@ class ItemControllerTest {
     }
 
     @Test
-    void getUserItems() throws Exception {
+    void testGettingUserItems() throws Exception {
         ItemWithProperty fullItem = ItemWithProperty.builder()
                 .id(1)
                 .name("name")
@@ -164,7 +163,7 @@ class ItemControllerTest {
     }
 
     @Test
-    void searchItem() throws Exception {
+    void testSearchItem() throws Exception {
         when(itemService.searchItem(anyString(), anyInt(), anyInt())).thenReturn(List.of(item));
         ItemDto itemDto = ItemMapper.toItemDto(item);
         List<ItemDto> result = List.of(itemDto);
@@ -187,7 +186,7 @@ class ItemControllerTest {
     }
 
     @Test
-    void addComment() throws Exception {
+    void testAddComment() throws Exception {
         LocalDateTime now = LocalDateTime.now();
         CommentRequest request = CommentRequest.builder().text("good item").build();
         Comment response = Comment.builder()

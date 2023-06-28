@@ -36,7 +36,7 @@ class ItemRequestMapperTest {
     }
 
     @Test
-    void toItemRequest() {
+    void testMappingToItemRequest() {
         ItemRequestDto request = new ItemRequestDto("text of request", requestor.getId());
 
         ItemRequest result = ItemRequestMapper.toItemRequest(request, requestor, now);
@@ -47,7 +47,7 @@ class ItemRequestMapperTest {
     }
 
     @Test
-    void toItemRequestResponse() {
+    void testMappingToItemRequestResponse() {
         ItemRequest request = ItemRequest.builder()
                 .id(1)
                 .description("request")

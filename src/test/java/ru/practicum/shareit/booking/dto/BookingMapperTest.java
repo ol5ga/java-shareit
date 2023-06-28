@@ -33,7 +33,7 @@ class BookingMapperTest {
     }
 
     @Test
-    void toBooking() {
+    void testMappingToBooking() {
         BookingRequest request = BookingRequest.builder()
                 .itemId(1L)
                 .start(LocalDateTime.now())
@@ -49,7 +49,7 @@ class BookingMapperTest {
     }
 
     @Test
-    void toResponse() {
+    void testMappingToResponse() {
 
         Booking booking = new Booking(1, LocalDateTime.now(), LocalDateTime.now().plusDays(2), item, booker, BookStatus.WAITING);
         BookingResponse result = BookingMapper.toResponse(booking);
@@ -65,7 +65,7 @@ class BookingMapperTest {
     }
 
     @Test
-    void toBookingShort() {
+    void testMappingToBookingShort() {
         Booking booking = new Booking(1, LocalDateTime.now(), LocalDateTime.now().plusDays(2), item, booker, BookStatus.WAITING);
         BookingShort result = BookingMapper.toBookingShort(booking);
 
