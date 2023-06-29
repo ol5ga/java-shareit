@@ -47,7 +47,6 @@ class ItemRepositoryTest {
         userRepository.save(owner);
         userRepository.save(requestor);
         request = ItemRequest.builder()
-                .id(1L)
                 .description("itemRequest description")
                 .requestor(requestor)
                 .created(LocalDateTime.now())
