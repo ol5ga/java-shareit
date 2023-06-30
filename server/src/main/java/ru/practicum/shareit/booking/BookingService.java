@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.dto.BookingRequest;
@@ -85,7 +86,7 @@ public class BookingService {
         User user = userRepository.findById(userId).orElseThrow(() -> new StorageException("Такого пользователя не существует"));
         LocalDateTime now = LocalDateTime.now();
         List<Booking> bookings;
-        Pageable page = PageRequest.of(from / size, size);
+        Pageable page = PageRequest.of(from / size, size, Sort.unsorted());
         switch (status) {
             case "ALL":
                 bookings = bookingRepository.findAllByBookerOrderByStartDesc(user, page);
@@ -109,11 +110,10 @@ public class BookingService {
                 throw new ValidationException("Unknown state: UNSUPPORTED_STATUS");
 
         }
-        System.out.println(bookings);
-        log.info("case:close");
-        return bookings.stream()
+        List<BookingResponse> result = bookings.stream()
                 .map(BookingMapper::toResponse)
                 .collect(Collectors.toList());
+        return result;
     }
 
     public List<BookingResponse> getUserItems(long userId, String status, int from, int size) {
