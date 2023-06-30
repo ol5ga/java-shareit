@@ -16,7 +16,13 @@ import javax.validation.constraints.Null;
 @Builder(toBuilder = true)
 @Generated
 public class UserDto {
+    @Null(groups = UserId.class)
     private long id;
+    @NotBlank(groups = UserCreate.class)
+    @Nullable
     private String name;
+    @Email(message = "Email not valid", groups = UserCreate.class)
+    @NotNull(groups = UserCreate.class)
+    @Nullable
     private String email;
 }
