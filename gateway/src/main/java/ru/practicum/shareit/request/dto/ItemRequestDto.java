@@ -16,7 +16,8 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @Generated
 public class ItemRequestDto {
-
+    @NotBlank
     private String description;
+    @NotNull
     private long requestor;
 }

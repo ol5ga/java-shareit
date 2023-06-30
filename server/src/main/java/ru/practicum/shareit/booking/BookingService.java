@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.dto.BookingRequest;
@@ -86,7 +85,7 @@ public class BookingService {
         User user = userRepository.findById(userId).orElseThrow(() -> new StorageException("Такого пользователя не существует"));
         LocalDateTime now = LocalDateTime.now();
         List<Booking> bookings;
-        Pageable page = PageRequest.of(from / size, size, Sort.unsorted());
+        Pageable page = PageRequest.of(from / size, size);
         switch (status) {
             case "ALL":
                 bookings = bookingRepository.findAllByBookerOrderByStartDesc(user, page);
