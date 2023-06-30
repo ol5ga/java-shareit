@@ -1,4 +1,4 @@
-package ru.practicum.shareit.item.comment;
+package ru.practicum.shareit.comment;
 
 import lombok.*;
 
@@ -10,5 +10,6 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @Builder
 public class CommentRequest {
+    @NotBlank
     private String text;
 }
