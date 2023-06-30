@@ -4,12 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.practicum.shareit.Generated;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Generated
 @Entity
 @Table(name = "comments")
 @Data
@@ -19,10 +21,10 @@ import java.time.LocalDateTime;
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column
     private Long id;
 
-    @Column(name = "text")
+    @Column
     private String text;
 
     @ManyToOne
@@ -33,6 +35,6 @@ public class Comment {
     @JoinColumn(name = "author_id")
     private User user;
 
-    @Column(name = "created")
+    @Column
     private LocalDateTime created;
 }

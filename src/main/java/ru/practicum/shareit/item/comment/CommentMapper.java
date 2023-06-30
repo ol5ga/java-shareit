@@ -7,12 +7,12 @@ import java.time.LocalDateTime;
 
 public class CommentMapper {
 
-    public static Comment toComment(CommentRequest request, Item item, User user) {
+    public static Comment toComment(CommentRequest request, Item item, User user,LocalDateTime now) {
         return Comment.builder()
                 .text(request.getText())
                 .item(item)
                 .user(user)
-                .created(LocalDateTime.now())
+                .created(now)
                 .build();
     }
 

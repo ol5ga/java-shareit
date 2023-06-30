@@ -2,6 +2,8 @@ package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.BookStatus;
 import ru.practicum.shareit.booking.Booking;
@@ -9,7 +11,6 @@ import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.dto.BookingShort;
 import ru.practicum.shareit.exceptions.ChangeException;
-import ru.practicum.shareit.exceptions.StorageException;
 import ru.practicum.shareit.exceptions.ValidationException;
 import ru.practicum.shareit.item.comment.*;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -17,6 +18,8 @@ import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.dto.ItemWithProperty;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.ItemRepository;
+import ru.practicum.shareit.request.ItemRequest;
+import ru.practicum.shareit.request.ItemRequestRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserRepository;
 
@@ -37,31 +40,32 @@ public class ItemServiceImpl implements ItemService {
     private final BookingRepository bookRepository;
     private final CommentRepository commentRepository;
 
+    private final ItemRequestRepository requestRepository;
+
     @Override
     @Transactional
     public Item addItem(long userId, ItemDto itemDto) {
-        checkUser(userId);
-        User user = userRepository.getById(userId);
-        Item item = ItemMapper.toItem(itemDto.getId(), user, itemDto);
+        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("Такого пользователя не существует"));
+        Item item;
+        if (itemDto.getRequestId() != null) {
+            ItemRequest request = requestRepository.findById(itemDto.getRequestId()).orElseThrow();
+            item = ItemMapper.toItem(itemDto.getId(), user, itemDto, request);
+        } else {
+            item = ItemMapper.toItem(itemDto.getId(), user, itemDto);
+        }
         return itemRepository.save(item);
     }
 
     @Override
     @Transactional
     public Item updateItem(long id, long userId, ItemDto itemDto) {
-        checkUser(userId);
+        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("Такого пользователя не существует"));
         if (userId != itemRepository.getById(id).getOwner().getId()) {
             throw new ChangeException("Изменения может вносить только владелец");
         }
-        User user = userRepository.getById(userId);
+
         Item item = ItemMapper.toItem(id, user, itemDto);
-        Item oldItem = itemRepository.getById(id);
-        try {
-            itemRepository.getById(id);
-        } catch (EntityNotFoundException ex) {
-            log.warn("Неправильный id");
-            throw new StorageException("Такой вещи не существует");
-        }
+        Item oldItem = itemRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Такой вещи не существует"));
         if (item.getName() == null) {
             item.setName(oldItem.getName());
         }
@@ -79,36 +83,35 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemWithProperty getItem(long id, long userId) {
         checkUser(userId);
-        return addProperty(itemRepository.getById(id), userId);
+        Item item = itemRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Такой вещи не существует"));
+        return addProperty(item, userId);
     }
 
     @Override
-    public List<ItemWithProperty> getUserItems(long userId) {
-        User user = userRepository.getById(userId);
-        return itemRepository.findAllByOwner(user).stream()
+    public List<ItemWithProperty> getUserItems(long userId, int from, int size) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("Такого пользователя не существует"));
+        Pageable page = PageRequest.of(from / size, size);
+        return itemRepository.findByOwnerId(userId, page).stream()
                 .map(item -> addProperty(item, userId))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<Item> searchItem(String text) {
+    public List<Item> searchItem(String text, int from, int size) {
         if (text.isEmpty()) {
             return new ArrayList<>();
         }
-        return itemRepository.findAll().stream()
-                .filter(item -> (item.getName().toLowerCase().contains(text.toLowerCase()) || item.getDescription().toLowerCase().contains(text.toLowerCase())))
-                .filter(item -> item.getAvailable().equals(true))
-                .collect(Collectors.toList());
+        Pageable page = PageRequest.of(from / size, size);
+        return itemRepository.search(text, page);
     }
 
     @Transactional
     public Comment addComment(long userId, long itemId, CommentRequest request) {
         Item item = itemRepository.getById(itemId);
-        checkUser(userId);
-        User user = userRepository.getById(userId);
+        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("Такого пользователя не существует"));
         Comment comment;
         if (bookRepository.findFirstByBookerIdAndItemIdAndEndIsBeforeOrderByEndDesc(userId, itemId, LocalDateTime.now()) != null) {
-            comment = CommentMapper.toComment(request, item, user);
+            comment = CommentMapper.toComment(request, item, user, LocalDateTime.now());
         } else {
             throw new ValidationException("Пользователь не может оставить коментарий");
         }

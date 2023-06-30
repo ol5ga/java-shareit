@@ -4,10 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.practicum.shareit.Generated;
+import ru.practicum.shareit.request.ItemRequest;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
 
+@Generated
 @Entity
 @Table(name = "items")
 @AllArgsConstructor
@@ -17,9 +20,9 @@ import javax.persistence.*;
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column
     private long id;
-    @Column(name = "name")
+    @Column
     private String name;
     @Column
     private String description;
@@ -28,7 +31,7 @@ public class Item {
     @ManyToOne(targetEntity = User.class)
     @JoinColumn(name = "user_id")
     private User owner;
-
-    //TODO ItemRequest request
-//    private Long request;
+    @ManyToOne(targetEntity = ItemRequest.class)
+    @JoinColumn(name = "request_id")
+    private ItemRequest request;
 }

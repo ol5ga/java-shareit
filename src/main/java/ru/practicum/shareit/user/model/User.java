@@ -4,9 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.practicum.shareit.Generated;
 
 import javax.persistence.*;
 
+@Generated
 @Entity
 @Table(name = "users")
 @AllArgsConstructor
@@ -16,10 +18,10 @@ import javax.persistence.*;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column
     private long id;
-    @Column(name = "email")
+    @Column
     private String email;
-    @Column(name = "name")
+    @Column
     private String name;
 }
