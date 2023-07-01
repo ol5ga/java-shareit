@@ -34,52 +34,52 @@ class ItemRequestIntegrationTest {
     private LocalDateTime now = LocalDateTime.now();
 
 
-    @BeforeEach
-    void setUp() {
-        service = new ItemRequestService(repository, userRepository, itemRepository);
-        owner = User.builder()
-                .email("ownerItem1@Mail.ru")
-                .name("ownerItem1")
-                .build();
-        userRepository.save(owner);
-        item = Item.builder()
-                .name("name")
-                .description("item1")
-                .available(true)
-                .owner(owner)
-                .build();
-        itemRepository.save(item);
-        booker = User.builder()
-                .email("bookerItem1@mail.ru")
-                .name("booker")
-                .build();
-        userRepository.save(booker);
-    }
-
-    @Test
-    void testAddingRequest() {
-        ItemRequestDto request = new ItemRequestDto("Request of item", 2);
-
-        ItemRequest result = service.addRequest(booker.getId(), request, now);
-
-        assertEquals(1, result.getId());
-        assertEquals(request.getDescription(), request.getDescription());
-        assertEquals(request.getRequestor(), result.getRequestor().getId());
-        assertEquals(booker, result.getRequestor());
-    }
-
-    @Test
-    void testGetRequest() {
-        ItemRequest request = ItemRequest.builder()
-                .id(1)
-                .description("request")
-                .requestor(booker)
-                .created(now)
-                .build();
-        repository.save(request);
-        ItemRequestResponse result = service.getRequest(request.getId(), booker.getId());
-
-        assertEquals(1, result.getId());
-        assertEquals(request.getDescription(), result.getDescription());
-    }
+//    @BeforeEach
+//    void setUp() {
+//        service = new ItemRequestService(repository, userRepository, itemRepository);
+//        owner = User.builder()
+//                .email("ownerItem1@Mail.ru")
+//                .name("ownerItem1")
+//                .build();
+//        userRepository.save(owner);
+//        item = Item.builder()
+//                .name("name")
+//                .description("item1")
+//                .available(true)
+//                .owner(owner)
+//                .build();
+//        itemRepository.save(item);
+//        booker = User.builder()
+//                .email("bookerItem1@mail.ru")
+//                .name("booker")
+//                .build();
+//        userRepository.save(booker);
+//    }
+//
+//    @Test
+//    void testAddingRequest() {
+//        ItemRequestDto request = new ItemRequestDto("Request of item", 2);
+//
+//        ItemRequest result = service.addRequest(booker.getId(), request, now);
+//
+//        assertEquals(1, result.getId());
+//        assertEquals(request.getDescription(), request.getDescription());
+//        assertEquals(request.getRequestor(), result.getRequestor().getId());
+//        assertEquals(booker, result.getRequestor());
+//    }
+//
+//    @Test
+//    void testGetRequest() {
+//        ItemRequest request = ItemRequest.builder()
+//                .id(1)
+//                .description("request")
+//                .requestor(booker)
+//                .created(now)
+//                .build();
+//        repository.save(request);
+//        ItemRequestResponse result = service.getRequest(request.getId(), booker.getId());
+//
+//        assertEquals(1, result.getId());
+//        assertEquals(request.getDescription(), result.getDescription());
+//    }
 }

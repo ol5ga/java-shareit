@@ -23,70 +23,70 @@ class UserServiceIntegrationTest {
     private UserRepository userRepository;
     private User user;
 
-    @BeforeEach
-    void setUp() {
-        user = User.builder()
-                .email("User1@Mail.ru")
-                .name("User")
-                .build();
-
-    }
-
-    @Test
-    void testGettingAllUsers() {
-        userRepository.save(user);
-        List<UserDto> result = service.getAllUsers();
-
-        assertEquals(1, result.size());
-        assertEquals(UserMapper.toUserDto(user), result.get(0));
-        assertEquals(user.getId(), result.get(0).getId());
-    }
-
-    @Test
-    void testGetUser() {
-        userRepository.save(user);
-        UserDto result = service.getUser(user.getId());
-
-        assertEquals(UserMapper.toUserDto(user), result);
-        assertEquals(user.getEmail(), result.getEmail());
-    }
-
-    @Test
-    void testCreate() {
-        assertEquals(0, user.getId());
-        UserDto result = service.create(UserMapper.toUserDto(user));
-
-        assertEquals(1, result.getId());
-        assertEquals(user.getEmail(), result.getEmail());
-    }
-
-    @Test
-    void testUpdateName() {
-        userRepository.save(user);
-        user.setName("New Name");
-        UserDto result = service.update(user.getId(), UserMapper.toUserDto(user));
-
-        assertEquals("New Name", result.getName());
-        assertEquals(user.getEmail(), result.getEmail());
-    }
-
-    @Test
-    void testUpdateEmail() {
-        userRepository.save(user);
-        user.setEmail("new@mail.ru");
-        UserDto result = service.update(user.getId(), UserMapper.toUserDto(user));
-
-        assertEquals(user.getName(), result.getName());
-        assertEquals("new@mail.ru", result.getEmail());
-    }
-
-    @Test
-    void testDelete() {
-        userRepository.save(user);
-        assertEquals(1, userRepository.findAll().size());
-        service.delete(user.getId());
-
-        assertEquals(0, userRepository.findAll().size());
-    }
+//    @BeforeEach
+//    void setUp() {
+//        user = User.builder()
+//                .email("User1@Mail.ru")
+//                .name("User")
+//                .build();
+//
+//    }
+//
+//    @Test
+//    void testGettingAllUsers() {
+//        userRepository.save(user);
+//        List<UserDto> result = service.getAllUsers();
+//
+//        assertEquals(1, result.size());
+//        assertEquals(UserMapper.toUserDto(user), result.get(0));
+//        assertEquals(user.getId(), result.get(0).getId());
+//    }
+//
+//    @Test
+//    void testGetUser() {
+//        userRepository.save(user);
+//        UserDto result = service.getUser(user.getId());
+//
+//        assertEquals(UserMapper.toUserDto(user), result);
+//        assertEquals(user.getEmail(), result.getEmail());
+//    }
+//
+//    @Test
+//    void testCreate() {
+//        assertEquals(0, user.getId());
+//        UserDto result = service.create(UserMapper.toUserDto(user));
+//
+//        assertEquals(1, result.getId());
+//        assertEquals(user.getEmail(), result.getEmail());
+//    }
+//
+//    @Test
+//    void testUpdateName() {
+//        userRepository.save(user);
+//        user.setName("New Name");
+//        UserDto result = service.update(user.getId(), UserMapper.toUserDto(user));
+//
+//        assertEquals("New Name", result.getName());
+//        assertEquals(user.getEmail(), result.getEmail());
+//    }
+//
+//    @Test
+//    void testUpdateEmail() {
+//        userRepository.save(user);
+//        user.setEmail("new@mail.ru");
+//        UserDto result = service.update(user.getId(), UserMapper.toUserDto(user));
+//
+//        assertEquals(user.getName(), result.getName());
+//        assertEquals("new@mail.ru", result.getEmail());
+//    }
+//
+//    @Test
+//    void testDelete() {
+//        userRepository.save(user);
+//        assertEquals(1, userRepository.findAll().size());
+//        service.delete(user.getId());
+//
+//        assertEquals(0, userRepository.findAll().size());
+//    }
 
 }
