@@ -35,33 +35,33 @@ class BookingServiceIntegrationTest {
     private Item item;
     private BookingRequest request;
 
-//    @BeforeEach
-//    void setUp() {
-//        owner = User.builder()
-//                .email("ownerItem1@Mail.ru")
-//                .name("ownerItem1")
-//                .build();
-//        userRepository.save(owner);
-//        item = Item.builder()
-//                .name("name")
-//                .description("item1")
-//                .available(true)
-//                .owner(owner)
-//                .build();
-//        itemRepository.save(item);
-//        booker = User.builder()
-//                .email("bookerItem1@mail.ru")
-//                .name("booker")
-//                .build();
-//        userRepository.save(booker);
-//        request = BookingRequest.builder()
-//                .itemId(1L)
-//                .start(LocalDateTime.now().plusMinutes(5))
-//                .end(LocalDateTime.now().plusDays(2))
-//                .build();
-//
-//    }
-//
+    @BeforeEach
+    void setUp() {
+        owner = User.builder()
+                .email("ownerItem1@Mail.ru")
+                .name("ownerItem1")
+                .build();
+        userRepository.save(owner);
+        item = Item.builder()
+                .name("name")
+                .description("item1")
+                .available(true)
+                .owner(owner)
+                .build();
+        itemRepository.save(item);
+        booker = User.builder()
+                .email("bookerItem1@mail.ru")
+                .name("booker")
+                .build();
+        userRepository.save(booker);
+        request = BookingRequest.builder()
+                .itemId(1L)
+                .start(LocalDateTime.now().plusMinutes(5))
+                .end(LocalDateTime.now().plusDays(2))
+                .build();
+
+    }
+
 //    @Test
 //    void testAddingBooking() {
 //        BookingResponse result = service.addBooking(booker.getId(), request);
@@ -93,7 +93,7 @@ class BookingServiceIntegrationTest {
 //        assertEquals(request.getStart().truncatedTo(ChronoUnit.MINUTES), result.getStart().truncatedTo(ChronoUnit.MINUTES));
 //        assertEquals(request.getEnd().truncatedTo(ChronoUnit.MINUTES), result.getEnd().truncatedTo(ChronoUnit.MINUTES));
 //    }
-//
+
 //    @Test
 //    void testGettingUsersBookings() {
 //        BookingResponse booking = service.addBooking(booker.getId(), request);
@@ -104,14 +104,14 @@ class BookingServiceIntegrationTest {
 //        assertEquals(result.get(0).getId(), booking.getId());
 //        assertEquals(result.get(0).getItem().getId(), booking.getItem().getId());
 //    }
-//
-//    @Test
-//    void testGettingBookingItem() {
-//        BookingResponse booking = service.addBooking(booker.getId(), request);
-//        List<BookingResponse> result = service.getUserItems(owner.getId(), "ALL", 0, 1);
-//
-//        assertNotNull(result);
-//        assertEquals(1, result.size());
-//        assertEquals(booking.getId(), result.get(0).getId());
-//    }
+
+    @Test
+    void testGettingBookingItem() {
+        BookingResponse booking = service.addBooking(booker.getId(), request);
+        List<BookingResponse> result = service.getUserItems(owner.getId(), "ALL", 0, 1);
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(booking.getId(), result.get(0).getId());
+    }
 }

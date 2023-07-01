@@ -9,6 +9,8 @@ import ru.practicum.shareit.booking.dto.BookingResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @RestController
@@ -40,6 +42,7 @@ public class BookingController {
                                                  @RequestParam(defaultValue = "ALL") String state,
                                                  @Valid @RequestParam(defaultValue = "0") @Min(0) Integer from,
                                                  @Valid @RequestParam(defaultValue = "20") @Min(1) @Max(20) Integer size) {
+        LocalDateTime now = LocalDateTime.now();
         return service.getUserBookings(userId, state, from, size);
     }
 

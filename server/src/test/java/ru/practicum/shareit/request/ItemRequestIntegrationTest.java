@@ -33,7 +33,7 @@ class ItemRequestIntegrationTest {
     private User booker;
     private LocalDateTime now = LocalDateTime.now();
 
-
+//
 //    @BeforeEach
 //    void setUp() {
 //        service = new ItemRequestService(repository, userRepository, itemRepository);

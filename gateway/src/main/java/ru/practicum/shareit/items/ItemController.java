@@ -10,6 +10,8 @@ import ru.practicum.shareit.items.dto.ItemDto;
 import ru.practicum.shareit.comment.CommentRequest;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 
 @RestController
 @RequestMapping("/items")
@@ -49,7 +51,9 @@ public class ItemController {
 
     @GetMapping("/search")
     public ResponseEntity<Object> searchItem(@RequestHeader(USER) long userId,
-                                             @RequestParam(name = "text") String text) {
+                                             @RequestParam(name = "text") String text,
+                                             @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
+                                             @Positive @RequestParam(defaultValue = "10") Integer size) {
         log.info("Search item text {}", text);
         return itemClient.findItem(userId, text);
     }

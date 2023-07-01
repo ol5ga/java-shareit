@@ -42,46 +42,46 @@ class ItemServiceIntegrationTest {
     @Autowired
     private CommentRepository commentRepository;
 
-//    private User owner;
-//    private User booker;
-//    private Item item;
-//    private BookingRequest request;
-//
-//    private ItemDto itemDto;
-//    private LocalDateTime now = LocalDateTime.now();
-//
-//    @BeforeEach
-//    void setUp() {
-//        owner = User.builder()
-//                .email("ownerItem1@Mail.ru")
-//                .name("ownerItem1")
-//                .build();
-//        userRepository.save(owner);
-//        item = Item.builder()
-//                .name("name")
-//                .description("item1")
-//                .available(true)
-//                .owner(owner)
-//                .build();
-//        itemRepository.save(item);
-//        booker = User.builder()
-//                .email("bookerItem1@mail.ru")
-//                .name("booker")
-//                .build();
-//        userRepository.save(booker);
-//        request = BookingRequest.builder()
-//                .itemId(1L)
-//                .start(LocalDateTime.now().plusMinutes(5))
-//                .end(LocalDateTime.now().plusDays(2))
-//                .build();
-//        itemDto = ItemDto.builder()
-//                .name("name")
-//                .description("item1")
-//                .available(true)
-//                .build();
-//
-//    }
-//
+    private User owner;
+    private User booker;
+    private Item item;
+    private BookingRequest request;
+
+    private ItemDto itemDto;
+    private LocalDateTime now = LocalDateTime.now();
+
+    @BeforeEach
+    void setUp() {
+        owner = User.builder()
+                .email("ownerItem1@Mail.ru")
+                .name("ownerItem1")
+                .build();
+        userRepository.save(owner);
+        item = Item.builder()
+                .name("name")
+                .description("item1")
+                .available(true)
+                .owner(owner)
+                .build();
+        itemRepository.save(item);
+        booker = User.builder()
+                .email("bookerItem1@mail.ru")
+                .name("booker")
+                .build();
+        userRepository.save(booker);
+        request = BookingRequest.builder()
+                .itemId(1L)
+                .start(LocalDateTime.now().plusMinutes(5))
+                .end(LocalDateTime.now().plusDays(2))
+                .build();
+        itemDto = ItemDto.builder()
+                .name("name")
+                .description("item1")
+                .available(true)
+                .build();
+
+    }
+
 //    @Test
 //    void testAddingItem() {
 //        Item result = service.addItem(owner.getId(), itemDto);
@@ -90,7 +90,7 @@ class ItemServiceIntegrationTest {
 //        assertEquals(itemDto.getName(), result.getName());
 //        assertEquals(itemDto.getAvailable(), result.getAvailable());
 //    }
-//
+
 //    @Test
 //    void testUdateItem() {
 //        itemDto.setName("nameNew");

@@ -45,18 +45,19 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemWithProperty> getUserItems(@RequestHeader(USER) long userId, @RequestParam(defaultValue = "1") @Min(1) Integer from,
+    public List<ItemWithProperty> getUserItems(@RequestHeader(USER) long userId,
+                                               @RequestParam(defaultValue = "0") @Min(0) Integer from,
                                                @RequestParam(defaultValue = "20") @Min(1) @Max(20) Integer size) {
         return service.getUserItems(userId, from, size);
     }
 
 
     @GetMapping("/search")
-    public List<ItemDto> searchItem(@RequestParam String text, @RequestParam(defaultValue = "1") @Min(1) Integer from,
+    public List<ItemDto> searchItem(@RequestParam String text,
+                                    @RequestParam(defaultValue = "0") @Min(0) Integer from,
                                     @RequestParam(defaultValue = "20") @Min(1) @Max(20) Integer size) {
-        return service.searchItem(text, from, size).stream()
-                .map(ItemMapper::toItemDto)
-                .collect(Collectors.toList());
+        List<ItemDto> items = service.searchItem(text, from, size);
+        return items;
     }
 
     @PostMapping("/{itemId}/comment")

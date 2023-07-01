@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.BookStatus;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingRepository;
@@ -24,7 +26,7 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserRepository;
 
 import javax.persistence.EntityNotFoundException;
-import javax.transaction.Transactional;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -90,19 +92,25 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<ItemWithProperty> getUserItems(long userId, int from, int size) {
         User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("Такого пользователя не существует"));
-        Pageable page = PageRequest.of(from / size, size);
-        return itemRepository.findByOwnerId(userId, page).stream()
+        Pageable page = PageRequest.of(from / size, size, Sort.by(Sort.Direction.ASC, "id"));
+        List<ItemWithProperty> items = itemRepository.findByOwnerId(userId, page).stream()
                 .map(item -> addProperty(item, userId))
                 .collect(Collectors.toList());
+        return items;
     }
 
     @Override
-    public List<Item> searchItem(String text, int from, int size) {
+    @Transactional(readOnly = true)
+    public List<ItemDto> searchItem(String text, int from, int size) {
         if (text.isEmpty()) {
             return new ArrayList<>();
         }
         Pageable page = PageRequest.of(from / size, size);
-        return itemRepository.search(text, page);
+        List<Item> repo = itemRepository.search(text, page);
+        List<ItemDto> items = repo.stream()
+                .map(ItemMapper::toItemDto)
+                .collect(Collectors.toList());
+        return items;
     }
 
     @Transactional

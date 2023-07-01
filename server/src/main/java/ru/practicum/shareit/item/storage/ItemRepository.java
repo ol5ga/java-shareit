@@ -16,7 +16,10 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
     Page<Item> findAll(Pageable pageable);
 
-    @Query("SELECT i from Item i WHERE upper(i.available) LIKE upper('true') AND (upper(i.name) LIKE upper(CONCAT('%', ?1, '%')) " +
-            "OR upper(i.description) LIKE upper(CONCAT('%', ?1, '%')))")
+    @Query("SELECT i " +
+            "FROM Item AS i " +
+            "WHERE (lower(i.name) LIKE lower(concat('%', :text,'%')) " +
+            "OR lower(i.description) LIKE lower(concat('%', :text,'%'))) " +
+            "AND i.available=TRUE")
     public List<Item> search(String text, Pageable pageable);
 }
