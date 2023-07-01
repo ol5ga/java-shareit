@@ -356,17 +356,17 @@ class ItemServiceImplTest {
 //        assertEquals(item.getId(), result.get(0).getId());
 //    }
 
-//    @Test
-//    void testSearchItem() {
-//        List<Item> items = new ArrayList<>();
-//        items.add(item);
-//        when(itemRepository.search("item", PageRequest.of(1, 1))).thenReturn(items);
-//        List<Item> result = service.searchItem("item", 1, 1);
-//
-//        assertEquals(1, result.size());
-//        assertEquals(item, result.get(0));
-//
-//    }
+    @Test
+    void testSearchItem() {
+        List<Item> items = new ArrayList<>();
+        items.add(item);
+        when(itemRepository.search("item", PageRequest.of(1, 1))).thenReturn(items);
+        List<ItemDto> result = service.searchItem("item", 1, 1);
+
+        assertEquals(1, result.size());
+        assertEquals(item.getId(), result.get(0).getId());
+
+    }
 
     @Test
     void testAddingComment() {

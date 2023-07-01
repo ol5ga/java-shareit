@@ -26,7 +26,6 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserRepository;
 
 import javax.persistence.EntityNotFoundException;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -106,11 +105,9 @@ public class ItemServiceImpl implements ItemService {
             return new ArrayList<>();
         }
         Pageable page = PageRequest.of(from / size, size);
-        List<Item> repo = itemRepository.search(text, page);
-        List<ItemDto> items = repo.stream()
+        return itemRepository.search(text, page).stream()
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
-        return items;
     }
 
     @Transactional

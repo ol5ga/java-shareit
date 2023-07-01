@@ -17,7 +17,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/items")
@@ -56,8 +55,7 @@ public class ItemController {
     public List<ItemDto> searchItem(@RequestParam String text,
                                     @RequestParam(defaultValue = "0") @Min(0) Integer from,
                                     @RequestParam(defaultValue = "20") @Min(1) @Max(20) Integer size) {
-        List<ItemDto> items = service.searchItem(text, from, size);
-        return items;
+        return service.searchItem(text, from, size);
     }
 
     @PostMapping("/{itemId}/comment")

@@ -180,95 +180,95 @@ class BookingServiceTest {
         verify(bookingRepository, never()).save(Mockito.any(Booking.class));
     }
 
-//    @Test
-//    void testGettingUsersBookingsAll() {
-//        Booking booking = BookingMapper.toBooking(request, item, booker, BookStatus.APPROVED);
-//        booking.setId(1);
-//        when(userRepository.findById(booker.getId())).thenReturn(Optional.of(booker));
-//        when(bookingRepository.findAllByBookerOrderByStartDesc(booker, PageRequest.of(1, 1))).thenReturn(List.of(booking));
-//        List<BookingResponse> result = service.getUserBookings(booker.getId(), "ALL", 1, 1);
-//        assertTrue(result.contains(BookingMapper.toResponse(booking)));
-//        assertEquals(1, result.size());
-//        verify(bookingRepository, times(1)).findAllByBookerOrderByStartDesc(any(), any());
-//        verify(bookingRepository, never()).findAllByBookerAndStartIsBeforeAndEndIsAfterOrderByStart(any(User.class), any(LocalDateTime.class), any(LocalDateTime.class), any(Pageable.class));
-//    }
-//
-//    @Test
-//    void testGettingUsersBookingsWithCURRENT() {
-//        Booking booking = BookingMapper.toBooking(request, item, booker, BookStatus.APPROVED);
-//        booking.setId(1);
-//        when(userRepository.findById(booker.getId())).thenReturn(Optional.of(booker));
-//        when(bookingRepository.findAllByBookerAndStartIsBeforeAndEndIsAfterOrderByStart(any(User.class), any(LocalDateTime.class), any(LocalDateTime.class), any(Pageable.class)))
-//                .thenReturn(List.of(booking));
-//        List<BookingResponse> result = service.getUserBookings(booker.getId(), "CURRENT", 1, 1);
-//        assertTrue(result.contains(BookingMapper.toResponse(booking)));
-//        assertEquals(1, result.size());
-//        verify(bookingRepository, times(1)).findAllByBookerAndStartIsBeforeAndEndIsAfterOrderByStart(any(User.class), any(LocalDateTime.class), any(LocalDateTime.class), any(Pageable.class));
-//        verify(bookingRepository, never()).findAllByBookerOrderByStartDesc(any(), any());
-//    }
-//
-//    @Test
-//    void testGettingUsersBookingsWithFUTURE() {
-//        Booking booking = BookingMapper.toBooking(request, item, booker, BookStatus.APPROVED);
-//        booking.setId(1);
-//        when(userRepository.findById(booker.getId())).thenReturn(Optional.of(booker));
-//        when(bookingRepository.findAllByBookerAndStartIsAfterOrderByStartDesc(any(User.class), any(LocalDateTime.class), any(Pageable.class)))
-//                .thenReturn(List.of(booking));
-//        List<BookingResponse> result = service.getUserBookings(booker.getId(), "FUTURE", 1, 1);
-//        assertTrue(result.contains(BookingMapper.toResponse(booking)));
-//        assertEquals(1, result.size());
-//        verify(bookingRepository, times(1)).findAllByBookerAndStartIsAfterOrderByStartDesc(any(User.class), any(LocalDateTime.class), any(Pageable.class));
-//        verify(bookingRepository, never()).findAllByBookerOrderByStartDesc(any(), any());
-//    }
-//
-//    @Test
-//    void testGettingUsersBookingsWithPAST() {
-//        Booking booking = BookingMapper.toBooking(request, item, booker, BookStatus.APPROVED);
-//        booking.setId(1);
-//        when(userRepository.findById(booker.getId())).thenReturn(Optional.of(booker));
-//        when(bookingRepository.findAllByBookerAndEndIsBeforeOrderByStartDesc(any(User.class), any(LocalDateTime.class), any(Pageable.class)))
-//                .thenReturn(List.of(booking));
-//        List<BookingResponse> result = service.getUserBookings(booker.getId(), "PAST", 1, 1);
-//        assertTrue(result.contains(BookingMapper.toResponse(booking)));
-//        assertEquals(1, result.size());
-//        verify(bookingRepository, times(1)).findAllByBookerAndEndIsBeforeOrderByStartDesc(any(User.class), any(LocalDateTime.class), any(Pageable.class));
-//        verify(bookingRepository, never()).findAllByBookerOrderByStartDesc(any(), any());
-//    }
-//
-//    @Test
-//    void testGettingUsersBookingsWithWAITING() {
-//        Booking booking = BookingMapper.toBooking(request, item, booker, BookStatus.WAITING);
-//        booking.setId(1);
-//        when(userRepository.findById(booker.getId())).thenReturn(Optional.of(booker));
-//        when(bookingRepository.findAllByBookerAndStatusEqualsOrderByStartDesc(booker, BookStatus.WAITING, PageRequest.of(1, 1)))
-//                .thenReturn(List.of(booking));
-//        List<BookingResponse> result = service.getUserBookings(booker.getId(), "WAITING", 1, 1);
-//        assertTrue(result.contains(BookingMapper.toResponse(booking)));
-//        assertEquals(1, result.size());
-//        verify(bookingRepository, times(1)).findAllByBookerAndStatusEqualsOrderByStartDesc(booker, BookStatus.WAITING, PageRequest.of(1, 1));
-//        verify(bookingRepository, never()).findAllByBookerOrderByStartDesc(any(), any());
-//    }
-//
-//    @Test
-//    void testGettingUsersBookingsWithREJECTED() {
-//        Booking booking = BookingMapper.toBooking(request, item, booker, BookStatus.REJECTED);
-//        booking.setId(1);
-//        when(userRepository.findById(booker.getId())).thenReturn(Optional.of(booker));
-//        when(bookingRepository.findAllByBookerAndStatusEqualsOrderByStartDesc(booker, BookStatus.REJECTED, PageRequest.of(1, 1)))
-//                .thenReturn(List.of(booking));
-//        List<BookingResponse> result = service.getUserBookings(booker.getId(), "REJECTED", 1, 1);
-//        assertTrue(result.contains(BookingMapper.toResponse(booking)));
-//        assertEquals(1, result.size());
-//        verify(bookingRepository, times(1)).findAllByBookerAndStatusEqualsOrderByStartDesc(booker, BookStatus.REJECTED, PageRequest.of(1, 1));
-//        verify(bookingRepository, never()).findAllByBookerOrderByStartDesc(any(), any());
-//    }
-//
-//    @Test
-//    void testGettingUsersBookingsWithWrongState() {
-//        when(userRepository.findById(booker.getId())).thenReturn(Optional.of(booker));
-//        assertThrows(ValidationException.class, () -> service.getUserBookings(booker.getId(), " ", 1, 1));
-//        verify(bookingRepository, never()).findAllByBookerOrderByStartDesc(any(), any());
-//    }
+    @Test
+    void testGettingUsersBookingsAll() {
+        Booking booking = BookingMapper.toBooking(request, item, booker, BookStatus.APPROVED);
+        booking.setId(1);
+        when(userRepository.findById(booker.getId())).thenReturn(Optional.of(booker));
+        when(bookingRepository.findAllByBookerOrderByStartDesc(booker, PageRequest.of(1, 1))).thenReturn(List.of(booking));
+        List<BookingResponse> result = service.getUserBookings(booker.getId(), "ALL", 1, 1);
+        assertTrue(result.contains(BookingMapper.toResponse(booking)));
+        assertEquals(1, result.size());
+        verify(bookingRepository, times(1)).findAllByBookerOrderByStartDesc(any(), any());
+        verify(bookingRepository, never()).findAllByBookerAndStartIsBeforeAndEndIsAfterOrderByStart(any(User.class), any(LocalDateTime.class), any(LocalDateTime.class), any(Pageable.class));
+    }
+
+    @Test
+    void testGettingUsersBookingsWithCURRENT() {
+        Booking booking = BookingMapper.toBooking(request, item, booker, BookStatus.APPROVED);
+        booking.setId(1);
+        when(userRepository.findById(booker.getId())).thenReturn(Optional.of(booker));
+        when(bookingRepository.findAllByBookerAndStartIsBeforeAndEndIsAfterOrderByStart(any(User.class), any(LocalDateTime.class), any(LocalDateTime.class), any(Pageable.class)))
+                .thenReturn(List.of(booking));
+        List<BookingResponse> result = service.getUserBookings(booker.getId(), "CURRENT", 1, 1);
+        assertTrue(result.contains(BookingMapper.toResponse(booking)));
+        assertEquals(1, result.size());
+        verify(bookingRepository, times(1)).findAllByBookerAndStartIsBeforeAndEndIsAfterOrderByStart(any(User.class), any(LocalDateTime.class), any(LocalDateTime.class), any(Pageable.class));
+        verify(bookingRepository, never()).findAllByBookerOrderByStartDesc(any(), any());
+    }
+
+    @Test
+    void testGettingUsersBookingsWithFUTURE() {
+        Booking booking = BookingMapper.toBooking(request, item, booker, BookStatus.APPROVED);
+        booking.setId(1);
+        when(userRepository.findById(booker.getId())).thenReturn(Optional.of(booker));
+        when(bookingRepository.findAllByBookerAndStartIsAfterOrderByStartDesc(any(User.class), any(LocalDateTime.class), any(Pageable.class)))
+                .thenReturn(List.of(booking));
+        List<BookingResponse> result = service.getUserBookings(booker.getId(), "FUTURE", 1, 1);
+        assertTrue(result.contains(BookingMapper.toResponse(booking)));
+        assertEquals(1, result.size());
+        verify(bookingRepository, times(1)).findAllByBookerAndStartIsAfterOrderByStartDesc(any(User.class), any(LocalDateTime.class), any(Pageable.class));
+        verify(bookingRepository, never()).findAllByBookerOrderByStartDesc(any(), any());
+    }
+
+    @Test
+    void testGettingUsersBookingsWithPAST() {
+        Booking booking = BookingMapper.toBooking(request, item, booker, BookStatus.APPROVED);
+        booking.setId(1);
+        when(userRepository.findById(booker.getId())).thenReturn(Optional.of(booker));
+        when(bookingRepository.findAllByBookerAndEndIsBeforeOrderByStartDesc(any(User.class), any(LocalDateTime.class), any(Pageable.class)))
+                .thenReturn(List.of(booking));
+        List<BookingResponse> result = service.getUserBookings(booker.getId(), "PAST", 1, 1);
+        assertTrue(result.contains(BookingMapper.toResponse(booking)));
+        assertEquals(1, result.size());
+        verify(bookingRepository, times(1)).findAllByBookerAndEndIsBeforeOrderByStartDesc(any(User.class), any(LocalDateTime.class), any(Pageable.class));
+        verify(bookingRepository, never()).findAllByBookerOrderByStartDesc(any(), any());
+    }
+
+    @Test
+    void testGettingUsersBookingsWithWAITING() {
+        Booking booking = BookingMapper.toBooking(request, item, booker, BookStatus.WAITING);
+        booking.setId(1);
+        when(userRepository.findById(booker.getId())).thenReturn(Optional.of(booker));
+        when(bookingRepository.findAllByBookerAndStatusEqualsOrderByStartDesc(booker, BookStatus.WAITING, PageRequest.of(1, 1)))
+                .thenReturn(List.of(booking));
+        List<BookingResponse> result = service.getUserBookings(booker.getId(), "WAITING", 1, 1);
+        assertTrue(result.contains(BookingMapper.toResponse(booking)));
+        assertEquals(1, result.size());
+        verify(bookingRepository, times(1)).findAllByBookerAndStatusEqualsOrderByStartDesc(booker, BookStatus.WAITING, PageRequest.of(1, 1));
+        verify(bookingRepository, never()).findAllByBookerOrderByStartDesc(any(), any());
+    }
+
+    @Test
+    void testGettingUsersBookingsWithREJECTED() {
+        Booking booking = BookingMapper.toBooking(request, item, booker, BookStatus.REJECTED);
+        booking.setId(1);
+        when(userRepository.findById(booker.getId())).thenReturn(Optional.of(booker));
+        when(bookingRepository.findAllByBookerAndStatusEqualsOrderByStartDesc(booker, BookStatus.REJECTED, PageRequest.of(1, 1)))
+                .thenReturn(List.of(booking));
+        List<BookingResponse> result = service.getUserBookings(booker.getId(), "REJECTED", 1, 1);
+        assertTrue(result.contains(BookingMapper.toResponse(booking)));
+        assertEquals(1, result.size());
+        verify(bookingRepository, times(1)).findAllByBookerAndStatusEqualsOrderByStartDesc(booker, BookStatus.REJECTED, PageRequest.of(1, 1));
+        verify(bookingRepository, never()).findAllByBookerOrderByStartDesc(any(), any());
+    }
+
+    @Test
+    void testGettingUsersBookingsWithWrongState() {
+        when(userRepository.findById(booker.getId())).thenReturn(Optional.of(booker));
+        assertThrows(ValidationException.class, () -> service.getUserBookings(booker.getId(), " ", 1, 1));
+        verify(bookingRepository, never()).findAllByBookerOrderByStartDesc(any(), any());
+    }
 
     @Test
     void testGettingBookingItemALL() {

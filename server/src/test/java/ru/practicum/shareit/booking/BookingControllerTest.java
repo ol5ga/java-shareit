@@ -138,46 +138,46 @@ class BookingControllerTest {
         verify(service, times(1)).getBooking(anyLong(), anyLong());
     }
 
-//    @Test
-//    void testGettingUsersBookings() throws Exception {
-//        BookingResponse response2 = BookingResponse.builder()
-//                .id(2L)
-//                .start(now.minusDays(1))
-//                .end(now.plusDays(1))
-//                .item(ItemMapper.toItemDto(item))
-//                .booker(UserMapper.toUserDto(booker))
-//                .status(BookStatus.WAITING)
-//                .build();
-//
-//        List<BookingResponse> expectedList = List.of(response, response2);
-//
-//        when(service.getUserBookings(anyLong(), anyString(), anyInt(), anyInt()))
-//                .thenReturn(expectedList);
-//
-//        mockMvc.perform(get("/bookings")
-//                        .characterEncoding(StandardCharsets.UTF_8)
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .accept(MediaType.APPLICATION_JSON)
-//                        .header(USER, "1")
-//                        .param("state", "ALL")
-//                        .param("from", "1")
-//                        .param("size", "2")
-//                ).andExpect(status().isOk())
-//                .andExpect(jsonPath("$[0].id").isNotEmpty())
-//                .andExpect(jsonPath("$[0].id", is(response.getId()), Long.class))
-//                .andExpect(jsonPath("$[0].start").isNotEmpty())
-//                .andExpect(jsonPath("$[0].end").isNotEmpty())
-//                .andExpect(jsonPath("$[0].item").isNotEmpty())
-//                .andExpect(jsonPath("$[0].booker.id").value(response.getBooker().getId()))
-//                .andExpect(jsonPath("$[0].status").value(response.getStatus().name()))
-//                .andExpect(jsonPath("$[1].id", is(response2.getId()), Long.class))
-//                .andExpect(jsonPath("$[1].start").isNotEmpty())
-//                .andExpect(jsonPath("$[1].end").isNotEmpty())
-//                .andExpect(jsonPath("$[1].item").isNotEmpty())
-//                .andExpect(jsonPath("$[1].booker.id").value(response2.getBooker().getId()))
-//                .andExpect(jsonPath("$[1].status").value(response2.getStatus().name()));
-//        verify(service, times(1)).getUserBookings(anyLong(), anyString(), anyInt(), anyInt());
-//    }
+    @Test
+    void testGettingUsersBookings() throws Exception {
+        BookingResponse response2 = BookingResponse.builder()
+                .id(2L)
+                .start(now.minusDays(1))
+                .end(now.plusDays(1))
+                .item(ItemMapper.toItemDto(item))
+                .booker(UserMapper.toUserDto(booker))
+                .status(BookStatus.WAITING)
+                .build();
+
+        List<BookingResponse> expectedList = List.of(response, response2);
+
+        when(service.getUserBookings(anyLong(), anyString(), anyInt(), anyInt()))
+                .thenReturn(expectedList);
+
+        mockMvc.perform(get("/bookings")
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header(USER, "1")
+                        .param("state", "ALL")
+                        .param("from", "1")
+                        .param("size", "2")
+                ).andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").isNotEmpty())
+                .andExpect(jsonPath("$[0].id", is(response.getId()), Long.class))
+                .andExpect(jsonPath("$[0].start").isNotEmpty())
+                .andExpect(jsonPath("$[0].end").isNotEmpty())
+                .andExpect(jsonPath("$[0].item").isNotEmpty())
+                .andExpect(jsonPath("$[0].booker.id").value(response.getBooker().getId()))
+                .andExpect(jsonPath("$[0].status").value(response.getStatus().name()))
+                .andExpect(jsonPath("$[1].id", is(response2.getId()), Long.class))
+                .andExpect(jsonPath("$[1].start").isNotEmpty())
+                .andExpect(jsonPath("$[1].end").isNotEmpty())
+                .andExpect(jsonPath("$[1].item").isNotEmpty())
+                .andExpect(jsonPath("$[1].booker.id").value(response2.getBooker().getId()))
+                .andExpect(jsonPath("$[1].status").value(response2.getStatus().name()));
+        verify(service, times(1)).getUserBookings(anyLong(), anyString(), anyInt(), anyInt());
+    }
 
     @Test
     void testGettingBookingItem() throws Exception {

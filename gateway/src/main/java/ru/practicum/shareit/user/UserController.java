@@ -7,7 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.annotation.UserCreate;
-import ru.practicum.shareit.user.annotation.UserId;
 import ru.practicum.shareit.user.dto.UserDto;
 
 import javax.validation.Valid;

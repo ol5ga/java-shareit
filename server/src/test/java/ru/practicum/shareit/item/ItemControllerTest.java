@@ -162,28 +162,27 @@ class ItemControllerTest {
 
     }
 
-//    @Test
-//    void testSearchItem() throws Exception {
-//        when(itemService.searchItem(anyString(), anyInt(), anyInt())).thenReturn(List.of(item));
-//        ItemDto itemDto = ItemMapper.toItemDto(item);
-//        List<ItemDto> result = List.of(itemDto);
-//
-//        mvc.perform(get("/items/search")
-//                        .accept(MediaType.APPLICATION_JSON)
-//                        .header(USER, "1")
-//                        .param("text", "item")
-//                        .param("from", "1")
-//                        .param("size", "2")
-//                ).andExpect(status().isOk())
-//                .andExpect(jsonPath("$").isNotEmpty())
-//                .andExpect(jsonPath("$[0].id", is(itemDto.getId()), Long.class))
-//                .andExpect(jsonPath("$[0].name").value(itemDto.getName()))
-//                .andExpect(jsonPath("$[0].description").value(itemDto.getDescription()))
-//                .andExpect(jsonPath("$[0].available").value(itemDto.getAvailable()))
-//                .andExpect(jsonPath("$[0].requestId").value(itemDto.getRequestId()))
-//        ;
-//        verify(itemService, times(1)).searchItem(anyString(), anyInt(), anyInt());
-//    }
+    @Test
+    void testSearchItem() throws Exception {
+        when(itemService.searchItem(anyString(), anyInt(), anyInt())).thenReturn(List.of(itemDto));
+        List<ItemDto> result = List.of(itemDto);
+
+        mvc.perform(get("/items/search")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header(USER, "1")
+                        .param("text", "item")
+                        .param("from", "1")
+                        .param("size", "2")
+                ).andExpect(status().isOk())
+                .andExpect(jsonPath("$").isNotEmpty())
+                .andExpect(jsonPath("$[0].id", is(itemDto.getId()), Long.class))
+                .andExpect(jsonPath("$[0].name").value(itemDto.getName()))
+                .andExpect(jsonPath("$[0].description").value(itemDto.getDescription()))
+                .andExpect(jsonPath("$[0].available").value(itemDto.getAvailable()))
+                .andExpect(jsonPath("$[0].requestId").value(itemDto.getRequestId()))
+        ;
+        verify(itemService, times(1)).searchItem(anyString(), anyInt(), anyInt());
+    }
 
     @Test
     void testAddComment() throws Exception {
